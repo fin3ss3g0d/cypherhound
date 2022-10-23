@@ -1,0 +1,4 @@
+colorama==0.4.5
+neo4j==5.1.0
+pytz==2022.4
+termcolor==2.0.1
