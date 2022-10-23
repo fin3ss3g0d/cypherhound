@@ -9,6 +9,7 @@ A `Python3` terminal application that contains 190+ `Neo4j` cyphers for BloodHou
 1. My tools think in lists - until my tools parse exported `JSON` graphs, I need graph results in a line-by-line format `.txt` file
 2. Copy/pasting graph results - this plays into the first but do we need to explain this one?
 3. Graphs can be too large to draw - the information contained in any graph can aid our goals as the attacker and we *need* to be able to view *all* data efficiently
+4. Manually running custom cyphers is time-consuming - let's automate it :)
 
 ## Features
 

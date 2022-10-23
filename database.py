@@ -989,6 +989,56 @@ class Driver:
                         file.close()
                         log.log_successful_export(f)
 
+    def find_all_dcs_oss(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (n:Group) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" WITH n MATCH p=(n)<-[r:MemberOf*1..]-(m) RETURN m.name,m.operatingsystem ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    for r in results:
+                        print(f'{log.default}Domain Controller {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} OS {log.reset}{log.red}{r["m.operatingsystem"]}{log.reset}')
+                else:
+                    if not raw:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Domain Controller {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} OS {log.reset}{log.red}{r["m.operatingsystem"]}{log.reset}')
+                            file.write(f'{r["m.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+                    else:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Domain Controller {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} OS {log.reset}{log.red}{r["m.operatingsystem"]}{log.reset}')
+                            file.write(f'Domain Controller {r["m.name"]} OS {r["m.operatingsystem"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+
+    def find_password_not_reqd(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (n:User {passwordnotreqd:true}) return n.name ORDER BY n.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    for r in results:
+                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}')
+                else:
+                    if not raw:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}')
+                            file.write(f'{r["n.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+                    else:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}')
+                            file.write(f'User {r["n.name"]} is not required to have a password\n')
+                        file.close()
+                        log.log_successful_export(f)
+
     def find_user_constrained(self, f, raw):
         with self.driver.session() as session:
             results = session.run('MATCH (u:User)-[:AllowedToDelegate]->(c:Computer) RETURN u.name,c.name ORDER BY u.name')
@@ -1186,6 +1236,31 @@ class Driver:
                         for r in results:
                             print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
                             file.write(f'User {r["m.name"]} is high value\n')
+                        file.close()
+                        log.log_successful_export(f)
+
+    def find_sensitive_users(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run("MATCH (m:User {sensitive:true}) RETURN m.name ORDER BY m.name")
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    for r in results:
+                        print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is sensitive{log.reset}')
+                else:
+                    if not raw:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is sensitive{log.reset}')
+                            file.write(f'{r["m.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+                    else:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is sensitive{log.reset}')
+                            file.write(f'User {r["m.name"]} is sensitive\n')
                         file.close()
                         log.log_successful_export(f)
 
@@ -2831,19 +2906,19 @@ class Driver:
             else:
                 if f == "":
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
                 else:
                     if not raw:
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
                             file.write(f'{r["c.name"]}\n')
                         file.close()
                         log.log_successful_export(f)
                     else:
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
                             file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which is AdminTo {r["c.name"]}\n')
                         file.close()
                         log.log_successful_export(f)
