@@ -54,7 +54,7 @@ def validate_group_config(c):
 
 
 def validate_computer_config(c):
-    if c == "" or "@" not in c:
+    if c == "" or "." not in c:
         return False
     else:
         return True
