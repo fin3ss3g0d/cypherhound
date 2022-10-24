@@ -3842,7 +3842,7 @@ class Driver:
 
     def find_localadmin_gd_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name')
+            results = session.run('MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) WHERE n.name =~ \'((?i)' + self.group_search + ')\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4413,7 +4413,7 @@ class Driver:
 
     def find_all_gd_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(v) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
+            results = session.run('MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(v) WHERE n.name =~ \'((?i)' + self.group_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4463,7 +4463,7 @@ class Driver:
 
     def find_localadmin_gd_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name')
+            results = session.run('MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) WHERE n.name =~ \'((?i)' + self.computer_search + ')\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4963,7 +4963,7 @@ class Driver:
 
     def find_all_gd_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(v) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
+            results = session.run('MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(v) WHERE n.name =~ \'((?i)' + self.computer_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
