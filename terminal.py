@@ -807,7 +807,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_localadmin_gs("", False)
+                            d.find_rdp_gd_gs("", False)
                             d.close()
                     elif option == "150":
                         if not util.validate_group_config(group_config):
@@ -815,7 +815,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_laps_gs("", False)
+                            d.find_localadmin_gs("", False)
                             d.close()
                     elif option == "151":
                         if not util.validate_group_config(group_config):
@@ -823,7 +823,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_gmsa_gs("", False)
+                            d.find_localadmin_gd_gs("", False)
                             d.close()
                     elif option == "152":
                         if not util.validate_group_config(group_config):
@@ -831,7 +831,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_constrained_gs("", False)
+                            d.find_laps_gs("", False)
                             d.close()
                     elif option == "153":
                         if not util.validate_group_config(group_config):
@@ -839,7 +839,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_force_change_pwd_gs("", False)
+                            d.find_gmsa_gs("", False)
                             d.close()
                     elif option == "154":
                         if not util.validate_group_config(group_config):
@@ -847,7 +847,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_add_member_gs("", False)
+                            d.find_constrained_gs("", False)
                             d.close()
                     elif option == "155":
                         if not util.validate_group_config(group_config):
@@ -855,7 +855,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_add_self_gs("", False)
+                            d.find_force_change_pwd_gs("", False)
                             d.close()
                     elif option == "156":
                         if not util.validate_group_config(group_config):
@@ -863,7 +863,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_sql_admin_gs("", False)
+                            d.find_add_member_gs("", False)
                             d.close()
                     elif option == "157":
                         if not util.validate_group_config(group_config):
@@ -871,7 +871,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_ps_remote_gs("", False)
+                            d.find_add_self_gs("", False)
                             d.close()
                     elif option == "158":
                         if not util.validate_group_config(group_config):
@@ -879,7 +879,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_exec_dcom_gs("", False)
+                            d.find_sql_admin_gs("", False)
                             d.close()
                     elif option == "159":
                         if not util.validate_group_config(group_config):
@@ -887,7 +887,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_allowed_to_act_gs("", False)
+                            d.find_ps_remote_gs("", False)
                             d.close()
                     elif option == "160":
                         if not util.validate_group_config(group_config):
@@ -895,7 +895,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_owns_gs("", False)
+                            d.find_exec_dcom_gs("", False)
                             d.close()
                     elif option == "161":
                         if not util.validate_group_config(group_config):
@@ -903,7 +903,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_all_extended_gs("", False)
+                            d.find_allowed_to_act_gs("", False)
                             d.close()
                     elif option == "162":
                         if not util.validate_group_config(group_config):
@@ -911,7 +911,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_add_key_cred_link_gs("", False)
+                            d.find_owns_gs("", False)
                             d.close()
                     elif option == "163":
                         if not util.validate_group_config(group_config):
@@ -919,7 +919,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_generic_all_gs("", False)
+                            d.find_all_extended_gs("", False)
                             d.close()
                     elif option == "164":
                         if not util.validate_group_config(group_config):
@@ -927,7 +927,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_write_dacl_gs("", False)
+                            d.find_add_key_cred_link_gs("", False)
                             d.close()
                     elif option == "165":
                         if not util.validate_group_config(group_config):
@@ -935,7 +935,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_write_owner_gs("", False)
+                            d.find_generic_all_gs("", False)
                             d.close()
                     elif option == "166":
                         if not util.validate_group_config(group_config):
@@ -943,7 +943,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_generic_write_gs("", False)
+                            d.find_write_dacl_gs("", False)
                             d.close()
                     elif option == "167":
                         if not util.validate_group_config(group_config):
@@ -951,7 +951,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_description_gs("", False)
+                            d.find_write_owner_gs("", False)
                             d.close()
                     elif option == "168":
                         if not util.validate_group_config(group_config):
@@ -959,7 +959,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_member_of_gs("", False)
+                            d.find_generic_write_gs("", False)
                             d.close()
                     elif option == "169":
                         if not util.validate_group_config(group_config):
@@ -967,7 +967,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_members_gs("", False)
+                            d.find_description_gs("", False)
                             d.close()
                     elif option == "170":
                         if not util.validate_group_config(group_config):
@@ -975,31 +975,31 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_all_gs("", False)
+                            d.find_member_of_gs("", False)
                             d.close()
                     elif option == "171":
-                        if not util.validate_computer_config(computer_config):
-                            log.log_config_not_set("computer")
+                        if not util.validate_group_config(group_config):
+                            log.log_config_not_set("group")
                         else:
                             d = database.Driver(user, pwd)
-                            d.set_computer_param(computer_config)
-                            d.find_localadmin_cs("", False)
+                            d.set_group_param(group_config)
+                            d.find_members_gs("", False)
                             d.close()
                     elif option == "172":
-                        if not util.validate_computer_config(computer_config):
-                            log.log_config_not_set("computer")
+                        if not util.validate_group_config(group_config):
+                            log.log_config_not_set("group")
                         else:
                             d = database.Driver(user, pwd)
-                            d.set_computer_param(computer_config)
-                            d.find_laps_cs("", False)
+                            d.set_group_param(group_config)
+                            d.find_all_gs("", False)
                             d.close()
                     elif option == "173":
-                        if not util.validate_computer_config(computer_config):
-                            log.log_config_not_set("computer")
+                        if not util.validate_group_config(group_config):
+                            log.log_config_not_set("group")
                         else:
                             d = database.Driver(user, pwd)
-                            d.set_computer_param(computer_config)
-                            d.find_gmsa_cs("", False)
+                            d.set_group_param(group_config)
+                            d.find_all_gd_gs("", False)
                             d.close()
                     elif option == "174":
                         if not util.validate_computer_config(computer_config):
@@ -1007,7 +1007,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_constrained_cs("", False)
+                            d.find_localadmin_cs("", False)
                             d.close()
                     elif option == "175":
                         if not util.validate_computer_config(computer_config):
@@ -1015,7 +1015,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_force_change_pwd_cs("", False)
+                            d.find_localadmin_gd_cs("", False)
                             d.close()
                     elif option == "176":
                         if not util.validate_computer_config(computer_config):
@@ -1023,7 +1023,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_add_member_cs("", False)
+                            d.find_laps_cs("", False)
                             d.close()
                     elif option == "177":
                         if not util.validate_computer_config(computer_config):
@@ -1031,7 +1031,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_add_self_cs("", False)
+                            d.find_gmsa_cs("", False)
                             d.close()
                     elif option == "178":
                         if not util.validate_computer_config(computer_config):
@@ -1039,7 +1039,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_sql_admin_cs("", False)
+                            d.find_constrained_cs("", False)
                             d.close()
                     elif option == "179":
                         if not util.validate_computer_config(computer_config):
@@ -1047,7 +1047,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_ps_remote_cs("", False)
+                            d.find_force_change_pwd_cs("", False)
                             d.close()
                     elif option == "180":
                         if not util.validate_computer_config(computer_config):
@@ -1055,7 +1055,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_exec_dcom_cs("", False)
+                            d.find_add_member_cs("", False)
                             d.close()
                     elif option == "181":
                         if not util.validate_computer_config(computer_config):
@@ -1063,7 +1063,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_allowed_to_act_cs("", False)
+                            d.find_add_self_cs("", False)
                             d.close()
                     elif option == "182":
                         if not util.validate_computer_config(computer_config):
@@ -1071,7 +1071,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_owns_cs("", False)
+                            d.find_sql_admin_cs("", False)
                             d.close()
                     elif option == "183":
                         if not util.validate_computer_config(computer_config):
@@ -1079,7 +1079,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_all_extended_cs("", False)
+                            d.find_ps_remote_cs("", False)
                             d.close()
                     elif option == "184":
                         if not util.validate_computer_config(computer_config):
@@ -1087,7 +1087,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_add_key_cred_link_cs("", False)
+                            d.find_exec_dcom_cs("", False)
                             d.close()
                     elif option == "185":
                         if not util.validate_computer_config(computer_config):
@@ -1095,7 +1095,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_generic_all_cs("", False)
+                            d.find_allowed_to_act_cs("", False)
                             d.close()
                     elif option == "186":
                         if not util.validate_computer_config(computer_config):
@@ -1103,7 +1103,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_write_dacl_cs("", False)
+                            d.find_owns_cs("", False)
                             d.close()
                     elif option == "187":
                         if not util.validate_computer_config(computer_config):
@@ -1111,7 +1111,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_write_owner_cs("", False)
+                            d.find_all_extended_cs("", False)
                             d.close()
                     elif option == "188":
                         if not util.validate_computer_config(computer_config):
@@ -1119,7 +1119,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_generic_write_cs("", False)
+                            d.find_add_key_cred_link_cs("", False)
                             d.close()
                     elif option == "189":
                         if not util.validate_computer_config(computer_config):
@@ -1127,7 +1127,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_member_of_cs("", False)
+                            d.find_generic_all_cs("", False)
                             d.close()
                     elif option == "190":
                         if not util.validate_computer_config(computer_config):
@@ -1135,47 +1135,47 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_all_cs("", False)
+                            d.find_write_dacl_cs("", False)
                             d.close()
                     elif option == "191":
-                        if not util.validate_regex_config(regex_config):
-                            log.log_config_not_set("regex")
+                        if not util.validate_computer_config(computer_config):
+                            log.log_config_not_set("computer")
                         else:
                             d = database.Driver(user, pwd)
-                            d.set_regex(regex_config)
-                            d.find_groups_r("", False)
+                            d.set_computer_param(computer_config)
+                            d.find_write_owner_cs("", False)
                             d.close()
                     elif option == "192":
-                        if not util.validate_regex_config(regex_config):
-                            log.log_config_not_set("regex")
+                        if not util.validate_computer_config(computer_config):
+                            log.log_config_not_set("computer")
                         else:
                             d = database.Driver(user, pwd)
-                            d.set_regex(regex_config)
-                            d.find_users_r("", False)
+                            d.set_computer_param(computer_config)
+                            d.find_generic_write_cs("", False)
                             d.close()
                     elif option == "193":
-                        if not util.validate_regex_config(regex_config):
-                            log.log_config_not_set("regex")
+                        if not util.validate_computer_config(computer_config):
+                            log.log_config_not_set("computer")
                         else:
                             d = database.Driver(user, pwd)
-                            d.set_regex(regex_config)
-                            d.find_computers_r("", False)
+                            d.set_computer_param(computer_config)
+                            d.find_member_of_cs("", False)
                             d.close()
                     elif option == "194":
-                        if not util.validate_regex_config(regex_config):
-                            log.log_config_not_set("regex")
+                        if not util.validate_computer_config(computer_config):
+                            log.log_config_not_set("computer")
                         else:
                             d = database.Driver(user, pwd)
-                            d.set_regex(regex_config)
-                            d.find_u_descriptions_r("", False)
+                            d.set_computer_param(computer_config)
+                            d.find_all_cs("", False)
                             d.close()
                     elif option == "195":
-                        if not util.validate_regex_config(regex_config):
-                            log.log_config_not_set("regex")
+                        if not util.validate_computer_config(computer_config):
+                            log.log_config_not_set("computer")
                         else:
                             d = database.Driver(user, pwd)
-                            d.set_regex(regex_config)
-                            d.find_g_descriptions_r("", False)
+                            d.set_computer_param(computer_config)
+                            d.find_all_gd_cs("", False)
                             d.close()
                     elif option == "196":
                         if not util.validate_regex_config(regex_config):
@@ -1183,7 +1183,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_regex(regex_config)
-                            d.find_oss_r("", False)
+                            d.find_groups_r("", False)
                             d.close()
                     elif option == "197":
                         if not util.validate_regex_config(regex_config):
@@ -1191,7 +1191,7 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_regex(regex_config)
-                            d.find_gpos_r("", False)
+                            d.find_users_r("", False)
                             d.close()
                     elif option == "198":
                         if not util.validate_regex_config(regex_config):
@@ -1199,9 +1199,49 @@ def input_loop(user, pwd):
                         else:
                             d = database.Driver(user, pwd)
                             d.set_regex(regex_config)
-                            d.find_containers_r("", False)
+                            d.find_computers_r("", False)
                             d.close()
                     elif option == "199":
+                        if not util.validate_regex_config(regex_config):
+                            log.log_config_not_set("regex")
+                        else:
+                            d = database.Driver(user, pwd)
+                            d.set_regex(regex_config)
+                            d.find_u_descriptions_r("", False)
+                            d.close()
+                    elif option == "200":
+                        if not util.validate_regex_config(regex_config):
+                            log.log_config_not_set("regex")
+                        else:
+                            d = database.Driver(user, pwd)
+                            d.set_regex(regex_config)
+                            d.find_g_descriptions_r("", False)
+                            d.close()
+                    elif option == "201":
+                        if not util.validate_regex_config(regex_config):
+                            log.log_config_not_set("regex")
+                        else:
+                            d = database.Driver(user, pwd)
+                            d.set_regex(regex_config)
+                            d.find_oss_r("", False)
+                            d.close()
+                    elif option == "202":
+                        if not util.validate_regex_config(regex_config):
+                            log.log_config_not_set("regex")
+                        else:
+                            d = database.Driver(user, pwd)
+                            d.set_regex(regex_config)
+                            d.find_gpos_r("", False)
+                            d.close()
+                    elif option == "203":
+                        if not util.validate_regex_config(regex_config):
+                            log.log_config_not_set("regex")
+                        else:
+                            d = database.Driver(user, pwd)
+                            d.set_regex(regex_config)
+                            d.find_containers_r("", False)
+                            d.close()
+                    elif option == "204":
                         if not util.validate_regex_config(regex_config):
                             log.log_config_not_set("regex")
                         else:
@@ -2095,7 +2135,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_localadmin_gs(f, is_raw)
+                            d.find_rdp_gd_gs(f, is_raw)
                             d.close()
                     elif option == "150":
                         if not util.validate_group_config(group_config):
@@ -2104,7 +2144,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_laps_gs(f, is_raw)
+                            d.find_localadmin_gs(f, is_raw)
                             d.close()
                     elif option == "151":
                         if not util.validate_group_config(group_config):
@@ -2113,7 +2153,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_gmsa_gs(f, is_raw)
+                            d.find_localadmin_gd_gs(f, is_raw)
                             d.close()
                     elif option == "152":
                         if not util.validate_group_config(group_config):
@@ -2122,7 +2162,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_constrained_gs(f, is_raw)
+                            d.find_laps_gs(f, is_raw)
                             d.close()
                     elif option == "153":
                         if not util.validate_group_config(group_config):
@@ -2131,7 +2171,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_force_change_pwd_gs(f, is_raw)
+                            d.find_gmsa_gs(f, is_raw)
                             d.close()
                     elif option == "154":
                         if not util.validate_group_config(group_config):
@@ -2140,7 +2180,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_add_member_gs(f, is_raw)
+                            d.find_constrained_gs(f, is_raw)
                             d.close()
                     elif option == "155":
                         if not util.validate_group_config(group_config):
@@ -2149,7 +2189,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_add_self_gs(f, is_raw)
+                            d.find_force_change_pwd_gs(f, is_raw)
                             d.close()
                     elif option == "156":
                         if not util.validate_group_config(group_config):
@@ -2158,7 +2198,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_sql_admin_gs(f, is_raw)
+                            d.find_add_member_gs(f, is_raw)
                             d.close()
                     elif option == "157":
                         if not util.validate_group_config(group_config):
@@ -2167,7 +2207,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_ps_remote_gs(f, is_raw)
+                            d.find_add_self_gs(f, is_raw)
                             d.close()
                     elif option == "158":
                         if not util.validate_group_config(group_config):
@@ -2176,7 +2216,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_exec_dcom_gs(f, is_raw)
+                            d.find_sql_admin_gs(f, is_raw)
                             d.close()
                     elif option == "159":
                         if not util.validate_group_config(group_config):
@@ -2185,7 +2225,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_allowed_to_act_gs(f, is_raw)
+                            d.find_ps_remote_gs(f, is_raw)
                             d.close()
                     elif option == "160":
                         if not util.validate_group_config(group_config):
@@ -2194,7 +2234,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_owns_gs(f, is_raw)
+                            d.find_exec_dcom_gs(f, is_raw)
                             d.close()
                     elif option == "161":
                         if not util.validate_group_config(group_config):
@@ -2203,7 +2243,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_all_extended_gs(f, is_raw)
+                            d.find_allowed_to_act_gs(f, is_raw)
                             d.close()
                     elif option == "162":
                         if not util.validate_group_config(group_config):
@@ -2212,7 +2252,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_add_key_cred_link_gs(f, is_raw)
+                            d.find_owns_gs(f, is_raw)
                             d.close()
                     elif option == "163":
                         if not util.validate_group_config(group_config):
@@ -2221,7 +2261,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_generic_all_gs(f, is_raw)
+                            d.find_all_extended_gs(f, is_raw)
                             d.close()
                     elif option == "164":
                         if not util.validate_group_config(group_config):
@@ -2230,7 +2270,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_write_dacl_gs(f, is_raw)
+                            d.find_add_key_cred_link_gs(f, is_raw)
                             d.close()
                     elif option == "165":
                         if not util.validate_group_config(group_config):
@@ -2239,7 +2279,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_write_owner_gs(f, is_raw)
+                            d.find_generic_all_gs(f, is_raw)
                             d.close()
                     elif option == "166":
                         if not util.validate_group_config(group_config):
@@ -2248,7 +2288,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_generic_write_gs(f, is_raw)
+                            d.find_write_dacl_gs(f, is_raw)
                             d.close()
                     elif option == "167":
                         if not util.validate_group_config(group_config):
@@ -2257,7 +2297,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_description_gs(f, is_raw)
+                            d.find_write_owner_gs(f, is_raw)
                             d.close()
                     elif option == "168":
                         if not util.validate_group_config(group_config):
@@ -2266,7 +2306,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_member_of_gs(f, is_raw)
+                            d.find_generic_write_gs(f, is_raw)
                             d.close()
                     elif option == "169":
                         if not util.validate_group_config(group_config):
@@ -2275,7 +2315,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_members_gs(f, is_raw)
+                            d.find_description_gs(f, is_raw)
                             d.close()
                     elif option == "170":
                         if not util.validate_group_config(group_config):
@@ -2284,34 +2324,34 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_group_param(group_config)
-                            d.find_all_gs(f, is_raw)
+                            d.find_member_of_gs(f, is_raw)
                             d.close()
                     elif option == "171":
-                        if not util.validate_computer_config(computer_config):
-                            log.log_config_not_set("computer")
+                        if not util.validate_group_config(group_config):
+                            log.log_config_not_set("group")
                         else:
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
-                            d.set_computer_param(computer_config)
-                            d.find_localadmin_cs(f, is_raw)
+                            d.set_group_param(group_config)
+                            d.find_members_gs(f, is_raw)
                             d.close()
                     elif option == "172":
-                        if not util.validate_computer_config(computer_config):
-                            log.log_config_not_set("computer")
+                        if not util.validate_group_config(group_config):
+                            log.log_config_not_set("group")
                         else:
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
-                            d.set_computer_param(computer_config)
-                            d.find_laps_cs(f, is_raw)
+                            d.set_group_param(group_config)
+                            d.find_all_gs(f, is_raw)
                             d.close()
                     elif option == "173":
-                        if not util.validate_computer_config(computer_config):
-                            log.log_config_not_set("computer")
+                        if not util.validate_group_config(group_config):
+                            log.log_config_not_set("group")
                         else:
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
-                            d.set_computer_param(computer_config)
-                            d.find_gmsa_cs(f, is_raw)
+                            d.set_group_param(group_config)
+                            d.find_all_gd_gs(f, is_raw)
                             d.close()
                     elif option == "174":
                         if not util.validate_computer_config(computer_config):
@@ -2320,7 +2360,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_constrained_cs(f, is_raw)
+                            d.find_localadmin_cs(f, is_raw)
                             d.close()
                     elif option == "175":
                         if not util.validate_computer_config(computer_config):
@@ -2329,7 +2369,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_force_change_pwd_cs(f, is_raw)
+                            d.find_localadmin_gd_cs(f, is_raw)
                             d.close()
                     elif option == "176":
                         if not util.validate_computer_config(computer_config):
@@ -2338,7 +2378,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_add_member_cs(f, is_raw)
+                            d.find_laps_cs(f, is_raw)
                             d.close()
                     elif option == "177":
                         if not util.validate_computer_config(computer_config):
@@ -2347,7 +2387,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_add_self_cs(f, is_raw)
+                            d.find_gmsa_cs(f, is_raw)
                             d.close()
                     elif option == "178":
                         if not util.validate_computer_config(computer_config):
@@ -2356,7 +2396,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_sql_admin_cs(f, is_raw)
+                            d.find_constrained_cs(f, is_raw)
                             d.close()
                     elif option == "179":
                         if not util.validate_computer_config(computer_config):
@@ -2365,7 +2405,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_ps_remote_cs(f, is_raw)
+                            d.find_force_change_pwd_cs(f, is_raw)
                             d.close()
                     elif option == "180":
                         if not util.validate_computer_config(computer_config):
@@ -2374,7 +2414,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_exec_dcom_cs(f, is_raw)
+                            d.find_add_member_cs(f, is_raw)
                             d.close()
                     elif option == "181":
                         if not util.validate_computer_config(computer_config):
@@ -2383,7 +2423,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_allowed_to_act_cs(f, is_raw)
+                            d.find_add_self_cs(f, is_raw)
                             d.close()
                     elif option == "182":
                         if not util.validate_computer_config(computer_config):
@@ -2392,7 +2432,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_owns_cs(f, is_raw)
+                            d.find_sql_admin_cs(f, is_raw)
                             d.close()
                     elif option == "183":
                         if not util.validate_computer_config(computer_config):
@@ -2401,7 +2441,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_all_extended_cs(f, is_raw)
+                            d.find_ps_remote_cs(f, is_raw)
                             d.close()
                     elif option == "184":
                         if not util.validate_computer_config(computer_config):
@@ -2410,7 +2450,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_add_key_cred_link_cs(f, is_raw)
+                            d.find_exec_dcom_cs(f, is_raw)
                             d.close()
                     elif option == "185":
                         if not util.validate_computer_config(computer_config):
@@ -2419,7 +2459,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_generic_all_cs(f, is_raw)
+                            d.find_allowed_to_act_cs(f, is_raw)
                             d.close()
                     elif option == "186":
                         if not util.validate_computer_config(computer_config):
@@ -2428,7 +2468,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_write_dacl_cs(f, is_raw)
+                            d.find_owns_cs(f, is_raw)
                             d.close()
                     elif option == "187":
                         if not util.validate_computer_config(computer_config):
@@ -2437,7 +2477,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_write_owner_cs(f, is_raw)
+                            d.find_all_extended_cs(f, is_raw)
                             d.close()
                     elif option == "188":
                         if not util.validate_computer_config(computer_config):
@@ -2446,7 +2486,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_generic_write_cs(f, is_raw)
+                            d.find_add_key_cred_link_cs(f, is_raw)
                             d.close()
                     elif option == "189":
                         if not util.validate_computer_config(computer_config):
@@ -2455,7 +2495,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_member_of_cs(f, is_raw)
+                            d.find_generic_all_cs(f, is_raw)
                             d.close()
                     elif option == "190":
                         if not util.validate_computer_config(computer_config):
@@ -2464,52 +2504,52 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_computer_param(computer_config)
-                            d.find_all_cs(f, is_raw)
+                            d.find_write_dacl_cs(f, is_raw)
                             d.close()
                     elif option == "191":
-                        if not util.validate_regex_config(regex_config):
-                            log.log_config_not_set("regex")
+                        if not util.validate_computer_config(computer_config):
+                            log.log_config_not_set("computer")
                         else:
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
-                            d.set_regex(regex_config)
-                            d.find_groups_r(f, is_raw)
+                            d.set_computer_param(computer_config)
+                            d.find_write_owner_cs(f, is_raw)
                             d.close()
                     elif option == "192":
-                        if not util.validate_regex_config(regex_config):
-                            log.log_config_not_set("regex")
+                        if not util.validate_computer_config(computer_config):
+                            log.log_config_not_set("computer")
                         else:
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
-                            d.set_regex(regex_config)
-                            d.find_users_r(f, is_raw)
+                            d.set_computer_param(computer_config)
+                            d.find_generic_write_cs(f, is_raw)
                             d.close()
                     elif option == "193":
-                        if not util.validate_regex_config(regex_config):
-                            log.log_config_not_set("regex")
+                        if not util.validate_computer_config(computer_config):
+                            log.log_config_not_set("computer")
                         else:
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
-                            d.set_regex(regex_config)
-                            d.find_computers_r(f, is_raw)
+                            d.set_computer_param(computer_config)
+                            d.find_member_of_cs(f, is_raw)
                             d.close()
                     elif option == "194":
-                        if not util.validate_regex_config(regex_config):
-                            log.log_config_not_set("regex")
+                        if not util.validate_computer_config(computer_config):
+                            log.log_config_not_set("computer")
                         else:
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
-                            d.set_regex(regex_config)
-                            d.find_u_descriptions_r(f, is_raw)
+                            d.set_computer_param(computer_config)
+                            d.find_all_cs(f, is_raw)
                             d.close()
                     elif option == "195":
-                        if not util.validate_regex_config(regex_config):
-                            log.log_config_not_set("regex")
+                        if not util.validate_computer_config(computer_config):
+                            log.log_config_not_set("computer")
                         else:
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
-                            d.set_regex(regex_config)
-                            d.find_g_descriptions_r(f, is_raw)
+                            d.set_computer_param(computer_config)
+                            d.find_all_gd_cs(f, is_raw)
                             d.close()
                     elif option == "196":
                         if not util.validate_regex_config(regex_config):
@@ -2518,7 +2558,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_regex(regex_config)
-                            d.find_oss_r(f, is_raw)
+                            d.find_groups_r(f, is_raw)
                             d.close()
                     elif option == "197":
                         if not util.validate_regex_config(regex_config):
@@ -2527,7 +2567,7 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_regex(regex_config)
-                            d.find_gpos_r(f, is_raw)
+                            d.find_users_r(f, is_raw)
                             d.close()
                     elif option == "198":
                         if not util.validate_regex_config(regex_config):
@@ -2536,9 +2576,54 @@ def input_loop(user, pwd):
                             f = util.validate_export_command(fname)
                             d = database.Driver(user, pwd)
                             d.set_regex(regex_config)
-                            d.find_containers_r(f, is_raw)
+                            d.find_computers_r(f, is_raw)
                             d.close()
                     elif option == "199":
+                        if not util.validate_regex_config(regex_config):
+                            log.log_config_not_set("regex")
+                        else:
+                            f = util.validate_export_command(fname)
+                            d = database.Driver(user, pwd)
+                            d.set_regex(regex_config)
+                            d.find_u_descriptions_r(f, is_raw)
+                            d.close()
+                    elif option == "200":
+                        if not util.validate_regex_config(regex_config):
+                            log.log_config_not_set("regex")
+                        else:
+                            f = util.validate_export_command(fname)
+                            d = database.Driver(user, pwd)
+                            d.set_regex(regex_config)
+                            d.find_g_descriptions_r(f, is_raw)
+                            d.close()
+                    elif option == "201":
+                        if not util.validate_regex_config(regex_config):
+                            log.log_config_not_set("regex")
+                        else:
+                            f = util.validate_export_command(fname)
+                            d = database.Driver(user, pwd)
+                            d.set_regex(regex_config)
+                            d.find_oss_r(f, is_raw)
+                            d.close()
+                    elif option == "202":
+                        if not util.validate_regex_config(regex_config):
+                            log.log_config_not_set("regex")
+                        else:
+                            f = util.validate_export_command(fname)
+                            d = database.Driver(user, pwd)
+                            d.set_regex(regex_config)
+                            d.find_gpos_r(f, is_raw)
+                            d.close()
+                    elif option == "203":
+                        if not util.validate_regex_config(regex_config):
+                            log.log_config_not_set("regex")
+                        else:
+                            f = util.validate_export_command(fname)
+                            d = database.Driver(user, pwd)
+                            d.set_regex(regex_config)
+                            d.find_containers_r(f, is_raw)
+                            d.close()
+                    elif option == "204":
                         if not util.validate_regex_config(regex_config):
                             log.log_config_not_set("regex")
                         else:

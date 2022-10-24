@@ -3790,6 +3790,31 @@ class Driver:
                         file.close()
                         log.log_successful_export(f)
 
+    def find_rdp_gd_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[:CanRDP]->(c:Computer) WHERE n.name =~ \'((?i)' + self.group_search + ')\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    for r in results:
+                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                else:
+                    if not raw:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            file.write(f'{r["c.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+                    else:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which can RDP to {r["c.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+
     def find_localadmin_gs(self, f, raw):
         with self.driver.session() as session:
             results = session.run('MATCH p=(m:Group)-[r:AdminTo]->(n:Computer) WHERE m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name, n.name ORDER BY m.name')
@@ -3812,6 +3837,31 @@ class Driver:
                         for r in results:
                             print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
                             file.write(f'Group {r["m.name"]} is local admin to {r["n.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+
+    def find_localadmin_gd_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    for r in results:
+                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                else:
+                    if not raw:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            file.write(f'{r["c.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+                    else:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which is AdminTo {r["c.name"]}\n')
                         file.close()
                         log.log_successful_export(f)
 
@@ -4361,6 +4411,31 @@ class Driver:
                         file.close()
                         log.log_successful_export(f)
 
+    def find_all_gd_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(v) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    for r in results:
+                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                else:
+                    if not raw:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                            file.write(f'{r["v.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+                    else:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                            file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
+                        file.close()
+                        log.log_successful_export(f)
+
     def find_localadmin_cs(self, f, raw):
         with self.driver.session() as session:
             results = session.run('MATCH p=(m:Computer)-[r:AdminTo]->(n:Computer) WHERE m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name, n.name ORDER BY m.name')
@@ -4383,6 +4458,31 @@ class Driver:
                         for r in results:
                             print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
                             file.write(f'Computer {r["m.name"]} is local admin to {r["n.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+
+    def find_localadmin_gd_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    for r in results:
+                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                else:
+                    if not raw:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            file.write(f'{r["c.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+                    else:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} which is AdminTo {r["c.name"]}\n')
                         file.close()
                         log.log_successful_export(f)
 
@@ -4858,6 +4958,31 @@ class Driver:
                         for r in results:
                             print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
                             file.write(f'Computer {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                        file.close()
+                        log.log_successful_export(f)
+
+    def find_all_gd_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(v) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    for r in results:
+                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                else:
+                    if not raw:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                            file.write(f'{r["v.name"]}\n')
+                        file.close()
+                        log.log_successful_export(f)
+                    else:
+                        file = open(f, 'w+')
+                        for r in results:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                            file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
                         file.close()
                         log.log_successful_export(f)
 
