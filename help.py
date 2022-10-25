@@ -39,6 +39,6 @@ def print_help():
     print(f'        list regex')
     print(f'        list all')
     print(f'{log.default}q, quit, exit{log.reset} - used to exit the program')
-    print(f'{log.default}clear{log.reset} - used to clear the terminal')
+    print(f'{log.default}clear, cls{log.reset} - used to clear the terminal')
     print(f'{log.default}help, ?{log.reset} - used to display this help menu')
     print()
