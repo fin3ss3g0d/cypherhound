@@ -11,16 +11,18 @@ A `Python3` terminal application that contains 200+ `Neo4j` cyphers for BloodHou
 3. Graphs can be too large to draw - the information contained in any graph can aid our goals as the attacker and we *need* to be able to view *all* data efficiently
 4. Manually running custom cyphers is time-consuming - let's automate it :)
 
+This tool can also help blue teams to reveal detailed information about their Active Directory environments as well.
+
 ## Features
 
 Take back control of your `BloodHound` data with `cypherhound`!
 
-- 204 cyphers as of date
+- 206 cyphers as of date
   - Set cyphers to search based on user input (user, group, and computer-specific)
   - User-defined regex cyphers
 - User-defined exporting of all results
   - Default export will be just end object to be used as target list with tools
-  - Raw export option available in `grep`-friendly format
+  - Raw export option available in `grep/cut/awk`-friendly format
 
 ## Installation
 
@@ -37,16 +39,17 @@ Start the program with: `python3 cypherhound.py -u <neo4j_username> -p <neo4j_pa
 The full command menu is shown below:
 
 ```
+Command Menu
 set - used to set search parameters for cyphers, double/single quotes not required for any sub-commands
     sub-commands
         user - the user to use in user-specific cyphers (MUST include @domain.name)
         group - the group to use in group-specific cyphers (MUST include @domain.name)
-        computer - the computer to use in computer-specific cyphers (MUST include @domain.name)
+        computer - the computer to use in computer-specific cyphers (SHOULD include .domain.name or @domain.name)
         regex - the regex to use in regex-specific cyphers
     example
         set user svc-test@domain.local
-        set group sql admins@domain.local
-        set computer dc01@domain.local
+        set group domain admins@domain.local
+        set computer dc01.domain.local
         set regex .*((?i)web).*
 run - used to run cyphers
     parameters
@@ -74,6 +77,7 @@ list - used to show a list of cyphers
 q, quit, exit - used to exit the program
 clear - used to clear the terminal
 help, ? - used to display this help menu
+
 ```
 
 ## Important Note

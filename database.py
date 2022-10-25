@@ -1,4 +1,5 @@
 from neo4j import GraphDatabase
+import util
 import log
 import os
 
@@ -46,23 +47,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
+                        if r["result"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
-                            file.write(f'{r["result"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["result"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
+                                file.write(f'{r["result"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
-                            file.write(f'User {r["result"]} is kerberoastable\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["result"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
+                                file.write(f'User {r["result"]} is kerberoastable\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_rdp(self, f, raw):
         with self.driver.session() as session:
@@ -71,23 +81,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["u.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'User {r["u.name"]} can RDP to {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'User {r["u.name"]} can RDP to {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_rdp(self, f, raw):
         with self.driver.session() as session:
@@ -96,23 +115,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["g.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Group {r["g.name"]} can RDP to {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Group {r["g.name"]} can RDP to {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_unconstrained(self, f, raw):
         with self.driver.session() as session:
@@ -121,23 +149,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has unconstrained delegation privilege{log.reset}')
+                        if r["c.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has unconstrained delegation privilege{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has unconstrained delegation privilege{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has unconstrained delegation privilege{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has unconstrained delegation privilege{log.reset}')
-                            file.write(f'Computer {r["c.name"]} has unconstrained delegation privilege\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has unconstrained delegation privilege{log.reset}')
+                                file.write(f'Computer {r["c.name"]} has unconstrained delegation privilege\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_unsupported(self, f, raw):
         with self.driver.session() as session:
@@ -146,23 +183,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["H.name"]}{log.reset}{log.default} is unsupported with OS {log.reset}{log.red}{r["H.operatingsystem"]}{log.reset}')
+                        if r["H.name"] is not None and r["H.operatingsystem"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["H.name"]}{log.reset}{log.default} is unsupported with OS {log.reset}{log.red}{r["H.operatingsystem"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["H.name"]}{log.reset}{log.default} is unsupported with OS {log.reset}{log.red}{r["H.operatingsystem"]}{log.reset}')
-                            file.write(f'{r["H.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["H.name"] is not None and r["H.operatingsystem"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["H.name"]}{log.reset}{log.default} is unsupported with OS {log.reset}{log.red}{r["H.operatingsystem"]}{log.reset}')
+                                file.write(f'{r["H.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["H.name"]}{log.reset}{log.default} is unsupported with OS {log.reset}{log.red}{r["H.operatingsystem"]}{log.reset}')
-                            file.write(f'Computer {r["H.name"]} is unsupported with OS {r["H.operatingsystem"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["H.name"] is not None and r["H.operatingsystem"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["H.name"]}{log.reset}{log.default} is unsupported with OS {log.reset}{log.red}{r["H.operatingsystem"]}{log.reset}')
+                                file.write(f'Computer {r["H.name"]} is unsupported with OS {r["H.operatingsystem"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_admin_groups(self, f, raw):
         with self.driver.session() as session:
@@ -171,23 +217,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Admin group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                        if r["g.name"] is not None:
+                            print(f'{log.default}Admin group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Admin group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'{r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}Admin group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'{r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Admin group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'Admin group {r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}Admin group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'Admin group {r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_admin_users(self, f, raw):
         with self.driver.session() as session:
@@ -196,23 +251,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Admin user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                        if r["u.name"] is not None:
+                            print(f'{log.default}Admin user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Admin user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'{r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}Admin user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'{r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Admin user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'Admin user {r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}Admin user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'Admin user {r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_sql_groups(self, f, raw):
         with self.driver.session() as session:
@@ -221,23 +285,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}SQL group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                        if r["g.name"] is not None:
+                            print(f'{log.default}SQL group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}SQL group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'{r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}SQL group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'{r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}SQL group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'SQL group {r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}SQL group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'SQL group {r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_sql_users(self, f, raw):
         with self.driver.session() as session:
@@ -246,23 +319,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}SQL user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                        if r["u.name"] is not None:
+                            print(f'{log.default}SQL user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}SQL user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'{r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}SQL user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'{r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}SQL user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'SQL user {r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}SQL user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'SQL user {r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_sql_computers(self, f, raw):
         with self.driver.session() as session:
@@ -271,23 +353,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}SQL computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["c.name"] is not None:
+                            print(f'{log.default}SQL computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}SQL computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}SQL computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}SQL computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'SQL computer {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}SQL computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'SQL computer {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_service_users(self, f, raw):
         with self.driver.session() as session:
@@ -296,23 +387,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Service user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                        if r["u.name"] is not None:
+                            print(f'{log.default}Service user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Service user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'{r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}Service user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'{r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Service user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'Service user {r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}Service user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'Service user {r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_service_groups(self, f, raw):
         with self.driver.session() as session:
@@ -321,23 +421,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Service group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                        if r["g.name"] is not None:
+                            print(f'{log.default}Service group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Service group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'{r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}Service group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'{r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Service group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'Service group {r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}Service group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'Service group {r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_web_groups(self, f, raw):
         with self.driver.session() as session:
@@ -346,23 +455,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Web group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                        if r["g.name"] is not None:
+                            print(f'{log.default}Web group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Web group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'{r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}Web group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'{r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Web group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'Web group {r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}Web group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'Web group {r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_web_users(self, f, raw):
         with self.driver.session() as session:
@@ -371,23 +489,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Web user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                        if r["u.name"] is not None:
+                            print(f'{log.default}Web user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Web user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'{r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}Web user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'{r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Web user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'Web user {r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}Web user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'Web user {r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_web_computers(self, f, raw):
         with self.driver.session() as session:
@@ -396,23 +523,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Web computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["c.name"] is not None:
+                            print(f'{log.default}Web computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Web computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Web computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Web computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Web computer {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Web computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Web computer {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_dev_groups(self, f, raw):
         with self.driver.session() as session:
@@ -421,23 +557,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Dev group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                        if r["g.name"] is not None:
+                            print(f'{log.default}Dev group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Dev group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'{r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}Dev group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'{r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Dev group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'Dev group {r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}Dev group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'Dev group {r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_dev_users(self, f, raw):
         with self.driver.session() as session:
@@ -446,23 +591,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Dev user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                        if r["u.name"] is not None:
+                            print(f'{log.default}Dev user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Dev user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'{r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}Dev user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'{r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Dev user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'Dev user {r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}Dev user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'Dev user {r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_dev_computers(self, f, raw):
         with self.driver.session() as session:
@@ -471,23 +625,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Dev computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["c.name"] is not None:
+                            print(f'{log.default}Dev computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Dev computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Dev computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Dev computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Dev computer {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Dev computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Dev computer {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_prod_groups(self, f, raw):
         with self.driver.session() as session:
@@ -496,23 +659,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Prod group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                        if r["g.name"] is not None:
+                            print(f'{log.default}Prod group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Prod group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'{r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}Prod group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'{r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Prod group {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'Prod group {r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None:
+                                print(f'{log.default}Prod group {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'Prod group {r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_prod_users(self, f, raw):
         with self.driver.session() as session:
@@ -521,23 +693,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Prod user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                        if r["u.name"] is not None:
+                            print(f'{log.default}Prod user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Prod user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'{r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}Prod user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'{r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Prod user {log.reset}{log.red}{r["u.name"]}{log.reset}')
-                            file.write(f'Prod user {r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}Prod user {log.reset}{log.red}{r["u.name"]}{log.reset}')
+                                file.write(f'Prod user {r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_prod_computers(self, f, raw):
         with self.driver.session() as session:
@@ -546,23 +727,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Prod computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["c.name"] is not None:
+                            print(f'{log.default}Prod computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Prod computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Prod computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Prod computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Prod computer {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Prod computer {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Prod computer {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_domain_admins(self, f, raw):
         with self.driver.session() as session:
@@ -571,23 +761,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a member of Domain Admins{log.reset}')
+                        if r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is MemberOf Domain Admins{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a member of Domain Admins{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is MemberOf Domain Admins{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a member of Domain Admins{log.reset}')
-                            file.write(f'User {r["m.name"]} is a member of Domain Admins\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is MemberOf Domain Admins{log.reset}')
+                                file.write(f'User {r["m.name"]} is MemberOf Domain Admins\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_enterprise_admins(self, f, raw):
         with self.driver.session() as session:
@@ -596,23 +795,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a member of Enterprise Admins{log.reset}')
+                        if r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is MemberOf Enterprise Admins{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a member of Enterprise Admins{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is MemberOf Enterprise Admins{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a member of Enterprise Admins{log.reset}')
-                            file.write(f'User {r["m.name"]} is a member of Enterprise Admins\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is MemberOf Enterprise Admins{log.reset}')
+                                file.write(f'User {r["m.name"]} is MemberOf Enterprise Admins\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_sessions(self, f, raw):
         with self.driver.session() as session:
@@ -621,23 +829,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} has session on {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} has session on {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_asrep_roastable(self, f, raw):
         with self.driver.session() as session:
@@ -646,23 +863,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
+                        if r["u.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
-                            file.write(f'{r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
+                                file.write(f'{r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
-                            file.write(f'User {r["u.name"]} is AS-REP roastable\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
+                                file.write(f'User {r["u.name"]} is AS-REP roastable\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_highvalue_groups(self, f, raw):
         with self.driver.session() as session:
@@ -671,23 +897,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
+                        if r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
-                            file.write(f'Group {r["m.name"]} is high value\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
+                                file.write(f'Group {r["m.name"]} is high value\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_highvalue_members(self, f, raw):
         with self.driver.session() as session:
@@ -696,23 +931,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a member of high value group {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf high value group {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a member of high value group {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf high value group {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a member of high value group {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} is a member of high value group {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf high value group {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} is MemberOf high value group {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_localadmin(self, f, raw):
         with self.driver.session() as session:
@@ -721,48 +965,66 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'User {r["m.name"]} is local admin to {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'User {r["m.name"]} is AdminTo {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_localadmin(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=(m:Group)-[r:AdminTo]->(n:Computer) RETURN m.name, n.name ORDER BY m.name')
+            results = session.run('MATCH p=(m:Group)-[r:AdminTo]->(n:Computer) RETURN m.name,n.name ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'Group {r["m.name"]} is local admin to {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'Group {r["m.name"]} is AdminTo {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_laps(self, f, raw):
         with self.driver.session() as session:
@@ -771,23 +1033,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_laps(self, f, raw):
         with self.driver.session() as session:
@@ -796,23 +1067,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_laps(self, f, raw):
         with self.driver.session() as session:
@@ -821,23 +1101,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_da_sessions(self, f, raw):
         with self.driver.session() as session:
@@ -846,23 +1135,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Domain admin {r["n.name"]} has session on {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Domain admin {r["n.name"]} has session on {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_ea_sessions(self, f, raw):
         with self.driver.session() as session:
@@ -871,23 +1169,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Enterprise admin {r["n.name"]} has session on {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Enterprise admin {r["n.name"]} has session on {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_users(self, f, raw):
         with self.driver.session() as session:
@@ -896,23 +1203,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_groups(self, f, raw):
         with self.driver.session() as session:
@@ -921,23 +1237,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_computers(self, f, raw):
         with self.driver.session() as session:
@@ -946,23 +1271,100 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+
+    def find_all_enabled_computers(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run("MATCH (n:Computer {enabled:TRUE}) return n.name ORDER BY n.name")
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is enabled{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is enabled{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is enabled{log.reset}')
+                                file.write(f'Computer {r["n.name"]} is enabled\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+
+    def find_all_disabled_computers(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run("MATCH (n:Computer {enabled:FALSE}) return n.name ORDER BY n.name")
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is disabled{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is disabled{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is disabled{log.reset}')
+                                file.write(f'Computer {r["n.name"]} is disabled\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_dcs(self, f, raw):
         with self.driver.session() as session:
@@ -971,23 +1373,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a Domain Controller{log.reset}')
+                        if r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a Domain Controller{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a Domain Controller{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a Domain Controller{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a Domain Controller{log.reset}')
-                            file.write(f'Computer {r["m.name"]} is a Domain Controller\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a Domain Controller{log.reset}')
+                                file.write(f'Computer {r["m.name"]} is a Domain Controller\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_dcs_oss(self, f, raw):
         with self.driver.session() as session:
@@ -996,23 +1407,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Domain Controller {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} OS {log.reset}{log.red}{r["m.operatingsystem"]}{log.reset}')
+                        if r["m.name"] is not None and r["m.operatingsystem"] is not None:
+                            print(f'{log.default}Domain Controller {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} OS {log.reset}{log.red}{r["m.operatingsystem"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Domain Controller {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} OS {log.reset}{log.red}{r["m.operatingsystem"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["m.operatingsystem"] is not None:
+                                print(f'{log.default}Domain Controller {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} OS {log.reset}{log.red}{r["m.operatingsystem"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Domain Controller {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} OS {log.reset}{log.red}{r["m.operatingsystem"]}{log.reset}')
-                            file.write(f'Domain Controller {r["m.name"]} OS {r["m.operatingsystem"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["m.operatingsystem"] is not None:
+                                print(f'{log.default}Domain Controller {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} OS {log.reset}{log.red}{r["m.operatingsystem"]}{log.reset}')
+                                file.write(f'Domain Controller {r["m.name"]} OS {r["m.operatingsystem"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_password_not_reqd(self, f, raw):
         with self.driver.session() as session:
@@ -1021,23 +1441,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}')
-                            file.write(f'User {r["n.name"]} is not required to have a password\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}')
+                                file.write(f'User {r["n.name"]} is not required to have a password\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_constrained(self, f, raw):
         with self.driver.session() as session:
@@ -1046,23 +1475,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["u.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'User {r["u.name"]} is allowed to delegate for {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'User {r["u.name"]} is allowed to delegate for {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_constrained(self, f, raw):
         with self.driver.session() as session:
@@ -1071,23 +1509,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["g.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Group {r["g.name"]} is allowed to delegate for {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Group {r["g.name"]} is allowed to delegate for {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_constrained(self, f, raw):
         with self.driver.session() as session:
@@ -1096,23 +1543,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["c1.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c2.name"]}{log.reset}')
+                        if r["c1.name"] is not None and r["c2.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["c1.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c2.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["c1.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c2.name"]}{log.reset}')
-                            file.write(f'{r["c2.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c1.name"] is not None and r["c2.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["c1.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c2.name"]}{log.reset}')
+                                file.write(f'{r["c2.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["c1.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c2.name"]}{log.reset}')
-                            file.write(f'Computer {r["c1.name"]} is allowed to delegate for {r["c2.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c1.name"] is not None and r["c2.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["c1.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c2.name"]}{log.reset}')
+                                file.write(f'Computer {r["c1.name"]} is allowed to delegate for {r["c2.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_gpos(self, f, raw):
         with self.driver.session() as session:
@@ -1121,23 +1577,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'GPO {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'GPO {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_laps_enabled(self, f, raw):
         with self.driver.session() as session:
@@ -1146,23 +1611,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS enabled{log.reset}')
+                        if r["c.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS enabled{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS enabled{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS enabled{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS enabled{log.reset}')
-                            file.write(f'Computer {r["c.name"]} has LAPS enabled\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS enabled{log.reset}')
+                                file.write(f'Computer {r["c.name"]} has LAPS enabled\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_laps_disabled(self, f, raw):
         with self.driver.session() as session:
@@ -1171,23 +1645,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS disabled{log.reset}')
+                        if r["c.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS disabled{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS disabled{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS disabled{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS disabled{log.reset}')
-                            file.write(f'Computer {r["c.name"]} has LAPS disabled\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS disabled{log.reset}')
+                                file.write(f'Computer {r["c.name"]} has LAPS disabled\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_description_pwds(self, f, raw):
         with self.driver.session() as session:
@@ -1196,23 +1679,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} may have password in description {log.reset}{log.red}{r["u.description"]}{log.reset}')
+                        if r["u.name"] is not None and r["u.description"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} may have password in description {log.reset}{log.red}{r["u.description"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} may have password in description {log.reset}{log.red}{r["u.description"]}{log.reset}')
-                            file.write(f'{r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None and r["u.description"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} may have password in description {log.reset}{log.red}{r["u.description"]}{log.reset}')
+                                file.write(f'{r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} may have password in description {log.reset}{log.red}{r["u.description"]}{log.reset}')
-                            file.write(f'User {r["u.name"]} may have password in description {r["u.description"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None and r["u.description"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} may have password in description {log.reset}{log.red}{r["u.description"]}{log.reset}')
+                                file.write(f'User {r["u.name"]} may have password in description {r["u.description"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_highvalue_users(self, f, raw):
         with self.driver.session() as session:
@@ -1221,23 +1713,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
+                        if r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
-                            file.write(f'User {r["m.name"]} is high value\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}')
+                                file.write(f'User {r["m.name"]} is high value\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_sensitive_users(self, f, raw):
         with self.driver.session() as session:
@@ -1246,23 +1747,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is sensitive{log.reset}')
+                        if r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is sensitive{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is sensitive{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is sensitive{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is sensitive{log.reset}')
-                            file.write(f'User {r["m.name"]} is sensitive\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is sensitive{log.reset}')
+                                file.write(f'User {r["m.name"]} is sensitive\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_admincount(self, f, raw):
         with self.driver.session() as session:
@@ -1271,23 +1781,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                        if r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
-                            file.write(f'Group {r["m.name"]} has an admin count\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                                file.write(f'Group {r["m.name"]} has an admin count\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_admincount(self, f, raw):
         with self.driver.session() as session:
@@ -1296,23 +1815,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                        if r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
-                            file.write(f'User {r["m.name"]} has an admin count\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                                file.write(f'User {r["m.name"]} has an admin count\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_admincount(self, f, raw):
         with self.driver.session() as session:
@@ -1321,48 +1849,66 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                        if r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
-                            file.write(f'Computer {r["m.name"]} has an admin count\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}')
+                                file.write(f'Computer {r["m.name"]} has an admin count\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_localadmin(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=(m:Computer)-[r:AdminTo]->(n:Computer) RETURN m.name, n.name ORDER BY m.name')
+            results = session.run('MATCH p=(m:Computer)-[r:AdminTo]->(n:Computer) RETURN m.name,n.name ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'Computer {r["m.name"]} is local admin to {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'Computer {r["m.name"]} is AdminTo {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_gmsa(self, f, raw):
         with self.driver.session() as session:
@@ -1371,23 +1917,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_gmsa(self, f, raw):
         with self.driver.session() as session:
@@ -1396,23 +1951,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_gmsa(self, f, raw):
         with self.driver.session() as session:
@@ -1421,23 +1985,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_dcsync(self, f, raw):
         with self.driver.session() as session:
@@ -1446,23 +2019,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
-                            file.write(f'User {r["n.name"]} has DCSync privileges\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                                file.write(f'User {r["n.name"]} has DCSync privileges\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_dcsync(self, f, raw):
         with self.driver.session() as session:
@@ -1471,23 +2053,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
-                            file.write(f'Group {r["n.name"]} has DCSync privileges\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                                file.write(f'Group {r["n.name"]} has DCSync privileges\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_dcsync(self, f, raw):
         with self.driver.session() as session:
@@ -1496,23 +2087,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
-                            file.write(f'Computer {r["n.name"]} has DCSync privileges\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                                file.write(f'Computer {r["n.name"]} has DCSync privileges\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_force_change_pwd(self, f, raw):
         with self.driver.session() as session:
@@ -1521,23 +2121,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can force change password for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can force change password for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_force_change_pwd(self, f, raw):
         with self.driver.session() as session:
@@ -1546,23 +2155,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can force change password for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can force change password for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_force_change_pwd(self, f, raw):
         with self.driver.session() as session:
@@ -1571,23 +2189,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can force change password for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can force change password for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_add_member(self, f, raw):
         with self.driver.session() as session:
@@ -1596,23 +2223,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can add members to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can add members to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_add_member(self, f, raw):
         with self.driver.session() as session:
@@ -1621,23 +2257,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can add members to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can add members to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_add_member(self, f, raw):
         with self.driver.session() as session:
@@ -1646,23 +2291,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can add members to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can add members to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_add_self(self, f, raw):
         with self.driver.session() as session:
@@ -1671,23 +2325,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can add itself to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can add itself to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_add_self(self, f, raw):
         with self.driver.session() as session:
@@ -1696,23 +2359,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can add itself to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can add itself to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_add_self(self, f, raw):
         with self.driver.session() as session:
@@ -1721,23 +2393,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can add itself to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can add itself to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_sql_admin(self, f, raw):
         with self.driver.session() as session:
@@ -1746,23 +2427,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} is SQL admin to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} is SQLAdmin to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_sql_admin(self, f, raw):
         with self.driver.session() as session:
@@ -1771,23 +2461,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} is SQL admin to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} is SQLAdmin to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_sql_admin(self, f, raw):
         with self.driver.session() as session:
@@ -1796,23 +2495,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} is SQL admin to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} is SQLAdmin to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_ps_remote(self, f, raw):
         with self.driver.session() as session:
@@ -1821,23 +2529,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can PS Remote to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can PSRemote to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_ps_remote(self, f, raw):
         with self.driver.session() as session:
@@ -1846,23 +2563,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can PS Remote to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can PSRemote to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_ps_remote(self, f, raw):
         with self.driver.session() as session:
@@ -1871,23 +2597,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can PS Remote to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can PSRemote to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_exec_dcom(self, f, raw):
         with self.driver.session() as session:
@@ -1896,23 +2631,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can Execute DCOM on {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can ExecuteDCOM on {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_exec_dcom(self, f, raw):
         with self.driver.session() as session:
@@ -1921,23 +2665,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can Execute DCOM on {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can ExecuteDCOM on {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_exec_dcom(self, f, raw):
         with self.driver.session() as session:
@@ -1946,23 +2699,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can Execute DCOM on {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can ExecuteDCOM on {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_allowed_to_act(self, f, raw):
         with self.driver.session() as session:
@@ -1971,23 +2733,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} is Allowed To Act for {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_allowed_to_act(self, f, raw):
         with self.driver.session() as session:
@@ -1996,23 +2767,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} is Allowed To Act for {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_allowed_to_act(self, f, raw):
         with self.driver.session() as session:
@@ -2021,23 +2801,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} is Allowed To Act for {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_owns(self, f, raw):
         with self.driver.session() as session:
@@ -2046,23 +2835,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_owns(self, f, raw):
         with self.driver.session() as session:
@@ -2071,23 +2869,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_owns(self, f, raw):
         with self.driver.session() as session:
@@ -2096,23 +2903,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_all_extended(self, f, raw):
         with self.driver.session() as session:
@@ -2121,23 +2937,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has All Extended Rights over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_all_extended(self, f, raw):
         with self.driver.session() as session:
@@ -2146,23 +2971,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has All Extended Rights over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_all_extended(self, f, raw):
         with self.driver.session() as session:
@@ -2171,23 +3005,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has All Extended Rights over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_member_of(self, f, raw):
         with self.driver.session() as session:
@@ -2196,23 +3039,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} is a Member Of {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_member_of(self, f, raw):
         with self.driver.session() as session:
@@ -2221,23 +3073,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} is a Member Of {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_member_of(self, f, raw):
         with self.driver.session() as session:
@@ -2246,23 +3107,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} is a Member Of {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_add_key_cred_link(self, f, raw):
         with self.driver.session() as session:
@@ -2271,23 +3141,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_add_key_cred_link(self, f, raw):
         with self.driver.session() as session:
@@ -2296,23 +3175,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_add_key_cred_link(self, f, raw):
         with self.driver.session() as session:
@@ -2321,23 +3209,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_generic_all(self, f, raw):
         with self.driver.session() as session:
@@ -2346,23 +3243,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_generic_all(self, f, raw):
         with self.driver.session() as session:
@@ -2371,23 +3277,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_generic_all(self, f, raw):
         with self.driver.session() as session:
@@ -2396,23 +3311,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_write_dacl(self, f, raw):
         with self.driver.session() as session:
@@ -2421,23 +3345,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_write_dacl(self, f, raw):
         with self.driver.session() as session:
@@ -2446,23 +3379,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_write_dacl(self, f, raw):
         with self.driver.session() as session:
@@ -2471,23 +3413,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_write_owner(self, f, raw):
         with self.driver.session() as session:
@@ -2496,23 +3447,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_write_owner(self, f, raw):
         with self.driver.session() as session:
@@ -2521,23 +3481,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_write_owner(self, f, raw):
         with self.driver.session() as session:
@@ -2546,23 +3515,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_generic_write(self, f, raw):
         with self.driver.session() as session:
@@ -2571,23 +3549,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_generic_write(self, f, raw):
         with self.driver.session() as session:
@@ -2596,23 +3583,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computer_generic_write(self, f, raw):
         with self.driver.session() as session:
@@ -2621,23 +3617,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_user_descriptions(self, f, raw):
         with self.driver.session() as session:
@@ -2646,26 +3651,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        if r["u.description"] is not None:
+                        if r["u.description"] is not None and r["u.name"] is not None:
                             print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["u.description"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            if r["u.description"] is not None:
+                            if r["u.description"] is not None and r["u.name"] is not None:
                                 print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["u.description"]}{log.reset}')
                                 file.write(f'{r["u.description"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            if r["u.description"] is not None:
+                            if r["u.description"] is not None and r["u.name"] is not None:
                                 print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["u.description"]}{log.reset}')
                                 file.write(f'User {r["u.name"]} description {r["u.description"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_group_descriptions(self, f, raw):
         with self.driver.session() as session:
@@ -2674,26 +3685,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        if r["g.description"] is not None:
+                        if r["g.description"] is not None and r["g.name"] is not None:
                             print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["g.description"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            if r["g.description"] is not None:
+                            if r["g.description"] is not None and r["g.name"] is not None:
                                 print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["g.description"]}{log.reset}')
                                 file.write(f'{r["g.description"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            if r["g.description"] is not None:
+                            if r["g.description"] is not None and r["g.name"] is not None:
                                 print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["g.description"]}{log.reset}')
                                 file.write(f'Group {r["g.name"]} description {r["g.description"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_emails(self, f, raw):
         with self.driver.session() as session:
@@ -2702,26 +3719,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        if r["u.email"] is not None:
+                        if r["u.email"] is not None and r["u.name"] is not None:
                             print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} email {log.reset}{log.red}{r["u.email"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            if r["u.email"] is not None:
+                            if r["u.email"] is not None and r["u.name"] is not None:
                                 print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} email {log.reset}{log.red}{r["u.email"]}{log.reset}')
                                 file.write(f'{r["u.email"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            if r["u.email"] is not None:
+                            if r["u.email"] is not None and r["u.name"] is not None:
                                 print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} email {log.reset}{log.red}{r["u.email"]}{log.reset}')
                                 file.write(f'User {r["u.name"]} email {r["u.email"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_ous(self, f, raw):
         with self.driver.session() as session:
@@ -2730,23 +3753,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                        if r["o.name"] is not None:
+                            print(f'{log.default}OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
-                            file.write(f'{r["o.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["o.name"] is not None:
+                                print(f'{log.default}OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                                file.write(f'{r["o.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
-                            file.write(f'OU {r["o.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["o.name"] is not None:
+                                print(f'{log.default}OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                                file.write(f'OU {r["o.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_containers(self, f, raw):
         with self.driver.session() as session:
@@ -2755,23 +3787,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["c.name"] is not None:
+                            print(f'{log.default}Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Container {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None:
+                                print(f'{log.default}Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Container {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_domains(self, f, raw):
         with self.driver.session() as session:
@@ -2780,23 +3821,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}')
+                        if r["d.name"] is not None:
+                            print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}')
-                            file.write(f'{r["d.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["d.name"] is not None:
+                                print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}')
+                                file.write(f'{r["d.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}')
-                            file.write(f'Domain {r["d.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["d.name"] is not None:
+                                print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}')
+                                file.write(f'Domain {r["d.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_domains_flevel(self, f, raw):
         with self.driver.session() as session:
@@ -2805,23 +3855,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}{log.default} functional level {log.reset}{log.red}{r["d.functionallevel"]}{log.reset}')
+                        if r["d.name"] is not None and r["d.functionallevel"] is not None:
+                            print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}{log.default} functional level {log.reset}{log.red}{r["d.functionallevel"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}{log.default} functional level {log.reset}{log.red}{r["d.functionallevel"]}{log.reset}')
-                            file.write(f'{r["d.functionallevel"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["d.name"] is not None and r["d.functionallevel"] is not None:
+                                print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}{log.default} functional level {log.reset}{log.red}{r["d.functionallevel"]}{log.reset}')
+                                file.write(f'{r["d.functionallevel"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}{log.default} functional level {log.reset}{log.red}{r["d.functionallevel"]}{log.reset}')
-                            file.write(f'Domain {r["d.name"]} functional level {r["d.functionallevel"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["d.name"] is not None and r["d.functionallevel"] is not None:
+                                print(f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}{log.default} functional level {log.reset}{log.red}{r["d.functionallevel"]}{log.reset}')
+                                file.write(f'Domain {r["d.name"]} functional level {r["d.functionallevel"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_rdp_us(self, f, raw):
         with self.driver.session() as session:
@@ -2830,23 +3889,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["u.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'User {r["u.name"]} can RDP to {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'User {r["u.name"]} can RDP to {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_rdp_gd_us(self, f, raw):
         with self.driver.session() as session:
@@ -2855,23 +3923,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
-                            file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which can RDP to {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which can RDP to {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_localadmin_us(self, f, raw):
         with self.driver.session() as session:
@@ -2880,23 +3957,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'User {r["m.name"]} is local admin to {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'User {r["m.name"]} is AdminTo {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_localadmin_gd_us(self, f, raw):
         with self.driver.session() as session:
@@ -2905,23 +3991,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
-                            file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which is AdminTo {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which is AdminTo {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_sessions_us(self, f, raw):
         with self.driver.session() as session:
@@ -2930,23 +4025,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} has session on {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} has session on {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_laps_us(self, f, raw):
         with self.driver.session() as session:
@@ -2955,23 +4059,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_gmsa_us(self, f, raw):
         with self.driver.session() as session:
@@ -2980,23 +4093,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_constrained_us(self, f, raw):
         with self.driver.session() as session:
@@ -3005,23 +4127,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["u.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'User {r["u.name"]} is allowed to delegate for {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'User {r["u.name"]} is allowed to delegate for {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_force_change_pwd_us(self, f, raw):
         with self.driver.session() as session:
@@ -3030,23 +4161,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can force change password for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can force change password for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_add_member_us(self, f, raw):
         with self.driver.session() as session:
@@ -3055,23 +4195,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can add members to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can add members to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_add_self_us(self, f, raw):
         with self.driver.session() as session:
@@ -3080,23 +4229,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can add itself to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can add itself to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_sql_admin_us(self, f, raw):
         with self.driver.session() as session:
@@ -3105,23 +4263,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} is SQL admin to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} is SQLAdmin to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_ps_remote_us(self, f, raw):
         with self.driver.session() as session:
@@ -3130,23 +4297,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can PS Remote to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can PSRemote to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_exec_dcom_us(self, f, raw):
         with self.driver.session() as session:
@@ -3155,23 +4331,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} can Execute DCOM on {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can ExecuteDCOM on {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_allowed_to_act_us(self, f, raw):
         with self.driver.session() as session:
@@ -3180,23 +4365,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} is Allowed To Act for {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_owns_us(self, f, raw):
         with self.driver.session() as session:
@@ -3205,23 +4399,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_extended_us(self, f, raw):
         with self.driver.session() as session:
@@ -3230,23 +4433,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has All Extended Rights over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_add_key_cred_link_us(self, f, raw):
         with self.driver.session() as session:
@@ -3255,23 +4467,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_generic_all_us(self, f, raw):
         with self.driver.session() as session:
@@ -3280,23 +4501,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_write_dacl_us(self, f, raw):
         with self.driver.session() as session:
@@ -3305,23 +4535,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_write_owner_us(self, f, raw):
         with self.driver.session() as session:
@@ -3330,23 +4569,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_generic_write_us(self, f, raw):
         with self.driver.session() as session:
@@ -3355,23 +4603,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_description_us(self, f, raw):
         with self.driver.session() as session:
@@ -3380,44 +4637,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        if r["u.description"] is not None:
+                        if r["u.description"] is not None and r["u.name"] is not None:
                             print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["u.description"]}{log.reset}')
-                        else:
-                            log.log_no_results()
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
-                        is_none = False
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            if r["u.description"] is not None:
+                            if r["u.description"] is not None and r["u.name"] is not None:
                                 print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["u.description"]}{log.reset}')
                                 file.write(f'{r["u.description"]}\n')
-                            else:
-                                is_none = True
-                                log.log_no_results()
-                        if is_none:
-                            file.close()
-                            os.remove(f)
-                        else:
-                            file.close()
-                            log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
-                        is_none = False
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            if r["u.description"] is not None:
+                            if r["u.description"] is not None and r["u.name"] is not None:
                                 print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["u.description"]}{log.reset}')
                                 file.write(f'User {r["u.name"]} description {r["u.description"]}\n')
-                            else:
-                                is_none = True
-                                log.log_no_results()
-                        if is_none:
-                            file.close()
-                            os.remove(f)
-                        else:
-                            file.close()
-                            log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_email_us(self, f, raw):
         with self.driver.session() as session:
@@ -3426,44 +4671,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
                         if r["u.email"] is not None:
                             print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} email {log.reset}{log.red}{r["u.email"]}{log.reset}')
-                        else:
-                            log.log_no_results()
+                            count += 1                       
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
-                        is_none = False
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
                             if r["u.email"] is not None:
                                 print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} email {log.reset}{log.red}{r["u.email"]}{log.reset}')
                                 file.write(f'{r["u.email"]}\n')
-                            else:
-                                is_none = True
-                                log.log_no_results()
-                        if is_none:
-                            file.close()
-                            os.remove(f)
-                        else:
-                            file.close()
-                            log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
-                        is_none = False
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
                             if r["u.email"] is not None:
                                 print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} email {log.reset}{log.red}{r["u.email"]}{log.reset}')
                                 file.write(f'User {r["u.name"]} email {r["u.email"]}\n')
-                            else:
-                                is_none = True
-                                log.log_no_results()
-                        if is_none:
-                            file.close()
-                            os.remove(f)
-                        else:
-                            file.close()
-                            log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_member_of_us(self, f, raw):
         with self.driver.session() as session:
@@ -3472,23 +4705,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} is a Member Of {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_asrep_roastable_us(self, f, raw):
         with self.driver.session() as session:
@@ -3497,23 +4739,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
+                        if r["u.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
-                            file.write(f'{r["u.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
+                                file.write(f'{r["u.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
-                            file.write(f'User {r["u.name"]} is AS-REP roastable\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["u.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}')
+                                file.write(f'User {r["u.name"]} is AS-REP roastable\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_kerberoastable_us(self, f, raw):
         with self.driver.session() as session:
@@ -3522,23 +4773,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
+                        if r["result"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
-                            file.write(f'{r["result"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["result"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
+                                file.write(f'{r["result"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
-                            file.write(f'User {r["result"]} is kerberoastable\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["result"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}')
+                                file.write(f'User {r["result"]} is kerberoastable\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_ou_oc(self, f, raw):
         with self.driver.session() as session:
@@ -3547,23 +4807,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["o.name"] is not None:
+                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
-                            file.write(f'{r["o.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["o.name"] is not None:
+                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                                file.write(f'{r["o.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) has {r["TYPE(r)"]} over OU {r["o.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["o.name"] is not None:
+                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) has {r["TYPE(r)"]} over OU {r["o.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_container_oc(self, f, raw):
         with self.driver.session() as session:
@@ -3572,23 +4841,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) has {r["TYPE(r)"]} over Container {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) has {r["TYPE(r)"]} over Container {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_gpo_oc(self, f, raw):
         with self.driver.session() as session:
@@ -3597,23 +4875,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                        if r["n.name"] is not None and r["g.name"] is not None:
+                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'{r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["g.name"] is not None:
+                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'{r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) has {r["TYPE(r)"]} over GPO {r["g.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["g.name"] is not None:
+                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) has {r["TYPE(r)"]} over GPO {r["g.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_us(self, f, raw):
         with self.driver.session() as session:
@@ -3622,23 +4909,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_gd_us(self, f, raw):
         with self.driver.session() as session:
@@ -3647,23 +4943,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                        if r["n.name"] is not None and r["m.name"] is not None and r["v.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
-                            file.write(f'{r["v.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None and r["v.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                                file.write(f'{r["v.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["m.name"] is not None and r["v.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_gp_links(self, f, raw):
         with self.driver.session() as session:
@@ -3672,23 +4977,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}){log.reset}')
+                        if r["g1.name"] is not None and r["g2.name"] is not None:
+                            print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}){log.reset}')
-                            file.write(f'{r["g2.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g1.name"] is not None and r["g2.name"] is not None:
+                                print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}){log.reset}')
+                                file.write(f'{r["g2.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}){log.reset}')
-                            file.write(f'GPO {r["g1.name"]} is linked to {r["g2.name"]} ({r["labels(g2)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g1.name"] is not None and r["g2.name"] is not None:
+                                print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}){log.reset}')
+                                file.write(f'GPO {r["g1.name"]} is linked to {r["g2.name"]} ({r["labels(g2)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_user_privs(self, f, raw):
         with self.driver.session() as session:
@@ -3697,23 +5011,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'User {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_group_privs(self, f, raw):
         with self.driver.session() as session:
@@ -3722,23 +5045,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_computer_privs(self, f, raw):
         with self.driver.session() as session:
@@ -3747,23 +5079,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_rdp_gs(self, f, raw):
         with self.driver.session() as session:
@@ -3772,23 +5113,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["g.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Group {r["g.name"]} can RDP to {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Group {r["g.name"]} can RDP to {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_rdp_gd_gs(self, f, raw):
         with self.driver.session() as session:
@@ -3797,23 +5147,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                        if r["n.name"] is not None and r["c.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["c.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
-                            file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which can RDP to {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["c.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which can RDP to {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_localadmin_gs(self, f, raw):
         with self.driver.session() as session:
@@ -3822,23 +5181,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'Group {r["m.name"]} is local admin to {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'Group {r["m.name"]} is AdminTo {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_localadmin_gd_gs(self, f, raw):
         with self.driver.session() as session:
@@ -3847,23 +5215,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                        if r["n.name"] is not None and r["c.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["c.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
-                            file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which is AdminTo {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["c.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which is AdminTo {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_laps_gs(self, f, raw):
         with self.driver.session() as session:
@@ -3872,23 +5249,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_gmsa_gs(self, f, raw):
         with self.driver.session() as session:
@@ -3897,23 +5283,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_constrained_gs(self, f, raw):
         with self.driver.session() as session:
@@ -3922,23 +5317,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["g.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Group {r["g.name"]} is allowed to delegate for {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["g.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Group {r["g.name"]} is allowed to delegate for {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_force_change_pwd_gs(self, f, raw):
         with self.driver.session() as session:
@@ -3947,23 +5351,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can force change password for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can force change password for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_add_member_gs(self, f, raw):
         with self.driver.session() as session:
@@ -3972,23 +5385,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can add members to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can add members to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_add_self_gs(self, f, raw):
         with self.driver.session() as session:
@@ -3997,23 +5419,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can add itself to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can add itself to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_sql_admin_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4022,23 +5453,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} is SQL admin to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} is SQLAdmin to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_ps_remote_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4047,23 +5487,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can PS Remote to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can PSRemote to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_exec_dcom_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4072,23 +5521,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} can Execute DCOM on {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can ExecuteDCOM on {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_allowed_to_act_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4097,23 +5555,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} is Allowed To Act for {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_owns_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4122,23 +5589,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_extended_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4147,23 +5623,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has All Extended Rights over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_add_key_cred_link_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4172,23 +5657,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_generic_all_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4197,23 +5691,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_write_dacl_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4222,23 +5725,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_write_owner_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4247,23 +5759,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_generic_write_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4272,23 +5793,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_description_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4297,44 +5827,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        if r["g.description"] is not None:
+                        if r["g.description"] is not None and r["g.name"] is not None:
                             print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["g.description"]}{log.reset}')
-                        else:
-                            log.log_no_results()
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
-                        is_none = False
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            if r["g.description"] is not None:
+                            if r["g.description"] is not None and r["g.name"] is not None:
                                 print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["g.description"]}{log.reset}')
                                 file.write(f'{r["g.description"]}\n')
-                            else:
-                                is_none = True
-                                log.log_no_results()
-                        if is_none:
-                            file.close()
-                            os.remove(f)
-                        else:
-                            file.close()
-                            log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
-                        is_none = False
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            if r["g.description"] is not None:
+                            if r["g.description"] is not None and r["g.name"] is not None:
                                 print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["g.description"]}{log.reset}')
                                 file.write(f'Group {r["g.name"]} description {r["g.description"]}\n')
-                            else:
-                                is_none = True
-                                log.log_no_results()
-                        if is_none:
-                            file.close()
-                            os.remove(f)
-                        else:
-                            file.close()
-                            log.log_successful_export(f)
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_member_of_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4343,23 +5861,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} is a Member Of {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_members_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4368,23 +5895,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}) is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}) is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}) is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}) is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}) is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) is a Member Of {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}) is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4393,23 +5929,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_gd_gs(self, f, raw):
         with self.driver.session() as session:
@@ -4418,23 +5963,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
-                            file.write(f'{r["v.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                                file.write(f'{r["v.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
-                            file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_localadmin_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4443,23 +5997,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is local admin to {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'Computer {r["m.name"]} is local admin to {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'Computer {r["m.name"]} is AdminTo {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_localadmin_gd_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4468,23 +6031,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None and r["c.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} which is AdminTo {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None and r["c.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} which is AdminTo {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_laps_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4493,23 +6065,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_gmsa_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4518,23 +6099,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can read GMSA passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_constrained_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4543,23 +6133,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                        if r["c.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'{r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'{r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} is allowed to delegate for {r["c.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["c.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} is allowed to delegate for {r["c.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_force_change_pwd_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4568,23 +6167,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can force change password for {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can force change password for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_add_member_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4593,23 +6201,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can add members to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can add members to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_add_self_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4618,23 +6235,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can add itself to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can add itself to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_sql_admin_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4643,23 +6269,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQL admin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} is SQL admin to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} is SQLAdmin to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_ps_remote_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4668,23 +6303,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PS Remote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can PS Remote to {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can PSRemote to {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_exec_dcom_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4693,23 +6337,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can Execute DCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} can Execute DCOM on {r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can ExecuteDCOM on {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_allowed_to_act_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4718,23 +6371,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is Allowed To Act for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} is Allowed To Act for {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_owns_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4743,23 +6405,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_extended_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4768,23 +6439,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has All Extended Rights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has All Extended Rights over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_add_key_cred_link_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4793,23 +6473,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_generic_all_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4818,23 +6507,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_write_dacl_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4843,23 +6541,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_write_owner_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4868,23 +6575,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_generic_write_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4893,23 +6609,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_member_of_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4918,23 +6643,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is a Member Of {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} is a Member Of {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4943,23 +6677,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'{r["m.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_all_gd_cs(self, f, raw):
         with self.driver.session() as session:
@@ -4968,23 +6711,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                        if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
-                            file.write(f'{r["v.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                                file.write(f'{r["v.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
-                            file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_groups_r(self, f, raw):
         with self.driver.session() as session:
@@ -4993,23 +6745,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_users_r(self, f, raw):
         with self.driver.session() as session:
@@ -5018,23 +6779,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'User {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_computers_r(self, f, raw):
         with self.driver.session() as session:
@@ -5043,23 +6813,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_u_descriptions_r(self, f, raw):
         with self.driver.session() as session:
@@ -5068,23 +6847,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
+                        if r["n.name"] is not None and r["n.description"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["n.description"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
-                            file.write(f'User {r["n.name"]} description {r["n.description"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["n.description"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} description {r["n.description"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_g_descriptions_r(self, f, raw):
         with self.driver.session() as session:
@@ -5093,23 +6881,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
+                        if r["n.name"] is not None and r["n.description"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["n.description"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
-                            file.write(f'Group {r["n.name"]} description {r["n.description"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["n.description"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} description {r["n.description"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_oss_r(self, f, raw):
         with self.driver.session() as session:
@@ -5118,23 +6915,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}OS {log.reset}{log.red}{r["n.operatingsystem"]}{log.reset}')
+                        if r["n.name"] is not None and r["n.operatingsystem"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}OS {log.reset}{log.red}{r["n.operatingsystem"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}OS {log.reset}{log.red}{r["n.operatingsystem"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["n.operatingsystem"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}OS {log.reset}{log.red}{r["n.operatingsystem"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}OS {log.reset}{log.red}{r["n.operatingsystem"]}{log.reset}')
-                            file.write(f'Computer {r["n.name"]} OS {r["n.operatingsystem"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None and r["n.operatingsystem"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}OS {log.reset}{log.red}{r["n.operatingsystem"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} OS {r["n.operatingsystem"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_gpos_r(self, f, raw):
         with self.driver.session() as session:
@@ -5143,23 +6949,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'GPO {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'GPO {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_containers_r(self, f, raw):
         with self.driver.session() as session:
@@ -5168,23 +6983,32 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}Container {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}Container {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Container {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Container {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}Container {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'Container {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Container {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'Container {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_ous_r(self, f, raw):
         with self.driver.session() as session:
@@ -5193,20 +7017,29 @@ class Driver:
                 log.log_no_results()
             else:
                 if f == "":
+                    count = 0
                     for r in results:
-                        print(f'{log.default}OU {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                        if r["n.name"] is not None:
+                            print(f'{log.default}OU {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
                 else:
                     if not raw:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}OU {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'{r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}OU {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
                     else:
+                        count = 0
                         file = open(f, 'w+')
                         for r in results:
-                            print(f'{log.default}OU {log.reset}{log.red}{r["n.name"]}{log.reset}')
-                            file.write(f'OU {r["n.name"]}\n')
-                        file.close()
-                        log.log_successful_export(f)
+                            if r["n.name"] is not None:
+                                print(f'{log.default}OU {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'OU {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
