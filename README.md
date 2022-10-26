@@ -17,7 +17,7 @@ This tool can also help blue teams to reveal detailed information about their Ac
 
 Take back control of your `BloodHound` data with `cypherhound`!
 
-- 206 cyphers as of date
+- 207 cyphers as of date
   - Set cyphers to search based on user input (user, group, and computer-specific)
   - User-defined regex cyphers
 - User-defined exporting of all results
@@ -80,12 +80,16 @@ help, ? - used to display this help menu
 
 ```
 
-## Important Note
+## Important Notes
 
-The program is configured to use the default `Neo4j` database and `URI`.
+- The program is configured to use the default `Neo4j` database and `URI`
+- Built for `BloodHound 4.2.0`, `DCSync` edge will not work for previous versions
+- `Windows` users must run `pip3 install pyreadline3`
 
 ## Future Goals
 
+- Add shortest paths cyphers
+- Add reachable high value targets cyphers
 - Add cyphers for `Azure` edges
 
 ## Issues and Support

@@ -1,7 +1,6 @@
 from neo4j import GraphDatabase
 import util
 import log
-import os
 
 
 class Driver:
@@ -84,7 +83,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["u.name"] is not None and r["c.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -94,7 +93,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["u.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
                                 file.write(f'{r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -103,8 +102,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["u.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                                file.write(f'User {r["u.name"]} can RDP to {r["c.name"]}\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'User {r["u.name"]} CanRDP to {r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -118,7 +117,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["g.name"] is not None and r["c.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -128,7 +127,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["g.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
                                 file.write(f'{r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -137,8 +136,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["g.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                                file.write(f'Group {r["g.name"]} can RDP to {r["c.name"]}\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Group {r["g.name"]} CanRDP to {r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -832,7 +831,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["m.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -842,7 +841,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["m.name"]}{log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -851,8 +850,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                                file.write(f'User {r["n.name"]} has session on {r["m.name"]}\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} HasSession on {r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -1138,7 +1137,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["c.name"] is not None:
-                            print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["c.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -1148,7 +1147,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["c.name"]}{log.reset}')
                                 file.write(f'{r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -1157,8 +1156,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                                file.write(f'Domain admin {r["n.name"]} has session on {r["c.name"]}\n')
+                                print(f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Domain admin {r["n.name"]} HasSession on {r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -1172,7 +1171,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["c.name"] is not None:
-                            print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["c.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -1182,7 +1181,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["c.name"]}{log.reset}')
                                 file.write(f'{r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -1191,8 +1190,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                                file.write(f'Enterprise admin {r["n.name"]} has session on {r["c.name"]}\n')
+                                print(f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Enterprise admin {r["n.name"]} HasSession on {r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -2014,7 +2013,7 @@ class Driver:
 
     def find_user_dcsync(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:User)-[r:GetChangesAll]->(m:Domain) WHERE (n)-[:GetChanges]->(m) RETURN n.name')
+            results = session.run('MATCH (n:User)-[r:DCSync]->(m:Domain) RETURN n.name ORDER BY n.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2048,7 +2047,7 @@ class Driver:
 
     def find_group_dcsync(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Group)-[r:GetChangesAll]->(m:Domain) WHERE (n)-[:GetChanges]->(m) RETURN n.name')
+            results = session.run('MATCH (n:Group)-[r:DCSync]->(m:Domain) RETURN n.name ORDER BY n.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2082,7 +2081,7 @@ class Driver:
 
     def find_computer_dcsync(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Computer)-[r:GetChangesAll]->(m:Domain) WHERE (n)-[:GetChanges]->(m) RETURN n.name')
+            results = session.run('MATCH (n:Computer)-[r:DCSync]->(m:Domain) RETURN n.name ORDER BY n.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2113,6 +2112,40 @@ class Driver:
                                 file.write(f'Computer {r["n.name"]} has DCSync privileges\n')
                                 count += 1
                         util.handle_export(file, count, f)
+
+    def find_all_dcsync(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (n)-[r:DCSync]->(m:Domain) RETURN n.name,labels(n) ORDER BY n.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["n.name"] is not None:
+                            print(f'{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None:
+                                print(f'{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None:
+                                print(f'{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges{log.reset}')
+                                file.write(f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {r["n.name"]} has DCSync privileges\n')
+                                count += 1
+                        util.handle_export(file, count, f)                        
 
     def find_user_force_change_pwd(self, f, raw):
         with self.driver.session() as session:
@@ -2736,7 +2769,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -2746,7 +2779,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -2755,8 +2788,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -2770,7 +2803,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -2780,7 +2813,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -2789,8 +2822,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -2804,7 +2837,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -2814,7 +2847,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -2823,8 +2856,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -2838,7 +2871,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -2848,7 +2881,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -2857,8 +2890,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -2872,7 +2905,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -2882,7 +2915,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -2891,8 +2924,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -2906,7 +2939,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -2916,7 +2949,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -2925,8 +2958,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -2940,7 +2973,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -2950,7 +2983,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -2959,8 +2992,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -2974,7 +3007,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -2984,7 +3017,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -2993,8 +3026,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3008,7 +3041,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3018,7 +3051,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3027,8 +3060,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3042,7 +3075,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3052,7 +3085,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3061,8 +3094,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3076,7 +3109,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3086,7 +3119,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3095,8 +3128,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3110,7 +3143,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3120,7 +3153,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3129,8 +3162,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3144,7 +3177,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3154,7 +3187,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3163,8 +3196,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3178,7 +3211,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3188,7 +3221,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3197,8 +3230,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3212,7 +3245,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3222,7 +3255,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3231,8 +3264,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3246,7 +3279,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3256,7 +3289,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3265,8 +3298,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3280,7 +3313,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3290,7 +3323,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3299,8 +3332,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3314,7 +3347,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3324,7 +3357,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3333,8 +3366,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3348,7 +3381,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3358,7 +3391,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3367,8 +3400,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3382,7 +3415,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3392,7 +3425,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3401,8 +3434,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3416,7 +3449,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3426,7 +3459,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3435,8 +3468,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3450,7 +3483,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3460,7 +3493,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3469,8 +3502,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3484,7 +3517,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3494,7 +3527,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3503,8 +3536,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3518,7 +3551,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3528,7 +3561,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3537,8 +3570,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3552,7 +3585,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3562,7 +3595,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3571,8 +3604,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3586,7 +3619,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3596,7 +3629,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3605,8 +3638,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3620,7 +3653,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3630,7 +3663,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3639,8 +3672,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3892,7 +3925,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["u.name"] is not None and r["c.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3902,7 +3935,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["u.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
                                 file.write(f'{r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3911,8 +3944,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["u.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                                file.write(f'User {r["u.name"]} can RDP to {r["c.name"]}\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'User {r["u.name"]} CanRDP to {r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -3926,7 +3959,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None and r["c.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which CanRDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -3936,7 +3969,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which CanRDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
                                 file.write(f'{r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -3945,8 +3978,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
-                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which can RDP to {r["c.name"]}\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which CanRDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which CanRDP to {r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4028,7 +4061,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["m.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4038,7 +4071,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["m.name"]}{log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4047,8 +4080,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has session on {log.reset}{log.red}{r["m.name"]}{log.reset}')
-                                file.write(f'User {r["n.name"]} has session on {r["m.name"]}\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} HasSession on {r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4368,7 +4401,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4378,7 +4411,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4387,8 +4420,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4402,7 +4435,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4412,7 +4445,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4421,8 +4454,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4436,7 +4469,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4446,7 +4479,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4455,8 +4488,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4470,7 +4503,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4480,7 +4513,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4489,8 +4522,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4504,7 +4537,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4514,7 +4547,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4523,8 +4556,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4538,7 +4571,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4548,7 +4581,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4557,8 +4590,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4572,7 +4605,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4582,7 +4615,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4591,8 +4624,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4606,7 +4639,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4616,7 +4649,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4625,8 +4658,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4708,7 +4741,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4718,7 +4751,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4727,8 +4760,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4810,7 +4843,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["o.name"] is not None:
-                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                            print(f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4820,7 +4853,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["o.name"] is not None:
-                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                                print(f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
                                 file.write(f'{r["o.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4829,8 +4862,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["o.name"] is not None:
-                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
-                                file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) has {r["TYPE(r)"]} over OU {r["o.name"]}\n')
+                                print(f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}')
+                                file.write(f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {r["n.name"]} has {r["TYPE(r)"]} over OU {r["o.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4844,7 +4877,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["c.name"] is not None:
-                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            print(f'{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4854,7 +4887,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                print(f'{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
                                 file.write(f'{r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4863,8 +4896,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                                file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) has {r["TYPE(r)"]} over Container {r["c.name"]}\n')
+                                print(f'{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {r["n.name"]} has {r["TYPE(r)"]} over Container {r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -4878,7 +4911,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["g.name"] is not None:
-                            print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                            print(f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4888,7 +4921,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["g.name"] is not None:
-                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                print(f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
                                 file.write(f'{r["g.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4897,14 +4930,14 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["g.name"] is not None:
-                                print(f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}) has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
-                                file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) has {r["TYPE(r)"]} over GPO {r["g.name"]}\n')
+                                print(f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}')
+                                file.write(f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {r["n.name"]} has {r["TYPE(r)"]} over GPO {r["g.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
     def find_all_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:User)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
+            results = session.run('MATCH (n:User)-[r]->(m) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4912,7 +4945,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4922,7 +4955,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4931,14 +4964,14 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
     def find_all_gd_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:User)-[:MemberOf]->(m:Group),(m)-[r:CanRDP|AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(v) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
+            results = session.run('MATCH (n:User)-[:MemberOf]->(m:Group),(m)-[r]->(v) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4946,7 +4979,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["m.name"] is not None and r["v.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4956,7 +4989,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None and r["v.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}')
                                 file.write(f'{r["v.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4965,14 +4998,14 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["m.name"] is not None and r["v.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]}/{r["labels(v)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
     def find_all_gp_links(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (g1)-[:GpLink]->(g2) RETURN g1.name,g2.name,labels(g2) ORDER BY g1.name')
+            results = session.run('MATCH (g1)-[:GPLink]->(g2) RETURN g1.name,g2.name,labels(g2) ORDER BY g1.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4980,7 +5013,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["g1.name"] is not None and r["g2.name"] is not None:
-                            print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}){log.reset}')
+                            print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}/{r["labels(g2)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -4990,7 +5023,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["g1.name"] is not None and r["g2.name"] is not None:
-                                print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}){log.reset}')
+                                print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}/{r["labels(g2)"][1]}){log.reset}')
                                 file.write(f'{r["g2.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -4999,14 +5032,14 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["g1.name"] is not None and r["g2.name"] is not None:
-                                print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}){log.reset}')
-                                file.write(f'GPO {r["g1.name"]} is linked to {r["g2.name"]} ({r["labels(g2)"][0]})\n')
+                                print(f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}/{r["labels(g2)"][1]}){log.reset}')
+                                file.write(f'GPO {r["g1.name"]} is linked to {r["g2.name"]} ({r["labels(g2)"][0]}/{r["labels(g2)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
     def find_all_user_privs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:User)-[r:CanRDP|AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
+            results = session.run('MATCH (n:User)-[r]->(m) RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -5014,7 +5047,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5024,7 +5057,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5033,14 +5066,14 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'User {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'User {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
     def find_all_group_privs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Group)-[r:CanRDP|AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
+            results = session.run('MATCH (n:Group)-[r]->(m) RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -5048,7 +5081,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5058,7 +5091,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5067,14 +5100,14 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
     def find_all_computer_privs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Computer)-[r:CanRDP|AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
+            results = session.run('MATCH (n:Computer)-[r]->(m) RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -5082,7 +5115,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5092,7 +5125,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5101,8 +5134,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5116,7 +5149,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["g.name"] is not None and r["c.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5126,7 +5159,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["g.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
                                 file.write(f'{r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5135,8 +5168,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["g.name"] is not None and r["c.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} can RDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
-                                file.write(f'Group {r["g.name"]} can RDP to {r["c.name"]}\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}')
+                                file.write(f'Group {r["g.name"]} CanRDP to {r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5150,7 +5183,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["n.name"] is not None and r["c.name"] is not None and r["m.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which CanRDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5160,7 +5193,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["c.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which CanRDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
                                 file.write(f'{r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5169,8 +5202,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["n.name"] is not None and r["c.name"] is not None and r["m.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which can RDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
-                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which can RDP to {r["c.name"]}\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which CanRDP to {log.red}{r["c.name"]}{log.default}{log.reset}')
+                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which CanRDP to {r["c.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5558,7 +5591,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5568,7 +5601,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5577,8 +5610,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5592,7 +5625,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5602,7 +5635,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5611,8 +5644,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5626,7 +5659,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5636,7 +5669,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5645,8 +5678,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5660,7 +5693,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5670,7 +5703,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5679,8 +5712,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5694,7 +5727,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5704,7 +5737,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5713,8 +5746,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5728,7 +5761,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5738,7 +5771,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5747,8 +5780,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5762,7 +5795,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5772,7 +5805,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5781,8 +5814,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5796,7 +5829,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5806,7 +5839,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5815,8 +5848,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5864,7 +5897,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5874,7 +5907,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5883,8 +5916,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5898,7 +5931,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}) is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}/{r["labels(n)"][1]}) is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5908,7 +5941,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}) is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}/{r["labels(n)"][1]}) is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["n.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5917,8 +5950,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}) is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'{r["n.name"]} ({r["labels(n)"][0]}) is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}/{r["labels(n)"][1]}) is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'{r["n.name"]} ({r["labels(n)"][0]}/{r["labels(n)"][1]}) is MemberOf {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -5932,7 +5965,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5942,7 +5975,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5951,14 +5984,14 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
     def find_all_gd_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[r:CanRDP|AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(v) WHERE n.name =~ \'((?i)' + self.group_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
+            results = session.run('MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[r]->(v) WHERE n.name =~ \'((?i)' + self.group_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -5966,7 +5999,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
-                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -5976,7 +6009,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}')
                                 file.write(f'{r["v.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -5985,8 +6018,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
-                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
-                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}')
+                                file.write(f'Group {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]}/{r["labels(v)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -6374,7 +6407,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6384,7 +6417,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6393,8 +6426,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} is AllowedToAct for {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -6408,7 +6441,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6418,7 +6451,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6427,8 +6460,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} Owns {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -6442,7 +6475,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6452,7 +6485,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6461,8 +6494,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has AllExtendedRights over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -6476,7 +6509,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6486,7 +6519,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6495,8 +6528,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has AddKeyCredentialLink over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -6510,7 +6543,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6520,7 +6553,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6529,8 +6562,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has GenericAll over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -6544,7 +6577,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6554,7 +6587,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6563,8 +6596,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has WriteDacl over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -6578,7 +6611,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6588,7 +6621,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6597,8 +6630,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has WriteOwner over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -6612,7 +6645,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6622,7 +6655,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6631,8 +6664,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has GenericWrite over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -6646,7 +6679,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6656,7 +6689,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6665,14 +6698,14 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
     def find_all_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Computer)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) WHERE n.name =~ \'((?i)' + self.computer_search + ')\' RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
+            results = session.run('MATCH (n:Computer)-[r]->(m) WHERE n.name =~ \'((?i)' + self.computer_search + ')\' RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -6680,7 +6713,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6690,7 +6723,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
                                 file.write(f'{r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6699,14 +6732,14 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} has {r["TYPE(r)"]} over {r["m.name"]} ({r["labels(m)"][0]}/{r["labels(m)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
     def find_all_gd_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[r:CanRDP|AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(v) WHERE n.name =~ \'((?i)' + self.computer_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
+            results = session.run('MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[r]->(v) WHERE n.name =~ \'((?i)' + self.computer_search + ')\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -6714,7 +6747,7 @@ class Driver:
                     count = 0
                     for r in results:
                         if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
-                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}')
                             count += 1
                     if count == 0:
                         log.log_no_results()
@@ -6724,7 +6757,7 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}')
                                 file.write(f'{r["v.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
@@ -6733,8 +6766,8 @@ class Driver:
                         file = open(f, 'w+')
                         for r in results:
                             if r["m.name"] is not None and r["n.name"] is not None and r["v.name"] is not None:
-                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}){log.reset}')
-                                file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]})\n')
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}')
+                                file.write(f'Computer {r["n.name"]} is MemberOf {r["m.name"]} which has {r["TYPE(r)"]} over {r["v.name"]} ({r["labels(v)"][0]}/{r["labels(v)"][1]})\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
