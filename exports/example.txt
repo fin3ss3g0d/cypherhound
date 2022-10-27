@@ -1,0 +1,1 @@
+User TESTSVC@DOMAIN.LOCAL is kerberoastable

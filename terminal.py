@@ -130,11 +130,11 @@ def input_loop(user, pwd):
                         d = database.Driver(user, pwd)
                         d.find_all_computer_sp_to_admin_groups("", False)
                         d.close()
-                    elif option == "8":
+                    elif option == "11":
                         d = database.Driver(user, pwd)
                         d.find_sql_groups("", False)
                         d.close()
-                    elif option == "9":
+                    elif option == "12":
                         d = database.Driver(user, pwd)
                         d.find_sql_users("", False)
                         d.close()
@@ -1679,12 +1679,12 @@ def input_loop(user, pwd):
                         d = database.Driver(user, pwd)
                         d.find_all_computer_sp_to_admin_groups(f, is_raw)
                         d.close()
-                    elif option == "8":
+                    elif option == "11":
                         f = util.validate_export_command(fname)
                         d = database.Driver(user, pwd)
                         d.find_sql_groups(f, is_raw)
                         d.close()
-                    elif option == "9":
+                    elif option == "12":
                         f = util.validate_export_command(fname)
                         d = database.Driver(user, pwd)
                         d.find_sql_users(f, is_raw)
