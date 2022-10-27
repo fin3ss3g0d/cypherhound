@@ -211,7 +211,7 @@ class Driver:
 
     def find_admin_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run("MATCH (g:Group) WHERE g.name =~ '.*((?i)admin).*' RETURN g.name ORDER BY g.name")
+            results = session.run("MATCH (g:Group) WHERE g.name =~ '.*((?i)admin|adm).*' RETURN g.name ORDER BY g.name")
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -245,7 +245,7 @@ class Driver:
 
     def find_admin_users(self, f, raw):
         with self.driver.session() as session:
-            results = session.run("MATCH (u:User) WHERE u.name =~ '.*((?i)admin).*' RETURN u.name ORDER BY u.name")
+            results = session.run("MATCH (u:User) WHERE u.name =~ '.*((?i)admin|adm).*' RETURN u.name ORDER BY u.name")
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -787,6 +787,426 @@ class Driver:
                                 count += 1
                         util.handle_export(file, count, f)
 
+    def find_all_user_sp_to_das(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_das_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND m.name =~ \'((?i)' + self.user_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_group_sp_to_das(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND NOT m=n return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_das_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_computer_sp_to_das(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_das_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND m.name =~ \'((?i)' + self.computer_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
     def find_enterprise_admins(self, f, raw):
         with self.driver.session() as session:
             results = session.run('MATCH (n:Group) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" WITH n MATCH p=(n)<-[r:MemberOf*1..]-(m) RETURN m.name ORDER BY m.name')
@@ -820,6 +1240,3576 @@ class Driver:
                                 file.write(f'User {r["m.name"]} is MemberOf Enterprise Admins\n')
                                 count += 1
                         util.handle_export(file, count, f)
+
+    def find_all_user_sp_to_eas(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_eas_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND m.name =~ \'((?i)' + self.user_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_group_sp_to_eas(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND NOT m=n return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_eas_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_computer_sp_to_eas(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_eas_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND m.name =~ \'((?i)' + self.computer_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_user_sp_to_high_value(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (m:User),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NOT m=n return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_high_value_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (m:User),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NOT m=n AND m.name =~ \'((?i)' + self.user_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_group_sp_to_high_value(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NOT m=n return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_high_value_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_computer_sp_to_high_value(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (m:Computer),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NOT m=n return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_high_value_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH (m:Computer),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NOT m=n AND m.name =~ \'((?i)' + self.computer_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_user_sp_to_exchange_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_exchange_groups_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND m.name =~ \'((?i)' + self.user_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_group_sp_to_exchange_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_exchange_groups_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_computer_sp_to_exchange_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_exchange_groups_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_user_sp_to_sql_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_sql_groups_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND m.name =~ \'((?i)' + self.user_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_group_sp_to_sql_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_sql_groups_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_computer_sp_to_sql_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_sql_groups_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_user_sp_to_web_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_web_groups_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND m.name =~ \'((?i)' + self.user_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_group_sp_to_web_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_web_groups_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_computer_sp_to_web_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_web_groups_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_user_sp_to_admin_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_admin_groups_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND m.name =~ \'((?i)' + self.user_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_group_sp_to_admin_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_admin_groups_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_computer_sp_to_admin_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_admin_groups_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_user_sp_to_service_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_service_groups_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND m.name =~ \'((?i)' + self.user_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_sp_to_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m)-[r*1..]->(n:User)) WHERE n.name =~ \'((?i)' + self.user_search + ')\' AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_sp_to_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m)-[r*1..]->(n:Group)) WHERE n.name =~ \'((?i)' + self.group_search + ')\' AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_sp_to_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m)-[r*1..]->(n:Computer)) WHERE n.name =~ \'((?i)' + self.computer_search + ')\' AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_group_sp_to_service_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_service_groups_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_computer_sp_to_service_groups(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_service_groups_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_user_sp_to_dcs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_dcs_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND m.name =~ \'((?i)' + self.user_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                           
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_group_sp_to_dcs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NOT m=n return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_dcs_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_all_computer_sp_to_dcs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
+
+    def find_sp_to_dcs_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND m.name =~ \'((?i)' + self.computer_search + ')\' return m.name,p ORDER BY m.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    p_count = 1
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""       
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            n_count += 1
+                                print(final)
+                                p_count += 1
+                        count += 1
+                else:
+                    count = 0
+                    p_count = 1
+                    file = open(f, 'w+')
+                    for r in results:
+                        if r["m.name"] is not None and r["p"] is not None:
+                            path = r["p"]
+                            if path.start_node["name"] is not None and path.end_node["name"] is not None:
+                                n_count = 0                            
+                                p_len = len(path)
+                                final = ""
+                                final_w = ""      
+                                mid_len = len(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                print(f'{log.default}*Path {log.reset}{log.red}{p_count}{log.reset}{log.default}* {log.reset}{log.red}{path.start_node["name"]}{log.reset}{log.default} -> {log.reset}{log.red}{path.end_node["name"]}{log.reset}{log.default}*{log.reset}')
+                                print(f'{log.default}*' * mid_len + f'{log.reset}')
+                                file.write('*' * mid_len + '\n')
+                                file.write(f'*Path {p_count}* {path.start_node["name"]} -> {path.end_node["name"]}*\n')
+                                file.write('*' * mid_len + '\n')
+                                for rel in path:
+                                    if rel.start_node["name"] is not None and rel.end_node["name"] is not None:
+                                        s_labels = list(rel.start_node.labels)
+                                        e_labels = list(rel.end_node.labels)
+                                        if n_count != p_len - 1:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}) and {log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]}) and '
+                                            n_count += 1
+                                        else:
+                                            final += f'{log.red}{rel.start_node["name"]}{log.reset}{log.default} ({s_labels[0]}/{s_labels[1]}) has {log.red}{rel.type}{log.reset} over {log.reset}{log.red}{rel.end_node["name"]} {log.reset}{log.default}({e_labels[0]}/{e_labels[1]}){log.reset}'
+                                            final_w += f'{rel.start_node["name"]} ({s_labels[0]}/{s_labels[1]}) has {rel.type} over {rel.end_node["name"]} ({e_labels[0]}/{e_labels[1]})'
+                                            n_count += 1
+                                print(final)
+                                file.write(final_w + '\n')
+                                p_count += 1
+                        count += 1
+                    util.handle_export(file, count, f)
 
     def find_sessions(self, f, raw):
         with self.driver.session() as session:
