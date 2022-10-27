@@ -789,7 +789,7 @@ class Driver:
 
     def find_all_user_sp_to_das(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -859,7 +859,7 @@ class Driver:
 
     def find_sp_to_das_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND m.name =~ \'((?i)' + self.user_search + ')\' return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND m.name =~ \'((?i)' + self.user_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -929,7 +929,7 @@ class Driver:
 
     def find_all_group_sp_to_das(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND NOT m=n return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -999,7 +999,7 @@ class Driver:
 
     def find_sp_to_das_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -1069,7 +1069,7 @@ class Driver:
 
     def find_all_computer_sp_to_das(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -1139,7 +1139,7 @@ class Driver:
 
     def find_sp_to_das_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND m.name =~ \'((?i)' + self.computer_search + ')\' return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND m.name =~ \'((?i)' + self.computer_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -1243,7 +1243,7 @@ class Driver:
 
     def find_all_user_sp_to_eas(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -1313,7 +1313,7 @@ class Driver:
 
     def find_sp_to_eas_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND m.name =~ \'((?i)' + self.user_search + ')\' return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND m.name =~ \'((?i)' + self.user_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -1383,7 +1383,7 @@ class Driver:
 
     def find_all_group_sp_to_eas(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND NOT m=n return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -1453,7 +1453,7 @@ class Driver:
 
     def find_sp_to_eas_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -1523,7 +1523,7 @@ class Driver:
 
     def find_all_computer_sp_to_eas(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -1593,7 +1593,7 @@ class Driver:
 
     def find_sp_to_eas_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND m.name =~ \'((?i)' + self.computer_search + ')\' return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND m.name =~ \'((?i)' + self.computer_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2083,7 +2083,7 @@ class Driver:
 
     def find_all_user_sp_to_exchange_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2153,7 +2153,7 @@ class Driver:
 
     def find_sp_to_exchange_groups_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND m.name =~ \'((?i)' + self.user_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND m.name =~ \'((?i)' + self.user_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2223,7 +2223,7 @@ class Driver:
 
     def find_all_group_sp_to_exchange_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2293,7 +2293,7 @@ class Driver:
 
     def find_sp_to_exchange_groups_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2363,7 +2363,7 @@ class Driver:
 
     def find_all_computer_sp_to_exchange_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2433,7 +2433,7 @@ class Driver:
 
     def find_sp_to_exchange_groups_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2503,7 +2503,7 @@ class Driver:
 
     def find_all_user_sp_to_sql_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2573,7 +2573,7 @@ class Driver:
 
     def find_sp_to_sql_groups_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND m.name =~ \'((?i)' + self.user_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND m.name =~ \'((?i)' + self.user_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2643,7 +2643,7 @@ class Driver:
 
     def find_all_group_sp_to_sql_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2713,7 +2713,7 @@ class Driver:
 
     def find_sp_to_sql_groups_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2783,7 +2783,7 @@ class Driver:
 
     def find_all_computer_sp_to_sql_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2853,7 +2853,7 @@ class Driver:
 
     def find_sp_to_sql_groups_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2923,7 +2923,7 @@ class Driver:
 
     def find_all_user_sp_to_web_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -2993,7 +2993,7 @@ class Driver:
 
     def find_sp_to_web_groups_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND m.name =~ \'((?i)' + self.user_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND m.name =~ \'((?i)' + self.user_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3063,7 +3063,7 @@ class Driver:
 
     def find_all_group_sp_to_web_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3133,7 +3133,7 @@ class Driver:
 
     def find_sp_to_web_groups_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3203,7 +3203,7 @@ class Driver:
 
     def find_all_computer_sp_to_web_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3273,7 +3273,7 @@ class Driver:
 
     def find_sp_to_web_groups_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3343,7 +3343,7 @@ class Driver:
 
     def find_all_user_sp_to_admin_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3413,7 +3413,7 @@ class Driver:
 
     def find_sp_to_admin_groups_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND m.name =~ \'((?i)' + self.user_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND m.name =~ \'((?i)' + self.user_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3483,7 +3483,7 @@ class Driver:
 
     def find_all_group_sp_to_admin_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3553,7 +3553,7 @@ class Driver:
 
     def find_sp_to_admin_groups_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3623,7 +3623,7 @@ class Driver:
 
     def find_all_computer_sp_to_admin_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3693,7 +3693,7 @@ class Driver:
 
     def find_sp_to_admin_groups_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3763,7 +3763,7 @@ class Driver:
 
     def find_all_user_sp_to_service_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3833,7 +3833,7 @@ class Driver:
 
     def find_sp_to_service_groups_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND m.name =~ \'((?i)' + self.user_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND m.name =~ \'((?i)' + self.user_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3903,7 +3903,7 @@ class Driver:
 
     def find_all_sp_to_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m)-[r*1..]->(n:User)) WHERE n.name =~ \'((?i)' + self.user_search + ')\' AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m)-[r*1..]->(n:User)) WHERE n.name =~ \'((?i)' + self.user_search + ')\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -3973,7 +3973,7 @@ class Driver:
 
     def find_all_sp_to_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m)-[r*1..]->(n:Group)) WHERE n.name =~ \'((?i)' + self.group_search + ')\' AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m)-[r*1..]->(n:Group)) WHERE n.name =~ \'((?i)' + self.group_search + ')\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4043,7 +4043,7 @@ class Driver:
 
     def find_all_sp_to_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m)-[r*1..]->(n:Computer)) WHERE n.name =~ \'((?i)' + self.computer_search + ')\' AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m)-[r*1..]->(n:Computer)) WHERE n.name =~ \'((?i)' + self.computer_search + ')\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4113,7 +4113,7 @@ class Driver:
 
     def find_all_group_sp_to_service_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND NOT m=n RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4183,7 +4183,7 @@ class Driver:
 
     def find_sp_to_service_groups_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4253,7 +4253,7 @@ class Driver:
 
     def find_all_computer_sp_to_service_groups(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4323,7 +4323,7 @@ class Driver:
 
     def find_sp_to_service_groups_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' RETURN m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND m.name =~ \'((?i)' + self.computer_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") RETURN m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4393,7 +4393,7 @@ class Driver:
 
     def find_all_user_sp_to_dcs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4463,7 +4463,7 @@ class Driver:
 
     def find_sp_to_dcs_us(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND m.name =~ \'((?i)' + self.user_search + ')\' return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND m.name =~ \'((?i)' + self.user_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4533,7 +4533,7 @@ class Driver:
 
     def find_all_group_sp_to_dcs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NOT m=n return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4603,7 +4603,7 @@ class Driver:
 
     def find_sp_to_dcs_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NOT m=n AND m.name =~ \'((?i)' + self.group_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4673,7 +4673,7 @@ class Driver:
 
     def find_all_computer_sp_to_dcs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -4743,7 +4743,7 @@ class Driver:
 
     def find_sp_to_dcs_cs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND m.name =~ \'((?i)' + self.computer_search + ')\' return m.name,p ORDER BY m.name')
+            results = session.run('MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND m.name =~ \'((?i)' + self.computer_search + ')\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") return m.name,p ORDER BY m.name')
             if results.peek() is None:
                 log.log_no_results()
             else:
