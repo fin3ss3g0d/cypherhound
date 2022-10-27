@@ -83,7 +83,7 @@ help, ? - used to display this help menu
 ## Important Notes
 
 - The program is configured to use the default `Neo4j` database and `URI`
-- Built for `BloodHound 4.2.0`, `DCSync` edge will not work for previous versions
+- Built for `BloodHound 4.2.0`, certain edges will not work for previous versions
 - `Windows` users must run `pip3 install pyreadline3`
 - Shortest paths exports are all the same (`raw` or not) due to their unpredictable number of nodes
 
