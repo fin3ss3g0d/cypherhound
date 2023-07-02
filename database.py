@@ -5116,6 +5116,108 @@ class Driver:
                                 file.write(f'Computer {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
+    
+    def find_user_sync_laps(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=(n:User)-[r:SyncLAPSPassword]->(m:Computer) RETURN n.name,m.name ORDER by n.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can sync LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+    
+    def find_group_sync_laps(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m:Computer) RETURN n.name,m.name ORDER by n.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can sync LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+
+    def find_computer_sync_laps(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=(n:Computer)-[r:SyncLAPSPassword]->(m:Computer) RETURN n.name,m.name ORDER by n.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["n.name"] is not None and r["m.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None and r["m.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can sync LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
 
     def find_da_sessions(self, f, raw):
         with self.driver.session() as session:
@@ -5590,6 +5692,74 @@ class Driver:
                             if r["n.name"] is not None:
                                 print(f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}')
                                 file.write(f'GPO {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+
+    def find_domains(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('Match (n:Domain) return n.name ORDER BY n.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["n.name"] is not None:
+                            print(f'{log.default}Domain {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Domain {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None:
+                                print(f'{log.default}Domain {log.reset}{log.red}{r["n.name"]}{log.reset}')
+                                file.write(f'Domain {r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+
+    def find_domain_trusts(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=(n:Domain)-[r:TrustedBy]->(m:Domain) RETURN r.trusttype,n.name,m.name ORDER by n.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["n.name"] is not None and r["m.name"] is not None and r["r.trusttype"] is not None:
+                            print(f'{log.default}Domain {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is trusted by {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}with type {log.reset}{log.red}{r["r.trusttype"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None and r["m.name"] is not None and r["r.trusttype"] is not None:
+                                print(f'{log.default}Domain {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is trusted by {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}with type {log.reset}{log.red}{r["r.trusttype"]}{log.reset}')
+                                file.write(f'{r["n.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["n.name"] is not None and r["m.name"] is not None and r["r.trusttype"] is not None:
+                                print(f'{log.default}Domain {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is trusted by {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}with type {log.reset}{log.red}{r["r.trusttype"]}{log.reset}')
+                                file.write(f'Domain {r["n.name"]} is trusted by {r["m.name"]} with type {r["r.trusttype"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 
@@ -8109,6 +8279,40 @@ class Driver:
                                 count += 1
                         util.handle_export(file, count, f)
 
+    def find_sync_laps_us(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=(n:User)-[r:SyncLAPSPassword]->(m:Computer) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN n.name,m.name ORDER by n.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'User {r["n.name"]} can sync LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+
     def find_gmsa_us(self, f, raw):
         with self.driver.session() as session:
             results = session.run('MATCH p=(n:User)-[r:ReadGMSAPassword]->(m:User) WHERE n.name =~ \'((?i)' + self.user_search + ')\' RETURN n.name,m.name ORDER by n.name')
@@ -9299,6 +9503,40 @@ class Driver:
                                 count += 1
                         util.handle_export(file, count, f)
 
+    def find_sync_laps_gs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m:Computer) WHERE n.name =~ \'((?i)' + self.group_search + ')\' RETURN n.name,m.name ORDER by n.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Group {r["n.name"]} can sync LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+
     def find_gmsa_gs(self, f, raw):
         with self.driver.session() as session:
             results = session.run('MATCH p=(n:Group)-[r:ReadGMSAPassword]->(m:User) WHERE n.name =~ \'((?i)' + self.group_search + ')\' RETURN n.name,m.name ORDER by n.name')
@@ -10112,6 +10350,40 @@ class Driver:
                             if r["m.name"] is not None and r["n.name"] is not None:
                                 print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
                                 file.write(f'Computer {r["n.name"]} can read LAPS passwords for {r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+
+    def find_sync_laps_cs(self, f, raw):
+        with self.driver.session() as session:
+            results = session.run('MATCH p=(n:Computer)-[r:SyncLAPSPassword]->(m:Computer) WHERE n.name =~ \'((?i)' + self.computer_search + ')\' RETURN n.name,m.name ORDER by n.name')
+            if results.peek() is None:
+                log.log_no_results()
+            else:
+                if f == "":
+                    count = 0
+                    for r in results:
+                        if r["m.name"] is not None and r["n.name"] is not None:
+                            print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                            count += 1
+                    if count == 0:
+                        log.log_no_results()
+                else:
+                    if not raw:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'{r["m.name"]}\n')
+                                count += 1
+                        util.handle_export(file, count, f)
+                    else:
+                        count = 0
+                        file = open(f, 'w+')
+                        for r in results:
+                            if r["m.name"] is not None and r["n.name"] is not None:
+                                print(f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}')
+                                file.write(f'Computer {r["n.name"]} can sync LAPS passwords for {r["m.name"]}\n')
                                 count += 1
                         util.handle_export(file, count, f)
 

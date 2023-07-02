@@ -67,11 +67,12 @@ def validate_regex_config(c):
     else:
         return True
 
-
 def validate_user_input(i):
-    result = re.sub(r'(\'|")', '', i)
-    return result
-
+    special_characters = ['{', '}', '[', ']', '(', ')', '^', '$', '.', '*', '+', '?', '\\', '|', '\'', '\"']
+    for character in special_characters:
+        if character in i:
+            i = i.replace(character, '\\' + character)
+    return i
 
 def handle_export(file, count, path):
     if count == 0:

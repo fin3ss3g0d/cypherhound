@@ -1,6 +1,6 @@
 # cypherhound
 
-A `Python3` terminal application that contains 260+ `Neo4j` cyphers for BloodHound data sets.
+A `Python3` terminal application that contains 270+ `Neo4j` cyphers for BloodHound data sets.
 
 ## Why?
 
@@ -17,7 +17,7 @@ This tool can also help blue teams to reveal detailed information about their Ac
 
 Take back control of your `BloodHound` data with `cypherhound`!
 
-- 264 cyphers as of date
+- 272 cyphers as of date
   - Set cyphers to search based on user input (user, group, and computer-specific)
   - User-defined regex cyphers
 - User-defined exporting of all results
