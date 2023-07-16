@@ -87,9 +87,14 @@ help, ? - used to display this help menu
 - `Windows` users must run `pip3 install pyreadline3`
 - Shortest paths exports are all the same (`raw` or not) due to their unpredictable number of nodes
 
+## A Word About Sponsorship
+
+On `July 15, 2023` I decided to make some changes to the project. After this date, this project will always be kept one version behind the private version for sponsors. Be sure to sponsor me for access to the latest cyphers, features, and bug fixes. By sponsoring me in this tier, you will also get access to additional private repositories I've not released to the public!
+
 ## Future Goals
 
 - Add cyphers for `Azure` edges
+- Continue to add cyphers when BloodHound releases updates
 
 ## Issues and Support
 
