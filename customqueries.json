@@ -1,0 +1,3079 @@
+{
+	"queries": [
+        {
+            "name": "List all kerberoastable users",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:User) WHERE n.hasspn=true RETURN n AS result ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List user CanRDP privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "match p=(u:User)-[:CanRDP]->(c:Computer) return p ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List group CanRDP privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "match p=(g:Group)-[:CanRDP]->(c:Computer) return p ORDER BY g.name"
+                }
+            ]
+        },
+        {
+            "name": "List all Unconstrained Delegation",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (c:Computer {unconstraineddelegation:true}) RETURN c ORDER BY c.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computers with unsupported OSs",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (H:Computer) WHERE H.operatingsystem =~ '.*(2000|2003|2008|xp|vista|7|me).*' RETURN H ORDER BY H.name"
+                }
+            ]
+        },
+        {
+            "name": "List groups containing \"admin\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (g:Group) WHERE g.name =~ '.*((?i)admin|adm).*' RETURN g ORDER BY g.name"
+                }
+            ]
+        },
+        {
+            "name": "List users containing \"admin\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (u:User) WHERE u.name =~ '.*((?i)admin|adm).*' RETURN u ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user shortest paths to admin groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group shortest paths to admin groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer shortest paths to admin groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List groups containing \"sql\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (g:Group) WHERE g.name =~ '.*((?i)sql).*' RETURN g ORDER BY g.name"
+                }
+            ]
+        },
+        {
+            "name": "List users containing \"sql\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (u:User) WHERE u.name =~ '.*((?i)sql).*' RETURN u ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List computers containing \"sql\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (c:Computer) WHERE c.name =~ '.*((?i)sql).*' RETURN c ORDER BY c.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user shortest paths to SQL groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group shortest paths to SQL groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer shortest paths to SQL groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List users containing \"svc/service\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (u:User) WHERE u.name =~ '.*((?i)svc|service).*' RETURN u ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user shortest paths to service groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group shortest paths to service groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer shortest paths to service groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List users containing \"web\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (u:User) WHERE u.name =~ '.*((?i)web).*' RETURN u ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List groups containing \"web\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (g:Group) WHERE g.name =~ '.*((?i)web).*' RETURN g ORDER BY g.name"
+                }
+            ]
+        },
+        {
+            "name": "List computers containing \"web\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (c:Computer) WHERE c.name =~ '.*((?i)web).*' RETURN c ORDER BY c.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user shortest paths to web groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group shortest paths to web groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer shortest paths to web groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List users containing \"dev\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (u:User) WHERE u.name =~ '.*((?i)dev).*' RETURN u ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List groups containing \"dev\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (g:Group) WHERE g.name =~ '.*((?i)dev).*' RETURN g ORDER BY g.name"
+                }
+            ]
+        },
+        {
+            "name": "List computers containing \"dev\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (c:Computer) WHERE c.name =~ '.*((?i)dev).*' RETURN c ORDER BY c.name"
+                }
+            ]
+        },
+        {
+            "name": "List users containing \"prod\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (u:User) WHERE u.name =~ '.*((?i)prod).*' RETURN u ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List groups containing \"prod\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (g:Group) WHERE g.name =~ '.*((?i)prod).*' RETURN g ORDER BY g.name"
+                }
+            ]
+        },
+        {
+            "name": "List computers containing \"prod\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (c:Computer) WHERE c.name =~ '.*((?i)prod).*' RETURN c ORDER BY c.name"
+                }
+            ]
+        },
+        {
+            "name": "List all Domain Admins",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:Group) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" WITH n MATCH p=(n)<-[r:MemberOf*1..]-(m) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user shortest paths to Domain Admins",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group shortest paths to Domain Admins",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer shortest paths to Domain Admins",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all Enterprise Admins",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:Group) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" WITH n MATCH p=(n)<-[r:MemberOf*1..]-(m) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user shortest paths to Enterprise Admins",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group shortest paths to Enterprise Admins",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer shortest paths to Enterprise Admins",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all sessions",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:Computer)-[r:HasSession]->(n:User) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all AS-REP roastable users",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (u:User {dontreqpreauth: true}) RETURN u ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List all high-value groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:Group {highvalue:true}) RETURN m ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all members of high-value groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:MemberOf*1..]->(m:Group {highvalue:true}) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user shortest paths to high-value targets",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:User),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group shortest paths to high-value targets",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer shortest paths to high-value targets",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:Computer),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user shortest paths to Exchange groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group shortest paths to Exchange groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer shortest paths to Exchange groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List user AdminTo privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:User)-[r:AdminTo]->(n:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List group AdminTo privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:Group)-[r:AdminTo]->(n:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List computer AdminTo privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:Computer)-[r:AdminTo]->(n:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List user ReadLAPSPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:ReadLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List group ReadLAPSPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:ReadLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List computer ReadLAPSPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:ReadLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List user SyncLAPSPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:SyncLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List group SyncLAPSPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List computer SyncLAPSPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:SyncLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List Domain Admin sessions",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:User)-[:MemberOf*1..]->(g:Group) WHERE g.objectid ENDS WITH '-512' MATCH p = (c:Computer)-[:HasSession]->(n) return p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List Enterprise Admin sessions",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:User)-[:MemberOf*1..]->(g:Group) WHERE g.objectid ENDS WITH '-519' MATCH p = (c:Computer)-[:HasSession]->(n) return p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all users",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:User) RETURN n ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:Group) RETURN n ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computers",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:Computer) RETURN n ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all enabled computers",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:Computer {enabled:TRUE}) RETURN n ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all disabled computers",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:Computer {enabled:FALSE}) RETURN n ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all Domain Controllers",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:Group) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" WITH n MATCH p=(n)<-[r:MemberOf*1..]-(m) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user shortest paths to Domain Controllers",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group shortest paths to Domain Controllers",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer shortest paths to Domain Controllers",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List user Constrained Delegation",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(u:User)-[:AllowedToDelegate]->(c:Computer) RETURN p ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List group Constrained Delegation",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(g:Group)-[:AllowedToDelegate]->(c:Computer) RETURN p ORDER BY g.name"
+                }
+            ]
+        },
+        {
+            "name": "List computer Constrained Delegation",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(c1:Computer)-[:AllowedToDelegate]->(c2:Computer) RETURN p ORDER BY c1.name"
+                }
+            ]
+        },
+        {
+            "name": "List all GPOs",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "Match (n:GPO) RETURN n ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all domains",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "Match (n:Domain) RETURN n ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all domain trusts",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Domain)-[r:TrustedBy]->(m:Domain) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List computers with LAPS enabled",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "Match (c:Computer) WHERE c.haslaps = true RETURN c ORDER BY c.name"
+                }
+            ]
+        },
+        {
+            "name": "List computers with LAPS disabled",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "Match (c:Computer) WHERE c.haslaps = false RETURN c ORDER BY c.name"
+                }
+            ]
+        },
+        {
+            "name": "List users with potential passwords in descriptions",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (u:User) WHERE u.description =~ '.*((?i)pass|pw|:).*' return u ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List all high-value users",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:User {highvalue:true}) RETURN m ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all sensitive users",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:User {sensitive:true}) RETURN m ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all users with an admin count",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:User {admincount:true}) RETURN m ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all groups with an admin count",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:Group {admincount:true}) RETURN m ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computers with an admin count",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:Computer {admincount:true}) RETURN m ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user ReadGMSAPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:ReadGMSAPassword]->(m:User) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group ReadGMSAPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:ReadGMSAPassword]->(m:User) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer ReadGMSAPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:ReadGMSAPassword]->(m:User) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user DCSync privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:DCSync]->(m:Domain) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group DCSync privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:DCSync]->(m:Domain) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer DCSync privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:DCSync]->(m:Domain) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all DCSync privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n)-[r:DCSync]->(m:Domain) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user ForceChangePassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:ForceChangePassword]->(m:User) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group ForceChangePassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:ForceChangePassword]->(m:User) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer ForceChangePassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:ForceChangePassword]->(m:User) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user AddMember privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:AddMember]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group AddMember privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:AddMember]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer AddMember privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:AddMember]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user AddSelf privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:AddSelf]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group AddSelf privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:AddSelf]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer AddSelf privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:AddSelf]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user SQLAdmin privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:SQLAdmin]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group SQLAdmin privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:SQLAdmin]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer SQLAdmin privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:SQLAdmin]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user CanPSRemote privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:CanPSRemote]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group CanPSRemote privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:CanPSRemote]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer CanPSRemote privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:CanPSRemote]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user ExecuteDCOM privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:ExecuteDCOM]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group ExecuteDCOM privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:ExecuteDCOM]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer ExecuteDCOM privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:ExecuteDCOM]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user AllowedToAct privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:AllowedToAct]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group AllowedToAct privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:AllowedToAct]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer AllowedToAct privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:AllowedToAct]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user Owns privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:Owns]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group Owns privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:Owns]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer Owns privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:Owns]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user AllExtendedRights privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:AllExtendedRights]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group AllExtendedRights privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:AllExtendedRights]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer AllExtendedRights privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:AllExtendedRights]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user memberships",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:MemberOf]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group memberships",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:MemberOf]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer memberships",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:MemberOf]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user AddKeyCredentialLink privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:AddKeyCredentialLink]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group AddKeyCredentialLink privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:AddKeyCredentialLink]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer AddKeyCredentialLink privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:AddKeyCredentialLink]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user GenericAll privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:GenericAll]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group GenericAll privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:GenericAll]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer GenericAll privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:GenericAll]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user WriteDacl privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:WriteDacl]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group WriteDacl privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:WriteDacl]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer WriteDacl privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:WriteDacl]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user WriteOwner privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:WriteOwner]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group WriteOwner privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:WriteOwner]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer WriteOwner privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:WriteOwner]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user GenericWrite privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group GenericWrite privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer GenericWrite privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List groups containing \"svc/service\"",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (g:Group) WHERE g.name =~ '.*((?i)svc|service).*' RETURN g ORDER BY g.name"
+                }
+            ]
+        },
+        {
+            "name": "List all OUs",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (o:OU) RETURN o ORDER BY o.name"
+                }
+            ]
+        },
+        {
+            "name": "List all Containers",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (c:Container) RETURN c ORDER BY c.name"
+                }
+            ]
+        },
+        {
+            "name": "List all Domains",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "Match (n:Domain) RETURN n ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all object control over OUs",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "match p=(n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(o:OU) return p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all object control over Containers",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "match p=(n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(c:Container) return p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all object control over GPOs",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "match p=(n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO) return p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all GP Links",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(g1)-[:GPLink]->(g2) RETURN p ORDER BY g1.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r]->(m) RETURN p ORDER BY TYPE(r)"
+                }
+            ]
+        },
+        {
+            "name": "List all group privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r]->(m) RETURN p ORDER BY TYPE(r)"
+                }
+            ]
+        },
+        {
+            "name": "List all computer privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r]->(m) RETURN p ORDER BY TYPE(r)"
+                }
+            ]
+        },
+		{
+            "name": "List this user's RDP privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "match p=(u:User {name: $result})-[:CanRDP]->(c:Computer) return p"
+                }
+            ]
+        },
+        {
+            "name": "List this user's group-delegated RDP privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[:MemberOf]->(m:Group),(m)-[:CanRDP]->(c:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's AdminTo privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:User {name: $result})-[r:AdminTo]->(n:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's group-delegated AdminTo privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's sessions",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:Computer)-[r:HasSession]->(n:User {name: $result}) RETURN p"
+                }
+            ]
+        },
+        {
+            "name": "List this user's ReadLAPSPassword privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:ReadLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's SyncLAPSPassword privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:SyncLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's ReadGMSAPassword privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:ReadGMSAPassword]->(m:User) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's Constrained Delegation privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(u:User {name: $result})-[:AllowedToDelegate]->(c:Computer) RETURN p"
+                }
+            ]
+        },
+        {
+            "name": "List this user's ForceChangePassword privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:ForceChangePassword]->(m:User) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's AddMember privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:AddMember]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's AddSelf privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:AddSelf]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's SQLAdmin privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:SQLAdmin]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's CanPSRemote privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:CanPSRemote]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's ExecuteDCOM privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:ExecuteDCOM]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's AllowedToAct privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:AllowedToAct]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's Owns privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:Owns]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's AllExtendedRights privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:AllExtendedRights]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's AddKeyCredentialLink privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:AddKeyCredentialLink]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's GenericAll privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:GenericAll]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's WriteDacl privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:WriteDacl]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's WriteOwner privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:WriteOwner]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's GenericWrite privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's group memberships",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:MemberOf]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List if this user's AS-REP roastable",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH (u:User {dontreqpreauth: true, name: $result}) RETURN u"
+                }
+            ]
+        },
+        {
+            "name": "List if this user's kerberoastable",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH (n:User {name: $result, hasspn: true}) RETURN n AS result ORDER BY n.name"
+                }
+            ]
+        },
+		{
+            "name": "List all privileges for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r]->(m) RETURN p ORDER BY TYPE(r)"
+                }
+            ]
+        },
+        {
+            "name": "List all group-delegated privileges for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[:MemberOf]->(m:Group),(m)-[r]->(v) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to high-value targets for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH (m:User {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Domain Admins for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Enterprise Admins for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Domain Controllers for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Exchange groups for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },		
+        {
+            "name": "List all shortest paths to admin groups for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to sql groups for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to web groups for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to service groups for this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to this user",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m)-[r*1..]->(n:User {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's RDP privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "match p=(g:Group {name: $result})-[:CanRDP]->(c:Computer) return p"
+                }
+            ]
+        },
+        {
+            "name": "List this group's group-delegated RDP privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[:MemberOf]->(m:Group),(m)-[:CanRDP]->(c:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's AdminTo privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:Group {name: $result})-[r:AdminTo]->(n:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's group-delegated AdminTo privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's ReadLAPSPassword privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:ReadLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's SyncLAPSPassword privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:SyncLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's ReadGMSAPassword privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:ReadGMSAPassword]->(m:User) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's Constrained Delegation privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(g:Group {name: $result})-[:AllowedToDelegate]->(c:Computer) RETURN p"
+                }
+            ]
+        },
+        {
+            "name": "List this group's ForceChangePassword privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:ForceChangePassword]->(m:User) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's AddMember privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:AddMember]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's AddSelf privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:AddSelf]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's SQLAdmin privileges",
+            "category": "Group Specific",
+            "queryList": [ 
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:SQLAdmin]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's CanPSRemote privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:CanPSRemote]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's ExecuteDCOM privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:ExecuteDCOM]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's AllowedToAct privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:AllowedToAct]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's Owns privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:Owns]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's AllExtendedRights privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:AllExtendedRights]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's AddKeyCredentialLink privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:AddKeyCredentialLink]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's GenericAll privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:GenericAll]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's WriteDacl privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:WriteDacl]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's WriteOwner privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:WriteOwner]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's GenericWrite privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's group memberships",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:MemberOf]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's members",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n)-[r:MemberOf]->(m {name: $result}) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all privileges for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|SyncLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) RETURN p ORDER BY TYPE(r)"
+                }
+            ]
+        },
+        {
+            "name": "List all group-delegated privileges for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[:MemberOf]->(m:Group),(m)-[r]->(v) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to high-value targets for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH (m:Group {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Domain Admins for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Enterprise Admins for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Domain Controllers for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Exchange groups for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to admin groups for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to sql groups for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to web groups for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to service groups for this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to this group",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m)-[r*1..]->(n:Group {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's AdminTo privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:Computer {name: $result})-[r:AdminTo]->(n:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's group-delegated AdminTo privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's ReadLAPSPassword privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:ReadLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's SyncLAPSPassword privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:SyncLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's ReadGMSAPassword privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:ReadGMSAPassword]->(m:User) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's Constrained Delegation privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[:AllowedToDelegate]->(c:Computer) RETURN p"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's ForceChangePassword privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:ForceChangePassword]->(m:User) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's AddMember privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:AddMember]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's AddSelf privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:AddSelf]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's SQLAdmin privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:SQLAdmin]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's CanPSRemote privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:CanPSRemote]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's ExecuteDCOM privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:ExecuteDCOM]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's AllowedToAct privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:AllowedToAct]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's Owns privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:Owns]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's AllExtendedRights privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:AllExtendedRights]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's AddKeyCredentialLink privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:AddKeyCredentialLink]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's GenericAll privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:GenericAll]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's WriteDacl privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:WriteDacl]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's WriteOwner privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:WriteOwner]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's GenericWrite privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's group memberships",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:MemberOf]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all privileges for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r]->(m) RETURN p ORDER BY TYPE(r)"
+                }
+            ]
+        },
+        {
+            "name": "List all group-delegated privileges for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[:MemberOf]->(m:Group),(m)-[r]->(v) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to high-value targets for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH (m:Computer {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Domain Admins for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Enterprise Admins for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Domain Controllers for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Exchange groups for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to admin groups for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to sql groups for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to web groups for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to service groups for this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to this computer",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m)-[r*1..]->(n:Computer {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        }
+	]	
+}

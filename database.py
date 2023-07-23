@@ -5833,7 +5833,7 @@ class Driver:
 
     def find_description_pwds(self, f, raw):
         with self.driver.session() as session:
-            results = session.run("MATCH (u:User) WHERE u.description =~ '.*(pass|pw|:).*' return u.name,u.description ORDER BY u.name")
+            results = session.run("MATCH (u:User) WHERE u.description =~ '.*((?i)pass|pw|:).*' return u.name,u.description ORDER BY u.name")
             if results.peek() is None:
                 log.log_no_results()
             else:
@@ -10185,7 +10185,7 @@ class Driver:
 
     def find_all_gs(self, f, raw):
         with self.driver.session() as session:
-            results = session.run('MATCH (n:Group)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) WHERE n.name =~ \'((?i)' + self.group_search + ')\' RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
+            results = session.run('MATCH (n:Group)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|SyncLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) WHERE n.name =~ \'((?i)' + self.group_search + ')\' RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)')
             if results.peek() is None:
                 log.log_no_results()
             else:

@@ -11,7 +11,7 @@ A `Python3` terminal application that contains 270+ `Neo4j` cyphers for BloodHou
 3. Graphs can be too large to draw - the information contained in any graph can aid our goals as the attacker and we *need* to be able to view *all* data efficiently
 4. Manually running custom cyphers is time-consuming - let's automate it :)
 
-This tool can also help blue teams to reveal detailed information about their Active Directory environments as well.
+This tool can also help blue teams to reveal detailed information about their Active Directory environments as well. Matter-of-fact, there are enough cyphers packaged within this project to allow complete visibility into an Active Directory environment. The nature of the cyphers allow the operator to enumerate the environment with scalpel precision, mapping virtually every and any attack path/privilege possible.
 
 ## Features
 
@@ -23,6 +23,8 @@ Take back control of your `BloodHound` data with `cypherhound`!
 - User-defined exporting of all results
   - Default export will be just end object to be used as target list with tools
   - Raw export option available in `grep/cut/awk`-friendly format
+- `customqueries.json` file included
+  - Run the same queries from the GUI
 
 ## Installation
 
@@ -80,10 +82,24 @@ help, ? - used to display this help menu
 
 ```
 
+## customqueries.json
+
+Almost all cyphers included in the terminal application (254 to be exact) have been ported over to `json` format for direct usage in the GUI. Follow the instructions below in order to begin using them!
+
+![customqueries.json](images/gui-cypher-list.png)
+
+### Linux
+
+Copy the `customqueries.json` file to `~/.config/bloodhound/`
+
+### Windows
+
+ Copy the `customqueries.json` file to `C:\Users\<YourUsername>\AppData\bloodhound\`
+
 ## Important Notes
 
 - The program is configured to use the default `Neo4j` database and `URI`
-- Built for `BloodHound 4.2.0`, certain edges will not work for previous versions
+- Built for `BloodHound 4.3.1`, certain edges will not work for previous versions
 - `Windows` users must run `pip3 install pyreadline3`
 - Shortest paths exports are all the same (`raw` or not) due to their unpredictable number of nodes
 
