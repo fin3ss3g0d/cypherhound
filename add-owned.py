@@ -54,14 +54,17 @@ if __name__ == "__main__":
         with d.driver.session(database=d.database) as session:
             with open(args.list, "r") as file:
                 for line in file:
-                    node_name = line.strip().upper()
-                    if args.owned:                        
-                        session.execute_write(lambda tx: d.set_owned(tx, node_name))
-                        print(f'{log.green}[+] {node_name} successfully set to owned!{log.reset}')
-                    else:
-                        session.execute_write(lambda tx: d.set_high_value(tx, node_name))
-                        print(f'{log.green}[+] {node_name} successfully set to high-value!{log.reset}')
-                    
+                    try:
+                        node_name = line.strip().upper()
+                        if args.owned:                        
+                            session.execute_write(lambda tx: d.set_owned(tx, node_name))
+                            print(f'{log.green}[+] {node_name} successfully set to owned!{log.reset}')
+                        else:
+                            session.execute_write(lambda tx: d.set_high_value(tx, node_name))
+                            print(f'{log.green}[+] {node_name} successfully set to high-value!{log.reset}')
+                    except Exception as e:
+                        log.log_error(e)
+    
         d.driver.close()
 
     except Exception as e:
