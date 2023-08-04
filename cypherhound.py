@@ -6,12 +6,15 @@ import readline
 import sys
 import signal
 import log
+import json
+import atexit
 
 
 def signal_handler(sig, frame):
-    sys.exit(0)
-
-
+    log.log_error("Exit program with 'q', 'quit', 'exit', or 'stop'")
+    print(": ", end="")
+            
+            
 banner = """:::::::------::-----::::-------::---------::-----------------=+++*++=++***++===+**######*++++**#####*****+===+===-----=+
 :::::::------::------::::-------:-------::::-----------------===++++++****++===+**#%%%%##***+**#######**++==++++==----=+
 ::::::-------::------::::-------:------::::::---:::::::...:::-==++*++**++*++===+*##%%%%%##*+++**##**#***++==+++++=---==+
@@ -56,13 +59,29 @@ banner = """:::::::------::-----::::-------::---------::-----------------=+++*++
                                       cypherhound (Author: Dylan Evans|fin3ss3g0d)
 """
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Python terminal app that runs various Neo4j cyphers on BloodHound data sets.")
-    parser.add_argument("-u", "--user", help="Neo4j username", required=True)
-    parser.add_argument("-p", "--pwd", help="Neo4j password", required=True)
+    parser.add_argument("-c", "--config", help="Config file", required=True)
     args = parser.parse_args()
-    readline.set_completer(terminal.Completer(terminal.OPTIONS).complete)
-    readline.parse_and_bind('tab: complete')
-    signal.signal(signal.SIGINT, signal_handler)
-    print(f'{log.default}{banner}{log.reset}')
-    terminal.input_loop(args.user, args.pwd)
+
+    try:
+        with open(args.config) as f:
+            config = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        log.log_error(e)
+        sys.exit(1)    
+
+    try:
+        print(f'{log.default}{banner}{log.reset}')
+        readline.set_completer(terminal.Completer(terminal.OPTIONS).complete)
+        readline.parse_and_bind('tab: complete')
+        histfile = ('.history')
+        readline.read_history_file(histfile)
+        atexit.register(readline.write_history_file, histfile)
+        signal.signal(signal.SIGINT, signal_handler)        
+        term = terminal.Terminal(config["user"], config["pwd"], config["database"])        
+        term.input_loop()
+    except Exception as e:
+        log.log_error(e)
+        sys.exit(1)

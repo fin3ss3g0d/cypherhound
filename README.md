@@ -34,7 +34,24 @@ Make sure to have `python3` installed and run:
 
 ## Usage
 
-Start the program with: `python3 cypherhound.py -u <neo4j_username> -p <neo4j_password>`
+Start the program with: `python3 cypherhound.py -c config.json`
+
+## config.json
+
+The program will read a configuration file in `json` format. An example of this file is shown below:
+
+```json
+{
+    "user": "neo4j",
+    "pwd": "password",
+    "database": "neo4j"
+}
+```
+
+where:
+- `user` is your `Neo4j` username
+- `pwd` is your `Neo4j` password
+- `database` is your `Neo4j` database
 
 ## Commands
 
@@ -51,7 +68,6 @@ set - used to set search parameters for cyphers, double/single quotes not requir
     example
         set user svc-test@domain.local
         set group domain admins@domain.local
-        set computer dc01.domain.local
         set regex .*((?i)web).*
 run - used to run cyphers
     parameters
@@ -62,10 +78,8 @@ export - used to export cypher results to txt files
     parameters
         cypher number - the number of the cypher to run and then export
         output filename - the number of the output file, extension not needed
-        raw - write raw output or just end object (optional)
     example
         export 31 results
-        export 42 results2 raw
 list - used to show a list of cyphers
     parameters
         list type - the type of cyphers to list (general, user, group, computer, regex, all)
@@ -76,10 +90,15 @@ list - used to show a list of cyphers
         list computer
         list regex
         list all
-q, quit, exit - used to exit the program
-clear - used to clear the terminal
+search - used to search the list of cyphers
+    parameters
+        search query - the search string
+    example
+        search domain admin
+        search shortest
+q, quit, exit, stop - used to exit the program
+clear, cls - used to clear the terminal
 help, ? - used to display this help menu
-
 ```
 
 ## customqueries.json
@@ -94,14 +113,37 @@ Copy the `customqueries.json` file to `~/.config/bloodhound/`
 
 ### Windows
 
- Copy the `customqueries.json` file to `C:\Users\<YourUsername>\AppData\bloodhound\`
+Copy the `customqueries.json` file to `C:\Users\<YourUsername>\AppData\bloodhound\`
+
+## parse-memberships.py
+
+This script will parse a raw export from the terminal application, specifically the cypher to list all user group memberships as an example for how this tool's output can be parsed. You will pass this export as a parameter to the script, a `NTDS.dit` file, and an output directory. It will then produce `.txt` files in the output directory for every group name with entries in `DOMAIN\USER` format, compatible with [DPAT](https://github.com/clr2of8/DPAT). It will then also produce the `-g` commandline argument to pass to [DPAT](https://github.com/clr2of8/DPAT), allowing the operator to produce group-specific statistics for every group in a domain.
+
+### Usage
+
+To use the script, you should have two files ready:
+
+1. The raw export from the terminal application that retrieves all user group memberships
+2. A `NTDS.dit` file with lines in the following format: `domain\user:RID:LMhash:NTLMhash:::`
+
+The script can be run with the following command:
+
+```bash
+python parse-memberships.py <memberships_filename> <domain> <ntds_filename> <output_directory>
+```
+
+where:
+- `parse-memberships.py` is the name of the script file.
+- `<memberships_filename>` is the file containing the group membership data, exported from terminal application.
+- `<domain>` is the domain name to be used for parsing the memberships file.
+- `<ntds_filename>` is the `ntds.dit` file containing user data.
+- `<output_directory>` is the directory where the script will output the group files.
 
 ## Important Notes
 
 - The program is configured to use the default `Neo4j` database and `URI`
 - Built for `BloodHound 4.3.1`, certain edges will not work for previous versions
 - `Windows` users must run `pip3 install pyreadline3`
-- Shortest paths exports are all the same (`raw` or not) due to their unpredictable number of nodes
 
 ## A Word About Sponsorship
 
@@ -111,6 +153,7 @@ On `July 15, 2023` I decided to make some changes to the project. After this dat
 
 - Add cyphers for `Azure` edges
 - Continue to add cyphers when BloodHound releases updates
+- Continue to add cyphers
 
 ## Issues and Support
 

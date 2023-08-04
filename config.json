@@ -1,0 +1,5 @@
+{
+    "user": "neo4j",
+    "pwd": "password",
+    "database": "neo4j"
+}
