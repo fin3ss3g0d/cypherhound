@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+# Author: Dylan Evans|fin3ss3g0d
 import re
 import sys
 import os

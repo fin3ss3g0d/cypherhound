@@ -8,7 +8,7 @@ class Driver:
     def __init__(self, user, password, db, u_search="", g_search="", c_search="", regex=""):
         try:
             self.driver = GraphDatabase.driver("neo4j://localhost:7687", auth=(user, password))
-            self.session = self.driver.session(database=db)
+            self.database = db
             self.user_search = u_search
             self.group_search = g_search
             self.computer_search = c_search
@@ -1924,8 +1924,7 @@ class Driver:
             log.log_error(e)
             
 
-    def close(self):
-        self.session.close()
+    def close(self):        
         self.driver.close()
 
 
@@ -2003,7 +2002,7 @@ class Driver:
     
     def handle_standard_query(self, query_data, f):
         try:
-            with self.driver.session() as session:                
+            with self.driver.session(database=self.database) as session:                
                 results = session.run(self.replace_fillers_in_string(query_data['query']))
                 if results.peek() is None:
                     log.log_no_results()
@@ -2025,7 +2024,7 @@ class Driver:
     
     def handle_path_query(self, query_data, f):
         try:
-            with self.driver.session() as session:
+            with self.driver.session(database=self.database) as session:
                 results = session.run(self.replace_fillers_in_string(query_data['query']))                
                 if results.peek() is None:
                     log.log_no_results()

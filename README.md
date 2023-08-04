@@ -140,6 +140,33 @@ where:
 - `<ntds_filename>` is the `ntds.dit` file containing user data.
 - `<output_directory>` is the directory where the script will output the group files.
 
+## add-owned.py
+
+This script will read a list of node names from a `.txt` file and mark them as either owned or high-value in the database.
+
+### Usage
+
+To use the script, you should have two files ready:
+
+- A line by line `.txt` file containing node names in the `BloodHound` format
+  - For users: `USER@DOMAIN.LOCAL`
+  - For groups: `GROUP@DOMAIN.LOCAL`
+  - For computers: `COMPUTER.DOMAIN.LOCAL`
+- Your configuration file in `json` format containing your `Neo4j` username, password, and database (example shown above)
+
+The script has the following options:
+
+```
+  -h, --help            show this help message and exit
+  -c CONFIG, --config CONFIG
+                        Config file
+  -l LIST, --list LIST  List of node names
+  -o, --owned           Set target nodes as owned
+  -v, --high-value      Set target nodes as high-value
+```
+
+You need to specify at least `-o` or `-v`
+
 ## Important Notes
 
 - The program is configured to use the default `Neo4j` database and `URI`
