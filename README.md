@@ -68,6 +68,7 @@ set - used to set search parameters for cyphers, double/single quotes not requir
     example
         set user svc-test@domain.local
         set group domain admins@domain.local
+        set computer dc01.domain.local
         set regex .*((?i)web).*
 run - used to run cyphers
     parameters
