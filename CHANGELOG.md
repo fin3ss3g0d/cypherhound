@@ -17,3 +17,7 @@ Performed a complete re-factor of the entire code base, removing thousands of li
 # 08/05/2023
 
 Added cyphers for the Users, Domain Users, Authenticated Users, and Everyone groups as well as a cypher for users with passwords set to never expire.
+
+# 08/06/2023
+
+Added additional cyphers for the Users, Domain Users, Authenticated Users, and Everyone groups as well as owned principles.

@@ -40,6 +40,16 @@
                 }
             ]
         },
+		{
+            "name": "List all CanRDP privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "match p=(m {owned: true})-[:CanRDP]->(c:Computer) return p ORDER BY m.name"
+                }
+            ]
+        },        
         {
             "name": "List all Unconstrained Delegation",
             "category": "General",
@@ -121,6 +131,16 @@
             ]
         },
         {
+            "name": "List all shortest paths to admin groups for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
             "name": "List groups containing \"sql\"",
             "category": "General",
             "queryList": [
@@ -191,6 +211,16 @@
             ]
         },
         {
+            "name": "List all shortest paths to SQL groups for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
             "name": "List users containing \"svc/service\"",
             "category": "General",
             "queryList": [
@@ -247,6 +277,16 @@
                 {
                     "final": true,
                     "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to service groups for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -317,6 +357,16 @@
                 {
                     "final": true,
                     "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to web groups for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -431,6 +481,16 @@
             ]
         },
         {
+            "name": "List all shortest paths to Domain Admins for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
             "name": "List all Enterprise Admins",
             "category": "General",
             "queryList": [
@@ -477,6 +537,16 @@
                 {
                     "final": true,
                     "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Enterprise Admins for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
                 }
             ]
         },
@@ -561,6 +631,16 @@
             ]
         },
         {
+            "name": "List all shortest paths to high-value targets for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m {owned: true}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
             "name": "List all user shortest paths to Exchange groups",
             "category": "General",
             "queryList": [
@@ -597,6 +677,16 @@
                 {
                     "final": true,
                     "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NOT m=n AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Exchange groups for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NOT m=n AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -641,6 +731,16 @@
             ]
         },
         {
+            "name": "List all AdminTo privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m {owned: true})-[r:AdminTo]->(n:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
             "name": "List user ReadLAPSPassword privileges",
             "category": "General",
             "queryList": [
@@ -681,6 +781,16 @@
             ]
         },
         {
+            "name": "List all ReadLAPSPassword privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:ReadLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
             "name": "List user SyncLAPSPassword privileges",
             "category": "General",
             "queryList": [
@@ -717,6 +827,16 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m:Computer) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all SyncLAPSPassword privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:SyncLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
                 }
             ]
         },
@@ -837,6 +957,16 @@
                 {
                     "final": true,
                     "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to Domain Controllers for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
                 }
             ]
         },
@@ -1031,6 +1161,26 @@
             ]
         },
         {
+            "name": "List all ReadGMSAPassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:Group)-[r:ReadGMSAPassword]->(n:User) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR .objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER by m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all ReadGMSAPassword privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m {owned: true})-[r:ReadGMSAPassword]->(n:Computer) RETURN p ORDER by m.name"
+                }
+            ]
+        },
+        {
             "name": "List all user DCSync privileges",
             "category": "General",
             "queryList": [
@@ -1071,6 +1221,26 @@
             ]
         },
         {
+            "name": "List all DCSync privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m)-[r:DCSync]->(n:Domain) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR .objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all DCSync privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:DCSync]->(m:Domain) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all user ForceChangePassword privileges",
             "category": "General",
             "queryList": [
@@ -1100,6 +1270,26 @@
                 }
             ]
         },
+		{
+            "name": "List all ForceChangePassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:ForceChangePassword]->(m:User) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all ForceChangePassword privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:ForceChangePassword]->(m:User) RETURN p ORDER BY n.name"
+                }
+            ]
+        },        
         {
             "name": "List all user AddMember privileges",
             "category": "General",
@@ -1127,6 +1317,26 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Computer)-[r:AddMember]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all AddMember privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:AddMember]->(m:Group) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all AddMember privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:AddMember]->(m:Group) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -1161,6 +1371,26 @@
             ]
         },
         {
+            "name": "List all AddSelf privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:AddSelf]->(m:Group) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all AddSelf privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:AddSelf]->(m:Group) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all user SQLAdmin privileges",
             "category": "General",
             "queryList": [
@@ -1187,6 +1417,26 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Computer)-[r:SQLAdmin]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all SQLAdmin privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:SQLAdmin]->(m:Computer) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all SQLAdmin privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:SQLAdmin]->(m:Computer) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -1221,6 +1471,26 @@
             ]
         },
         {
+            "name": "List all CanPSRemote privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:CanPSRemote]->(m:Computer) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all CanPSRemote privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:CanPSRemote]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all user ExecuteDCOM privileges",
             "category": "General",
             "queryList": [
@@ -1247,6 +1517,26 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Computer)-[r:ExecuteDCOM]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all ExecuteDCOM privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:ExecuteDCOM]->(m:Computer) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all ExecuteDCOM privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:ExecuteDCOM]->(m:Computer) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -1281,6 +1571,26 @@
             ]
         },
         {
+            "name": "List all AllowedToAct privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:AllowedToAct]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all AllowedToAct privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:AllowedToAct]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all user Owns privileges",
             "category": "General",
             "queryList": [
@@ -1307,6 +1617,26 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Computer)-[r:Owns]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all Owns privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:Owns]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all Owns privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:Owns]->(m) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -1341,6 +1671,26 @@
             ]
         },
         {
+            "name": "List all AllExtendedRights privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:AllExtendedRights]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all AllExtendedRights privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:AllExtendedRights]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all user memberships",
             "category": "General",
             "queryList": [
@@ -1367,6 +1717,26 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Computer)-[r:MemberOf]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all memberships for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:MemberOf]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all memberships for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:MemberOf]->(m) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -1401,6 +1771,26 @@
             ]
         },
         {
+            "name": "List all AddKeyCredentialLink privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:AddKeyCredentialLink]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all AddKeyCredentialLink privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:AddKeyCredentialLink]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all user GenericAll privileges",
             "category": "General",
             "queryList": [
@@ -1427,6 +1817,26 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Computer)-[r:GenericAll]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all GenericAll privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:GenericAll]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all GenericAll privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:GenericAll]->(m) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -1461,6 +1871,26 @@
             ]
         },
         {
+            "name": "List all WriteDacl privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:WriteDacl]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all WriteDacl privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:WriteDacl]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all user WriteOwner privileges",
             "category": "General",
             "queryList": [
@@ -1491,6 +1921,26 @@
             ]
         },
         {
+            "name": "List all WriteOwner privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:WriteOwner]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all WriteOwner privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:WriteOwner]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all user GenericWrite privileges",
             "category": "General",
             "queryList": [
@@ -1517,6 +1967,26 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Computer)-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all GenericWrite privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:GenericWrite]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all GenericWrite privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -1627,6 +2097,16 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Group)-[r]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY TYPE(r)"
+                }
+            ]
+        },
+        {
+            "name": "List all privileges for owned principles",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r]->(m) RETURN p ORDER BY TYPE(r)"
                 }
             ]
         },
@@ -2201,6 +2681,36 @@
             ]
         },
         {
+            "name": "List all shortest paths to this user for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:User {name: $result})) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to this user for owned principles",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:User {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
             "name": "List this group's RDP privileges",
             "category": "Group Specific",
             "queryList": [
@@ -2741,6 +3251,36 @@
             ]
         },
         {
+            "name": "List all shortest paths to this group for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group {name: $result})) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to this group for owned principles",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
             "name": "List this computer's AdminTo privileges",
             "category": "Computer Specific",
             "queryList": [
@@ -3232,6 +3772,36 @@
                 {
                     "final": true,
                     "query": "MATCH p=shortestPath((m)-[r*1..]->(n:Computer {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to this computer for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Computer {name: $result})) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to this computer for owned principles",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Computer {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
                 }
             ]
         }
