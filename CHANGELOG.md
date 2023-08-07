@@ -20,4 +20,8 @@ Added cyphers for the Users, Domain Users, Authenticated Users, and Everyone gro
 
 # 08/06/2023
 
-Added additional cyphers for the Users, Domain Users, Authenticated Users, and Everyone groups as well as owned principles.
+Added additional cyphers for the Users, Domain Users, Authenticated Users, and Everyone groups as well as owned principals.
+
+# 08/07/2023
+
+Expanded cyphers for owned principals as well as the Users, Domain Users, Authenticated Users, and Everyone groups. Added additional cyphers for domains including cross-domain paths.

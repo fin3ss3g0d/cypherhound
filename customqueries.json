@@ -6,7 +6,17 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User) WHERE n.hasspn=true RETURN n AS result ORDER BY n.name"
+                    "query": "MATCH (n:User {hasspn: true}) RETURN n AS result ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all kerberoastable users for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:User {owned: true, hasspn: true}) RETURN n AS result ORDER BY n.name"
                 }
             ]
         },
@@ -41,7 +51,7 @@
             ]
         },
 		{
-            "name": "List all CanRDP privileges for owned principles",
+            "name": "List all CanRDP privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -131,7 +141,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to admin groups for owned principles",
+            "name": "List all shortest paths to admin groups for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -211,7 +221,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to SQL groups for owned principles",
+            "name": "List all shortest paths to SQL groups for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -281,7 +291,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to service groups for owned principles",
+            "name": "List all shortest paths to service groups for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -361,7 +371,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to web groups for owned principles",
+            "name": "List all shortest paths to web groups for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -481,7 +491,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to Domain Admins for owned principles",
+            "name": "List all shortest paths to Domain Admins for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -541,7 +551,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to Enterprise Admins for owned principles",
+            "name": "List all shortest paths to Enterprise Admins for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -561,12 +571,42 @@
             ]
         },
         {
+            "name": "List all sessions for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:Computer)-[r:HasSession]->(n:User {owned: true}) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all AS-REP roastable users",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
                     "query": "MATCH (u:User {dontreqpreauth: true}) RETURN u ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List all AS-REP roastable users for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (u:User {dontreqpreauth: true, owned: true}) RETURN u ORDER BY u.name"
+                }
+            ]
+        },
+        {
+            "name": "List all high-value owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m {highvalue:true, owned: true}) RETURN m ORDER BY m.name"
                 }
             ]
         },
@@ -587,6 +627,16 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:User)-[r:MemberOf*1..]->(m:Group {highvalue:true}) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all members of high-value groups for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:MemberOf*1..]->(m:Group {highvalue:true}) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -631,7 +681,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to high-value targets for owned principles",
+            "name": "List all shortest paths to high-value targets for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -681,7 +731,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to Exchange groups for owned principles",
+            "name": "List all shortest paths to Exchange groups for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -731,7 +781,7 @@
             ]
         },
         {
-            "name": "List all AdminTo privileges for owned principles",
+            "name": "List all AdminTo privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -781,7 +831,7 @@
             ]
         },
         {
-            "name": "List all ReadLAPSPassword privileges for owned principles",
+            "name": "List all ReadLAPSPassword privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -831,7 +881,7 @@
             ]
         },
         {
-            "name": "List all SyncLAPSPassword privileges for owned principles",
+            "name": "List all SyncLAPSPassword privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -887,6 +937,16 @@
                 {
                     "final": true,
                     "query": "MATCH (n:Computer) RETURN n ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n {owned: true}) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -961,7 +1021,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to Domain Controllers for owned principles",
+            "name": "List all shortest paths to Domain Controllers for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -981,12 +1041,32 @@
             ]
         },
         {
+            "name": "List all users that don't require a password for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:User {passwordnotreqd:true, owned: true}) return n ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all users where password never expires",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
                     "query": "MATCH (n:User {pwdneverexpires:true}) return n ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all users where password never expires for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (n:User {pwdneverexpires:true, owned: true}) return n ORDER BY n.name"
                 }
             ]
         },
@@ -1047,6 +1127,66 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Domain)-[r:TrustedBy]->(m:Domain) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user shortest paths to domains",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group shortest paths to domains",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer shortest paths to domains",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all domain shortest paths to domains",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Domain)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"TrustedBy\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to domains for for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m:Group})-[r*1..]->(n:Domain)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all shortest paths to domains for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
                 }
             ]
         },
@@ -1131,6 +1271,16 @@
             ]
         },
         {
+            "name": "List all owned principals with an admin count",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m {admincount:true, owned: true}) RETURN m ORDER BY m.name"
+                }
+            ]
+        },
+        {
             "name": "List all user ReadGMSAPassword privileges",
             "category": "General",
             "queryList": [
@@ -1171,12 +1321,12 @@
             ]
         },
         {
-            "name": "List all ReadGMSAPassword privileges for owned principles",
+            "name": "List all ReadGMSAPassword privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=(m {owned: true})-[r:ReadGMSAPassword]->(n:Computer) RETURN p ORDER by m.name"
+                    "query": "MATCH p=(m {owned: true})-[r:ReadGMSAPassword]->(n:User) RETURN p ORDER by m.name"
                 }
             ]
         },
@@ -1231,7 +1381,7 @@
             ]
         },
         {
-            "name": "List all DCSync privileges for owned principles",
+            "name": "List all DCSync privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1281,7 +1431,7 @@
             ]
         },
         {
-            "name": "List all ForceChangePassword privileges for owned principles",
+            "name": "List all ForceChangePassword privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1331,7 +1481,7 @@
             ]
         },
         {
-            "name": "List all AddMember privileges for owned principles",
+            "name": "List all AddMember privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1381,7 +1531,7 @@
             ]
         },
         {
-            "name": "List all AddSelf privileges for owned principles",
+            "name": "List all AddSelf privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1431,7 +1581,7 @@
             ]
         },
         {
-            "name": "List all SQLAdmin privileges for owned principles",
+            "name": "List all SQLAdmin privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1481,7 +1631,7 @@
             ]
         },
         {
-            "name": "List all CanPSRemote privileges for owned principles",
+            "name": "List all CanPSRemote privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1531,7 +1681,7 @@
             ]
         },
         {
-            "name": "List all ExecuteDCOM privileges for owned principles",
+            "name": "List all ExecuteDCOM privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1581,7 +1731,7 @@
             ]
         },
         {
-            "name": "List all AllowedToAct privileges for owned principles",
+            "name": "List all AllowedToAct privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1631,7 +1781,7 @@
             ]
         },
         {
-            "name": "List all Owns privileges for owned principles",
+            "name": "List all Owns privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1681,7 +1831,7 @@
             ]
         },
         {
-            "name": "List all AllExtendedRights privileges for owned principles",
+            "name": "List all AllExtendedRights privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1731,7 +1881,7 @@
             ]
         },
         {
-            "name": "List all memberships for owned principles",
+            "name": "List all memberships for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1781,7 +1931,7 @@
             ]
         },
         {
-            "name": "List all AddKeyCredentialLink privileges for owned principles",
+            "name": "List all AddKeyCredentialLink privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1831,7 +1981,7 @@
             ]
         },
         {
-            "name": "List all GenericAll privileges for owned principles",
+            "name": "List all GenericAll privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1881,7 +2031,7 @@
             ]
         },
         {
-            "name": "List all WriteDacl privileges for owned principles",
+            "name": "List all WriteDacl privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1931,7 +2081,7 @@
             ]
         },
         {
-            "name": "List all WriteOwner privileges for owned principles",
+            "name": "List all WriteOwner privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -1981,7 +2131,7 @@
             ]
         },
         {
-            "name": "List all GenericWrite privileges for owned principles",
+            "name": "List all GenericWrite privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
@@ -2031,6 +2181,16 @@
             ]
         },
         {
+            "name": "List all object control over OUs for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "match p=(n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(o:OU) return p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all object control over Containers",
             "category": "General",
             "queryList": [
@@ -2041,12 +2201,32 @@
             ]
         },
         {
+            "name": "List all object control over Containers for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "match p=(n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(c:Container) return p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all object control over GPOs",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
                     "query": "match p=(n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO) return p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all object control over GPOs for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "match p=(n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO) return p ORDER BY n.name"
                 }
             ]
         },
@@ -2101,12 +2281,32 @@
             ]
         },
         {
-            "name": "List all privileges for owned principles",
+            "name": "List all group-delegated privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[:MemberOf]->(g)-[r]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY TYPE(r)"
+                }
+            ]
+        },
+        {
+            "name": "List all privileges for owned principals",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
                     "query": "MATCH p=(n {owned: true})-[r]->(m) RETURN p ORDER BY TYPE(r)"
+                }
+            ]
+        },
+        {
+            "name": "List all group-delegated privileges for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[:MemberOf]->(g:Group)-[r]->(m) RETURN p ORDER BY TYPE(r)"
                 }
             ]
         },
@@ -2136,7 +2336,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=(n:User {name: $result})-[:MemberOf]->(m:Group),(m)-[:CanRDP]->(c:Computer) RETURN p ORDER BY m.name"
+                    "query": "MATCH p=(n:User {name: $result})-[:MemberOf]->(m:Group)-[:CanRDP]->(c:Computer) RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2166,7 +2366,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=(n:User {name: $result})-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) RETURN p ORDER BY m.name"
+					"query": "MATCH p=(n:User {name: $result})-[:MemberOf]->(m:Group)-[:AdminTo]->(c:Computer) RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2526,7 +2726,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=(n:User {name: $result})-[:MemberOf]->(m:Group),(m)-[r]->(v) RETURN p ORDER BY m.name"
+                    "query": "MATCH p=(n:User {name: $result})-[:MemberOf]->(m:Group)-[r]->(v) RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2696,7 +2896,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to this user for owned principles",
+            "name": "List all shortest paths to this user for owned principals",
             "category": "User Specific",
             "queryList": [
 				{
@@ -2736,7 +2936,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=(n:Group {name: $result})-[:MemberOf]->(m:Group),(m)-[:CanRDP]->(c:Computer) RETURN p ORDER BY m.name"
+					"query": "MATCH p=(n:Group {name: $result})-[:MemberOf]->(m:Group)-[:CanRDP]->(c:Computer) RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2766,7 +2966,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=(n:Group {name: $result})-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) RETURN p ORDER BY m.name"
+					"query": "MATCH p=(n:Group {name: $result})-[:MemberOf]->(m:Group)-[:AdminTo]->(c:Computer) RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3096,7 +3296,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=(n:Group {name: $result})-[:MemberOf]->(m:Group),(m)-[r]->(v) RETURN p ORDER BY m.name"
+                    "query": "MATCH p=(n:Group {name: $result})-[:MemberOf]->(m:Group)-[r]->(v) RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3266,7 +3466,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to this group for owned principles",
+            "name": "List all shortest paths to this group for owned principals",
             "category": "Group Specific",
             "queryList": [
 				{
@@ -3306,7 +3506,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=(n:Computer {name: $result})-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) RETURN p ORDER BY m.name"
+					"query": "MATCH p=(n:Computer {name: $result})-[:MemberOf]->(m:Group)-[:AdminTo]->(c:Computer) RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3621,7 +3821,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=(n:Computer {name: $result})-[:MemberOf]->(m:Group),(m)-[r]->(v) RETURN p ORDER BY m.name"
+                    "query": "MATCH p=(n:Computer {name: $result})-[:MemberOf]->(m:Group)-[r]->(v) RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3791,7 +3991,7 @@
             ]
         },
         {
-            "name": "List all shortest paths to this computer for owned principles",
+            "name": "List all shortest paths to this computer for owned principals",
             "category": "Computer Specific",
             "queryList": [
 				{
