@@ -1,6 +1,6 @@
 # cypherhound
 
-A `Python3` terminal application that contains 360+ `Neo4j` cyphers for BloodHound data sets and a `customqueries.json` file containing 344 cyphers for the GUI.
+A `Python3` terminal application that contains 390+ `Neo4j` cyphers for BloodHound data sets and a `customqueries.json` file containing 380 cyphers for the GUI.
 
 ## Why?
 
@@ -17,7 +17,7 @@ This tool can also help blue teams to reveal detailed information about their Ac
 
 Take back control of your `BloodHound` data with `cypherhound`!
 
-- 361 cyphers as of date
+- 397 cyphers as of date
   - Set cyphers to search based on user input (user, group, and computer-specific)
   - User-defined regex cyphers
 - User-defined exporting of all results
@@ -104,7 +104,7 @@ help, ? - used to display this help menu
 
 ## customqueries.json
 
-Almost all cyphers included in the terminal application (344 to be exact) have been ported over to `json` format for direct usage in the GUI. Follow the instructions below in order to begin using them!
+Almost all cyphers included in the terminal application (380 to be exact) have been ported over to `json` format for direct usage in the GUI. Follow the instructions below in order to begin using them!
 
 ![customqueries.json](images/gui-cypher-list.png)
 

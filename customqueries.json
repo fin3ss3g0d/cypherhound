@@ -21,42 +21,62 @@
             ]
         },
         {
-            "name": "List user CanRDP privileges",
+            "name": "List all user RDP privileges",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
-                    "query": "match p=(u:User)-[:CanRDP]->(c:Computer) return p ORDER BY u.name"
+                    "query": "MATCH p=(u:User)-[:CanRDP]->(c:Computer) RETURN p ORDER BY u.name"
                 }
             ]
         },
         {
-            "name": "List group CanRDP privileges",
+            "name": "List all group RDP privileges",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
-                    "query": "match p=(g:Group)-[:CanRDP]->(c:Computer) return p ORDER BY g.name"
+                    "query": "MATCH p=(g:Group)-[:CanRDP]->(c:Computer) RETURN p ORDER BY g.name"
                 }
             ]
         },
         {
-            "name": "List all CanRDP privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "name": "List all RDP privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
-                    "query": "match p=(g:Group)-[:CanRDP]->(c:Computer) WHERE (g.objectid =~ \"(?i)S-1-5-21-.*-513\" OR g.objectid =~ \"(?i).*-S-1-5-11\" OR g.objectid =~ \"(?i).*-S-1-1-0\" OR g.objectid =~ \"(?i).*-S-1-5-32-545\") return p ORDER BY g.name"
+                    "query": "MATCH p=(g:Group)-[:CanRDP]->(c:Computer) WHERE (g.objectid =~ \"(?i)S-1-5-21-.*-513\" OR g.objectid =~ \"(?i).*-S-1-5-11\" OR g.objectid =~ \"(?i).*-S-1-1-0\" OR g.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY g.name"
                 }
             ]
         },
 		{
-            "name": "List all CanRDP privileges for owned principals",
+            "name": "List all group-delegated RDP privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
-                    "query": "match p=(m {owned: true})-[:CanRDP]->(c:Computer) return p ORDER BY m.name"
+                    "query": "MATCH p=(m:Group)-[:MemberOf]->(g:Group)-[:CanRDP]->(n:Computer) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+		{
+            "name": "List all RDP privileges for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m {owned: true})-[:CanRDP]->(c:Computer) RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+		{
+            "name": "List all group-delegated RDP privileges for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[:MemberOf]->(g:Group)-[:CanRDP]->(m:Computer) RETURN p ORDER BY n.name"
                 }
             ]
         },        
@@ -106,7 +126,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -116,7 +136,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -126,7 +146,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -136,7 +156,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -146,7 +166,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -186,7 +206,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -196,7 +216,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -206,7 +226,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -216,7 +236,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -226,7 +246,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -256,7 +276,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -266,7 +286,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -276,7 +296,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -286,7 +306,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -296,7 +316,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -336,7 +356,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -346,7 +366,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -356,7 +376,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -366,7 +386,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -376,7 +396,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -456,7 +476,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -466,7 +486,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -476,7 +496,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -486,7 +506,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -496,7 +516,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -516,7 +536,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -526,7 +546,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -536,7 +556,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -546,7 +566,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -556,7 +576,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -646,7 +666,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:User),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH (m:User),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -656,7 +676,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -666,7 +686,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:Computer),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH (m:Computer),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -676,7 +696,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -686,7 +706,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m {owned: true}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH (m {owned: true}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -696,7 +716,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -706,7 +726,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -716,7 +736,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -726,7 +746,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NOT m=n AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -736,12 +756,12 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NOT m=n AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
         {
-            "name": "List user AdminTo privileges",
+            "name": "List all user AdminTo privileges",
             "category": "General",
             "queryList": [
                 {
@@ -751,7 +771,7 @@
             ]
         },
         {
-            "name": "List group AdminTo privileges",
+            "name": "List all group AdminTo privileges",
             "category": "General",
             "queryList": [
                 {
@@ -761,7 +781,7 @@
             ]
         },
         {
-            "name": "List computer AdminTo privileges",
+            "name": "List all computer AdminTo privileges",
             "category": "General",
             "queryList": [
                 {
@@ -781,6 +801,16 @@
             ]
         },
         {
+            "name": "List all group-delegated AdminTo privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(m:Group)-[:MemberOf]->(g:Group)-[:AdminTo]->(n:Computer) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY m.name"
+                }
+            ]
+        },
+        {
             "name": "List all AdminTo privileges for owned principals",
             "category": "General",
             "queryList": [
@@ -791,7 +821,17 @@
             ]
         },
         {
-            "name": "List user ReadLAPSPassword privileges",
+            "name": "List all group-delegated AdminTo privileges for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[:MemberOf]->(g:Group)-[:AdminTo]->(m:Computer) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user ReadLAPSPassword privileges",
             "category": "General",
             "queryList": [
                 {
@@ -801,7 +841,7 @@
             ]
         },
         {
-            "name": "List group ReadLAPSPassword privileges",
+            "name": "List all group ReadLAPSPassword privileges",
             "category": "General",
             "queryList": [
                 {
@@ -811,7 +851,7 @@
             ]
         },
         {
-            "name": "List computer ReadLAPSPassword privileges",
+            "name": "List all computer ReadLAPSPassword privileges",
             "category": "General",
             "queryList": [
                 {
@@ -841,7 +881,7 @@
             ]
         },
         {
-            "name": "List user SyncLAPSPassword privileges",
+            "name": "List all user SyncLAPSPassword privileges",
             "category": "General",
             "queryList": [
                 {
@@ -851,7 +891,7 @@
             ]
         },
         {
-            "name": "List group SyncLAPSPassword privileges",
+            "name": "List all group SyncLAPSPassword privileges",
             "category": "General",
             "queryList": [
                 {
@@ -861,7 +901,7 @@
             ]
         },
         {
-            "name": "List computer SyncLAPSPassword privileges",
+            "name": "List all computer SyncLAPSPassword privileges",
             "category": "General",
             "queryList": [
                 {
@@ -891,12 +931,62 @@
             ]
         },
         {
+            "name": "List all user DumpSMSAPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:DumpSMSAPassword]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group DumpSMSAPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:DumpSMSAPassword]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer DumpSMSAPassword privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:DumpSMSAPassword]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all DumpSMSAPassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:DumpSMSAPassword]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all DumpSMSAPassword privileges for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:DumpSMSAPassword]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List Domain Admin sessions",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User)-[:MemberOf*1..]->(g:Group) WHERE g.objectid ENDS WITH '-512' MATCH p = (c:Computer)-[:HasSession]->(n) return p ORDER BY n.name"
+                    "query": "MATCH (n:User)-[:MemberOf*1..]->(g:Group) WHERE g.objectid ENDS WITH '-512' MATCH p = (c:Computer)-[:HasSession]->(n) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -906,7 +996,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User)-[:MemberOf*1..]->(g:Group) WHERE g.objectid ENDS WITH '-519' MATCH p = (c:Computer)-[:HasSession]->(n) return p ORDER BY n.name"
+                    "query": "MATCH (n:User)-[:MemberOf*1..]->(g:Group) WHERE g.objectid ENDS WITH '-519' MATCH p = (c:Computer)-[:HasSession]->(n) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -986,7 +1076,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -996,7 +1086,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1006,7 +1096,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1016,7 +1106,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1026,7 +1116,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1036,7 +1126,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User {passwordnotreqd:true}) return n ORDER BY n.name"
+                    "query": "MATCH (n:User {passwordnotreqd:true}) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1046,7 +1136,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User {passwordnotreqd:true, owned: true}) return n ORDER BY n.name"
+                    "query": "MATCH (n:User {passwordnotreqd:true, owned: true}) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1056,7 +1146,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User {pwdneverexpires:true}) return n ORDER BY n.name"
+                    "query": "MATCH (n:User {pwdneverexpires:true}) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1066,12 +1156,12 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User {pwdneverexpires:true, owned: true}) return n ORDER BY n.name"
+                    "query": "MATCH (n:User {pwdneverexpires:true, owned: true}) RETURN n ORDER BY n.name"
                 }
             ]
         },
         {
-            "name": "List user Constrained Delegation",
+            "name": "List all user Constrained Delegation",
             "category": "General",
             "queryList": [
                 {
@@ -1081,7 +1171,7 @@
             ]
         },
         {
-            "name": "List group Constrained Delegation",
+            "name": "List all group Constrained Delegation",
             "category": "General",
             "queryList": [
                 {
@@ -1091,7 +1181,7 @@
             ]
         },
         {
-            "name": "List computer Constrained Delegation",
+            "name": "List all computer Constrained Delegation",
             "category": "General",
             "queryList": [
                 {
@@ -1106,7 +1196,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "Match (n:GPO) RETURN n ORDER BY n.name"
+                    "query": "MATCH (n:GPO) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1116,7 +1206,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "Match (n:Domain) RETURN n ORDER BY n.name"
+                    "query": "MATCH (n:Domain) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1136,7 +1226,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1146,7 +1236,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1156,7 +1246,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1166,7 +1256,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Domain)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"TrustedBy\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Domain)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NONE (r in relationships(p) WHERE type(r)=\"TrustedBy\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1176,7 +1266,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group})-[r*1..]->(n:Domain)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group})-[r*1..]->(n:Domain)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1186,7 +1276,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1196,7 +1286,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "Match (c:Computer) WHERE c.haslaps = true RETURN c ORDER BY c.name"
+                    "query": "MATCH (c:Computer) WHERE c.haslaps = true RETURN c ORDER BY c.name"
                 }
             ]
         },
@@ -1206,7 +1296,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "Match (c:Computer) WHERE c.haslaps = false RETURN c ORDER BY c.name"
+                    "query": "MATCH (c:Computer) WHERE c.haslaps = false RETURN c ORDER BY c.name"
                 }
             ]
         },
@@ -1216,7 +1306,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (u:User) WHERE u.description =~ '.*((?i)pass|pw|:).*' return u ORDER BY u.name"
+                    "query": "MATCH (u:User) WHERE u.description =~ '.*((?i)pass|pw|:).*' RETURN u ORDER BY u.name"
                 }
             ]
         },
@@ -2091,6 +2181,106 @@
             ]
         },
         {
+            "name": "List all user WriteSPN privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:WriteSPN]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group WriteSPN privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:WriteSPN]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer WriteSPN privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:WriteSPN]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all WriteSPN privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:WriteSPN]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all WriteSPN privileges for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:WriteSPN]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all user WriteAccountRestrictions privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:WriteAccountRestrictions]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group WriteAccountRestrictions privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:WriteAccountRestrictions]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer WriteAccountRestrictions privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:WriteAccountRestrictions]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all WriteAccountRestrictions privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:WriteAccountRestrictions]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all WriteAccountRestrictions privileges for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:WriteAccountRestrictions]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all user GenericWrite privileges",
             "category": "General",
             "queryList": [
@@ -2141,6 +2331,56 @@
             ]
         },
         {
+            "name": "List all user HasSIDHistory privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User)-[r:HasSIDHistory]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all group HasSIDHistory privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:HasSIDHistory]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all computer HasSIDHistory privileges",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer)-[r:HasSIDHistory]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all HasSIDHistory privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group)-[r:HasSIDHistory]->(m) WHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\") RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List all HasSIDHistory privileges for owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH p=(n {owned: true})-[r:HasSIDHistory]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List all OUs",
             "category": "General",
             "queryList": [
@@ -2166,7 +2406,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "Match (n:Domain) RETURN n ORDER BY n.name"
+                    "query": "MATCH (n:Domain) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -2176,7 +2416,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "match p=(n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(o:OU) return p ORDER BY n.name"
+                    "query": "MATCH p=(n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(o:OU) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -2186,7 +2426,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "match p=(n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(o:OU) return p ORDER BY n.name"
+                    "query": "MATCH p=(n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(o:OU) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -2196,7 +2436,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "match p=(n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(c:Container) return p ORDER BY n.name"
+                    "query": "MATCH p=(n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(c:Container) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -2206,7 +2446,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "match p=(n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(c:Container) return p ORDER BY n.name"
+                    "query": "MATCH p=(n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(c:Container) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -2216,7 +2456,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "match p=(n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO) return p ORDER BY n.name"
+                    "query": "MATCH p=(n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -2226,7 +2466,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "match p=(n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO) return p ORDER BY n.name"
+                    "query": "MATCH p=(n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -2321,7 +2561,7 @@
 				},
                 {
                     "final": true,
-                    "query": "match p=(u:User {name: $result})-[:CanRDP]->(c:Computer) return p"
+                    "query": "MATCH p=(u:User {name: $result})-[:CanRDP]->(c:Computer) RETURN p"
                 }
             ]
         },
@@ -2415,6 +2655,21 @@
                 }
             ]
         },
+        {
+            "name": "List this user's DumpSMSAPassword privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:DumpSMSAPassword]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },        
         {
             "name": "List this user's ReadGMSAPassword privileges",
             "category": "User Specific",
@@ -2641,6 +2896,36 @@
             ]
         },
         {
+            "name": "List this user's WriteSPN privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:WriteSPN]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's WriteAccountRestrictions privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:WriteAccountRestrictions]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List this user's GenericWrite privileges",
             "category": "User Specific",
             "queryList": [
@@ -2652,6 +2937,21 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:User {name: $result})-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this user's HasSIDHistory privileges",
+            "category": "User Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source user...",
+					"query": "MATCH (u:User) RETURN u.name ORDER BY u.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:User {name: $result})-[r:HasSIDHistory]->(m) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -2741,7 +3041,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH (m:User {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH (m:User {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2756,7 +3056,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2771,7 +3071,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2786,7 +3086,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2801,7 +3101,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },		
@@ -2816,7 +3116,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2831,7 +3131,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2846,7 +3146,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2861,7 +3161,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:User {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2876,7 +3176,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m)-[r*1..]->(n:User {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m)-[r*1..]->(n:User {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2891,7 +3191,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:User {name: $result})) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:User {name: $result})) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2906,7 +3206,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:User {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:User {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -2921,7 +3221,7 @@
 				},
                 {
                     "final": true,
-                    "query": "match p=(g:Group {name: $result})-[:CanRDP]->(c:Computer) return p"
+                    "query": "MATCH p=(g:Group {name: $result})-[:CanRDP]->(c:Computer) RETURN p"
                 }
             ]
         },
@@ -2997,6 +3297,21 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Group {name: $result})-[r:SyncLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's DumpSMSAPassword privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:DumpSMSAPassword]->(m) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -3226,6 +3541,36 @@
             ]
         },
         {
+            "name": "List this group's WriteSPN privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:WriteSPN]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's WriteAccountRestrictions privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:WriteAccountRestrictions]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List this group's GenericWrite privileges",
             "category": "Group Specific",
             "queryList": [
@@ -3237,6 +3582,21 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Group {name: $result})-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this group's HasSIDHistory privileges",
+            "category": "Group Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source group...",
+					"query": "MATCH (g:Group) RETURN g.name ORDER BY g.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Group {name: $result})-[r:HasSIDHistory]->(m) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -3281,7 +3641,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=(n:Group {name: $result})-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|Owns|AddKeyCredentialLink|ReadLAPSPassword|SyncLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) RETURN p ORDER BY TYPE(r)"
+                    "query": "MATCH p=(n:Group {name: $result})-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|HasSIDHistory|DumpSMSAPassword|WriteSPN|WriteAccountRestrictions|Owns|AddKeyCredentialLink|ReadLAPSPassword|SyncLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) RETURN p ORDER BY TYPE(r)"
                 }
             ]
         },
@@ -3311,7 +3671,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH (m:Group {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH (m:Group {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3326,7 +3686,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3341,7 +3701,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3356,7 +3716,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3371,7 +3731,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3386,7 +3746,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3401,7 +3761,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3416,7 +3776,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3431,7 +3791,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3446,7 +3806,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m)-[r*1..]->(n:Group {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m)-[r*1..]->(n:Group {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3461,7 +3821,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group {name: $result})) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group {name: $result})) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3476,7 +3836,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3537,6 +3897,21 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Computer {name: $result})-[r:SyncLAPSPassword]->(m:Computer) RETURN p ORDER by n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's DumpSMSAPassword privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:DumpSMSAPassword]->(m) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -3766,6 +4141,36 @@
             ]
         },
         {
+            "name": "List this computer's WriteSPN privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:WriteSPN]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's WriteAccountRestrictions privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:WriteAccountRestrictions]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
             "name": "List this computer's GenericWrite privileges",
             "category": "Computer Specific",
             "queryList": [
@@ -3777,6 +4182,21 @@
                 {
                     "final": true,
                     "query": "MATCH p=(n:Computer {name: $result})-[r:GenericWrite]->(m) RETURN p ORDER BY n.name"
+                }
+            ]
+        },
+        {
+            "name": "List this computer's HasSIDHistory privileges",
+            "category": "Computer Specific",
+            "queryList": [
+				{
+					"final": false,
+					"title": "Select source computer...",
+					"query": "MATCH (c:Computer) RETURN c.name ORDER BY c.name"
+				},
+                {
+                    "final": true,
+                    "query": "MATCH p=(n:Computer {name: $result})-[r:HasSIDHistory]->(m) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -3836,7 +4256,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH (m:Computer {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NOT m=n return p ORDER BY m.name"
+                    "query": "MATCH (m:Computer {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3851,7 +4271,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3866,7 +4286,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3881,7 +4301,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") return p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3896,7 +4316,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3911,7 +4331,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)admin|adm).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3926,7 +4346,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)SQL).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3941,7 +4361,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)WEB).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3956,7 +4376,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Computer {name: $result})-[r*1..]->(n:Group)) WHERE n.name =~ \".*((?i)service|svc).*\" AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3971,7 +4391,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m)-[r*1..]->(n:Computer {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m)-[r*1..]->(n:Computer {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3986,7 +4406,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Computer {name: $result})) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Computer {name: $result})) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -4001,7 +4421,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Computer {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") RETURN p ORDER BY m.name"
+                    "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Computer {name: $result})) WHERE NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") RETURN p ORDER BY m.name"
                 }
             ]
         }

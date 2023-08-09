@@ -25,3 +25,7 @@ Added additional cyphers for the Users, Domain Users, Authenticated Users, and E
 # 08/07/2023
 
 Expanded cyphers for owned principals as well as the Users, Domain Users, Authenticated Users, and Everyone groups. Added additional cyphers for domains including cross-domain paths.
+
+# 08/09/2023
+
+Added group-delegated CanRDP/Adminto cyphers for the Users, Domain Users, Authenticated Users, and Everyone groups as well as owned principals. Added cyphers for additional relationships including: `WriteSPN`, `WriteAccountRestrictions`, `HasSIDHistory`, and `DumpSMSAPassword`.
