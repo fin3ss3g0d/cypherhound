@@ -71,7 +71,7 @@ class Driver:
                     'type': 'general',
                 },                                
                 '9': {
-                    'query': 'MATCH (c:Computer {unconstraineddelegation:true}) RETURN c.name ORDER BY c.name',
+                    'query': 'MATCH (c:Computer {unconstraineddelegation: true}) RETURN c.name ORDER BY c.name',
                     'desc': 'List all Unconstrained Delegation',
                     'message_generator': lambda r: (r.get('c.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has unconstrained delegation privilege{log.reset}' or None,
                     'handler': self.handle_standard_query,
@@ -449,2344 +449,2365 @@ class Driver:
                     'type': 'general',
                 },
                 '63': {
-                    'query': 'MATCH (m {highvalue:true, owned: true}) RETURN m.name,labels(m) ORDER BY m.name',
-                    'desc': 'List all high-value owned principals',
-                    'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}{log.default} is high value{log.reset}' or None,
+                    'query': 'MATCH (m:User {highvalue: true}) RETURN m.name ORDER BY m.name',
+                    'desc': 'List all high-value users',
+                    'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
                 '64': {
-                    'query': 'MATCH (m:Group {highvalue:true}) RETURN m.name ORDER BY m.name',
+                    'query': 'MATCH (m:Group {highvalue: true}) RETURN m.name ORDER BY m.name',
                     'desc': 'List all high-value groups',
                     'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
                 '65': {
-                    'query': 'MATCH p=(n:User)-[r:MemberOf*1..]->(m:Group {highvalue:true}) RETURN n.name,m.name ORDER BY n.name',
+                    'query': 'MATCH (m:Computer {highvalue: true}) RETURN m.name ORDER BY m.name',
+                    'desc': 'List all high-value computers',
+                    'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}' or None,
+                    'handler': self.handle_standard_query,
+                    'type': 'general',
+                },
+                '66': {
+                    'query': 'MATCH p=(n {highvalue: true}) RETURN n.name,labels(n) ORDER BY n.name',
+                    'desc': 'List all high-value principals',
+                    'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} is high value{log.reset}' or None,
+                    'handler': self.handle_standard_query,
+                    'type': 'general',
+                },
+                '67': {
+                    'query': 'MATCH (m {highvalue: true, owned: true}) RETURN m.name,labels(m) ORDER BY m.name',
+                    'desc': 'List all high-value owned principals',
+                    'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}{log.default} is high value{log.reset}' or None,
+                    'handler': self.handle_standard_query,
+                    'type': 'general',
+                },
+                '68': {
+                    'query': 'MATCH p=(n:User)-[r:MemberOf*1..]->(m:Group {highvalue: true}) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all members of high-value groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf high value group {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '66': {
-                    'query': 'MATCH p=(n {owned: true})-[r:MemberOf*1..]->(m:Group {highvalue:true}) RETURN n.name,m.name,labels(n) ORDER BY n.name',
+                '69': {
+                    'query': 'MATCH p=(n {owned: true})-[r:MemberOf*1..]->(m:Group {highvalue: true}) RETURN n.name,m.name,labels(n) ORDER BY n.name',
                     'desc': 'List all members of high-value groups for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} is MemberOf high value group {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '67': {
-                    'query': 'MATCH (m:User),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
+                '70': {
+                    'query': 'MATCH (m:User),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all user shortest paths to high-value targets',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '68': {
-                    'query': 'MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
+                '71': {
+                    'query': 'MATCH (m:Group),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all group shortest paths to high-value targets',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '69': {
-                    'query': 'MATCH (m:Computer),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
+                '72': {
+                    'query': 'MATCH (m:Computer),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all computer shortest paths to high-value targets',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '70': {
-                    'query': 'MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE (m.objectid =~ "(?i)S-1-5-21-.*-513" OR m.objectid =~ "(?i).*-S-1-5-11" OR m.objectid =~ "(?i).*-S-1-1-0" OR m.objectid =~ "(?i).*-S-1-5-32-545") AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
+                '73': {
+                    'query': 'MATCH (m:Group),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE (m.objectid =~ "(?i)S-1-5-21-.*-513" OR m.objectid =~ "(?i).*-S-1-5-11" OR m.objectid =~ "(?i).*-S-1-1-0" OR m.objectid =~ "(?i).*-S-1-5-32-545") AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to high-value targets for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '71': {
-                    'query': 'MATCH (m {owned: true}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
+                '74': {
+                    'query': 'MATCH (m {owned: true}),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to high-value targets for owned principals',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '72': {
+                '75': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all user shortest paths to Exchange groups',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '73': {
+                '76': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all group shortest paths to Exchange groups',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '74': {
+                '77': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all computer shortest paths to Exchange groups',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '75': {
+                '78': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ "(?i)S-1-5-21-.*-513" OR m.objectid =~ "(?i).*-S-1-5-11" OR m.objectid =~ "(?i).*-S-1-1-0" OR m.objectid =~ "(?i).*-S-1-5-32-545") AND n.name =~ ".*((?i)EXCHANGE).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Exchange groups for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '76': {
+                '79': {
                     'query': 'MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Exchange groups for owned principals',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '77': {
+                '80': {
                     'query': 'MATCH p=(m:User)-[r:AdminTo]->(n:Computer) RETURN m.name, n.name ORDER BY m.name',
                     'desc': 'List all user AdminTo privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '78': {
+                '81': {
                     'query': 'MATCH p=(m:Group)-[r:AdminTo]->(n:Computer) RETURN m.name,n.name ORDER BY m.name',
                     'desc': 'List all group AdminTo privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '79': {
+                '82': {
                     'query': 'MATCH p=(m:Computer)-[r:AdminTo]->(n:Computer) RETURN m.name,n.name ORDER BY m.name',
                     'desc': 'List all computer AdminTo privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '80': {
+                '83': {
                     'query': 'MATCH p=(m:Group)-[r:AdminTo]->(n:Computer) WHERE (m.objectid =~ "(?i)S-1-5-21-.*-513" OR m.objectid =~ "(?i).*-S-1-5-11" OR m.objectid =~ "(?i).*-S-1-1-0" OR m.objectid =~ "(?i).*-S-1-5-32-545") RETURN m.name,n.name ORDER BY m.name',
                     'desc': 'List all AdminTo privileges for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '81': {
+                '84': {
                     'query': 'MATCH p=(m:Group)-[:MemberOf]->(g:Group)-[:AdminTo]->(n:Computer) WHERE (m.objectid =~ "(?i)S-1-5-21-.*-513" OR m.objectid =~ "(?i).*-S-1-5-11" OR m.objectid =~ "(?i).*-S-1-1-0" OR m.objectid =~ "(?i).*-S-1-5-32-545") RETURN m.name,n.name,g.name ORDER BY m.name',
                     'desc': 'List all group-delegated AdminTo privileges for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None and r.get('g.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["g.name"]} {log.reset}{log.default}which is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '82': {
+                '85': {
                     'query': 'MATCH p=(m {owned: true})-[r:AdminTo]->(n:Computer) RETURN m.name,n.name,labels(m) ORDER BY m.name',
                     'desc': 'List all AdminTo privileges for owned principals',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '83': {
+                '86': {
                     'query': 'MATCH (n {owned: true})-[:MemberOf]->(g:Group)-[:AdminTo]->(m:Computer) RETURN n.name,labels(n),m.name,g.name ORDER BY n.name',
                     'desc': 'List all group-delegated AdminTo privileges for owned principals',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None and r.get('g.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["g.name"]} {log.reset}{log.default}which is AdminTo {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '84': {
+                '87': {
                     'query': 'MATCH p=(n:User)-[r:ReadLAPSPassword]->(m:Computer) RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all user ReadLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '85': {
+                '88': {
                     'query': 'MATCH p=(n:Group)-[r:ReadLAPSPassword]->(m:Computer) RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all group ReadLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '86': {
+                '89': {
                     'query': 'MATCH p=(n:Computer)-[r:ReadLAPSPassword]->(m:Computer) RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all computer ReadLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '87': {
+                '90': {
                     'query': 'MATCH p=(n:Group)-[r:ReadLAPSPassword]->(m:Computer) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all ReadLAPSPassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '88': {
+                '91': {
                     'query': 'MATCH p=(m {owned: true})-[r:ReadLAPSPassword]->(n:Computer) RETURN n.name,m.name,labels(m) ORDER by m.name',
                     'desc': 'List all ReadLAPSPassword privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '89': {
+                '92': {
                     'query': 'MATCH p=(n:User)-[r:SyncLAPSPassword]->(m:Computer) RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all user SyncLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '90': {
+                '93': {
                     'query': 'MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m:Computer) RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all group SyncLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '91': {
+                '94': {
                     'query': 'MATCH p=(n:Computer)-[r:SyncLAPSPassword]->(m:Computer) RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all computer SyncLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '92': {
+                '95': {
                     'query': 'MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m:Computer) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all SyncLAPSPassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '93': {
+                '96': {
                     'query': 'MATCH p=(m {owned: true})-[r:SyncLAPSPassword]->(n:Computer) RETURN n.name,m.name,labels(m) ORDER by m.name',
                     'desc': 'List all SyncLAPSPassword privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },				
-                '94': {
+                '97': {
                     'query': 'MATCH (n:User)-[r:DumpSMSAPassword]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user DumpSMSAPassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DumpSMSAPassword over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '95': {
+                '98': {
                     'query': 'MATCH (n:Group)-[r:DumpSMSAPassword]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group DumpSMSAPassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DumpSMSAPassword over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '96': {
+                '99': {
                     'query': 'MATCH (n:Computer)-[r:DumpSMSAPassword]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer DumpSMSAPassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DumpSMSAPassword over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '97': {
+                '100': {
                     'query': 'MATCH (n:Group)-[r:DumpSMSAPassword]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all DumpSMSAPassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DumpSMSAPassword over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '98': {
+                '101': {
                     'query': 'MATCH (n {owned: true})-[r:DumpSMSAPassword]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all DumpSMSAPassword privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has DumpSMSAPassword over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },               
-                '99': {
+                '102': {
                     'query': 'MATCH (n:User)-[:MemberOf*1..]->(g:Group) WHERE g.objectid ENDS WITH \'-512\' MATCH p = (c:Computer)-[:HasSession]->(n) RETURN n.name,c.name ORDER BY n.name',
                     'desc': 'List Domain Admin sessions',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('c.name') is not None) and f'{log.default}Domain admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '100': {
+                '103': {
                     'query': 'MATCH (n:User)-[:MemberOf*1..]->(g:Group) WHERE g.objectid ENDS WITH \'-519\' MATCH p = (c:Computer)-[:HasSession]->(n) RETURN n.name,c.name ORDER BY n.name',
                     'desc': 'List Enterprise Admin sessions',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('c.name') is not None) and f'{log.default}Enterprise admin {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '101': {
+                '104': {
                     'query': 'MATCH (n:User) RETURN n.name ORDER BY n.name',
                     'desc': 'List all users',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '102': {
+                '105': {
                     'query': 'MATCH (n:Group) RETURN n.name ORDER BY n.name',
                     'desc': 'List all groups',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '103': {
+                '106': {
                     'query': 'MATCH (n:Computer) RETURN n.name ORDER BY n.name',
                     'desc': 'List all computers',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '104': {
+                '107': {
                     'query': 'MATCH (m {owned: true}) RETURN m.name,labels(m) ORDER BY m.name',
                     'desc': 'List all owned principals',
                     'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.default}Owned principal {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '105': {
-                    'query': 'MATCH (n:Computer {enabled:TRUE}) RETURN n.name ORDER BY n.name',
+                '108': {
+                    'query': 'MATCH (n:Computer {enabled: true}) RETURN n.name ORDER BY n.name',
                     'desc': 'List all enabled computers',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is enabled{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '106': {
-                    'query': 'MATCH (n:Computer {enabled:FALSE}) RETURN n.name ORDER BY n.name',
+                '109': {
+                    'query': 'MATCH (n:Computer {enabled: false}) RETURN n.name ORDER BY n.name',
                     'desc': 'List all disabled computers',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is disabled{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '107': {
+                '110': {
                     'query': 'MATCH (n:Group) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" WITH n MATCH p=(n)<-[r:MemberOf*1..]-(m) RETURN m.name ORDER BY m.name',
                     'desc': 'List all Domain Controllers',
                     'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is a Domain Controller{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '108': {
+                '111': {
                     'query': 'MATCH (n:Group) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" WITH n MATCH p=(n)<-[r:MemberOf*1..]-(m) RETURN m.name,m.operatingsystem ORDER BY m.name',
                     'desc': 'List all Domain Controllers OSs',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('m.operatingsystem') is not None) and f'{log.default}Domain Controller {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} OS {log.reset}{log.red}{r["m.operatingsystem"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '109': {
+                '112': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all user shortest paths to Domain Controllers',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '110': {
+                '113': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all group shortest paths to Domain Controllers',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '111': {
+                '114': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all computer shortest paths to Domain Controllers',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '112': {
+                '115': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ "(?i)S-1-5-21-.*-513" OR m.objectid =~ "(?i).*-S-1-5-11" OR m.objectid =~ "(?i).*-S-1-1-0" OR m.objectid =~ "(?i).*-S-1-5-32-545") AND n.objectid =~ "(?i)S-1-5-21-.*-516" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Domain Controllers for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '113': {
+                '116': {
                     'query': 'MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Domain Controllers for owned principals',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '114': {
-                    'query': 'MATCH (n:User {passwordnotreqd:true}) RETURN n.name ORDER BY n.name',
+                '117': {
+                    'query': 'MATCH (n:User {passwordnotreqd: true}) RETURN n.name ORDER BY n.name',
                     'desc': 'List all users that don\'t require a password',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '115': {
-                    'query': 'MATCH (n:User {passwordnotreqd:true, owned: true}) RETURN n.name ORDER BY n.name',
+                '118': {
+                    'query': 'MATCH (n:User {passwordnotreqd: true, owned: true}) RETURN n.name ORDER BY n.name',
                     'desc': 'List all users that don\'t require a password for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is not required to have a password{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '116': {
-                    'query': 'MATCH (n:User {pwdneverexpires:true}) RETURN n.name ORDER BY n.name',
+                '119': {
+                    'query': 'MATCH (n:User {pwdneverexpires: true}) RETURN n.name ORDER BY n.name',
                     'desc': 'List all users where password never expires',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}User\'s {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} password is set to never expire{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '117': {
-                    'query': 'MATCH (n:User {pwdneverexpires:true, owned: true}) RETURN n.name ORDER BY n.name',
+                '120': {
+                    'query': 'MATCH (n:User {pwdneverexpires: true, owned: true}) RETURN n.name ORDER BY n.name',
                     'desc': 'List all users where password never expires for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}User\'s {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} password is set to never expire{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '118': {
+                '121': {
                     'query': 'MATCH (u:User)-[:AllowedToDelegate]->(c:Computer) RETURN u.name,c.name ORDER BY u.name',
                     'desc': 'List all user Constrained Delegation',
                     'message_generator': lambda r: (r.get('u.name') is not None and r.get('c.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '119': {
+                '122': {
                     'query': 'MATCH (g:Group)-[:AllowedToDelegate]->(c:Computer) RETURN g.name,c.name ORDER BY g.name',
                     'desc': 'List all group Constrained Delegation',
                     'message_generator': lambda r: (r.get('g.name') is not None and r.get('c.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '120': {
+                '123': {
                     'query': 'MATCH (c1:Computer)-[:AllowedToDelegate]->(c2:Computer) RETURN c1.name,c2.name ORDER BY c1.name',
                     'desc': 'List all computer Constrained Delegation',
                     'message_generator': lambda r: (r.get('c1.name') is not None and r.get('c2.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["c1.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c2.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '121': {
+                '124': {
                     'query': 'MATCH (n:GPO) RETURN n.name ORDER BY n.name',
                     'desc': 'List all GPOs',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '122': {
+                '125': {
                     'query': 'MATCH (n:Domain) RETURN n.name ORDER BY n.name',
                     'desc': 'List all domains',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Domain {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '123': {
+                '126': {
                     'query': 'MATCH p=(n:Domain)-[r:TrustedBy]->(m:Domain) RETURN r.trusttype,n.name,m.name ORDER by n.name',
                     'desc': 'List all domain trusts',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None and r.get('r.trusttype') is not None) and f'{log.default}Domain {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is trusted by {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}with type {log.reset}{log.red}{r["r.trusttype"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '124': {
+                '127': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all user shortest paths to domains',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '125': {
+                '128': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all group shortest paths to domains',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '126': {
+                '129': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all computer shortest paths to domains',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '127': {
+                '130': {
                     'query': 'MATCH p=shortestPath((m:Domain)-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NONE (r in relationships(p) WHERE type(r)="TrustedBy") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all domain shortest paths to domains',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '128': {
+                '131': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Domain)) WHERE (m.objectid =~ "(?i)S-1-5-21-.*-513" OR m.objectid =~ "(?i).*-S-1-5-11" OR m.objectid =~ "(?i).*-S-1-1-0" OR m.objectid =~ "(?i).*-S-1-5-32-545") AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to domains for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '129': {
+                '132': {
                     'query': 'MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Domain)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to domains for owned principals',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'general',
                 },
-                '130': {
+                '133': {
                     'query': 'MATCH (c:Computer) WHERE c.haslaps = true RETURN c.name ORDER BY c.name',
                     'desc': 'List computers with LAPS enabled',
                     'message_generator': lambda r: (r.get('c.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS enabled{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '131': {
+                '134': {
                     'query': 'MATCH (c:Computer) WHERE c.haslaps = false RETURN c.name ORDER BY c.name',
                     'desc': 'List computers with LAPS disabled',
                     'message_generator': lambda r: (r.get('c.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["c.name"]}{log.reset}{log.default} has LAPS disabled{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '132': {
+                '135': {
                     'query': 'MATCH (u:User) WHERE u.description =~ \'.*((?i)pass|pw|:).*\' RETURN u.name,u.description ORDER BY u.name',
                     'desc': 'List potential passwords in descriptions',
                     'message_generator': lambda r: (r.get('u.name') is not None and r.get('u.description') is not None) and f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} may have password in description {log.reset}{log.red}{r["u.description"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '133': {
-                    'query': 'MATCH (m:User {highvalue:true}) RETURN m.name ORDER BY m.name',
+                '136': {
+                    'query': 'MATCH (m:User {highvalue: true}) RETURN m.name ORDER BY m.name',
                     'desc': 'List all high-value users',
                     'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is high value{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '134': {
-                    'query': 'MATCH (m:User {sensitive:true}) RETURN m.name ORDER BY m.name',
+                '137': {
+                    'query': 'MATCH (m:User {sensitive: true}) RETURN m.name ORDER BY m.name',
                     'desc': 'List all sensitive users',
                     'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is sensitive{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '135': {
-                    'query': 'MATCH (m:User {admincount:true}) RETURN m.name ORDER BY m.name',
+                '138': {
+                    'query': 'MATCH (m:User {admincount: true}) RETURN m.name ORDER BY m.name',
                     'desc': 'List all users with an admin count',
                     'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '136': {
-                    'query': 'MATCH (m:Group {admincount:true}) RETURN m.name ORDER BY m.name',
+                '139': {
+                    'query': 'MATCH (m:Group {admincount: true}) RETURN m.name ORDER BY m.name',
                     'desc': 'List all groups with an admin count',
                     'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '137': {
-                    'query': 'MATCH (m:Computer {admincount:true}) RETURN m.name ORDER BY m.name',
+                '140': {
+                    'query': 'MATCH (m:Computer {admincount: true}) RETURN m.name ORDER BY m.name',
                     'desc': 'List all computers with an admin count',
                     'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} has an admin count{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '138': {
-                    'query': 'MATCH (m {admincount:true, owned: true}) RETURN labels(m),m.name ORDER BY m.name',
+                '141': {
+                    'query': 'MATCH (m {admincount: true, owned: true}) RETURN labels(m),m.name ORDER BY m.name',
                     'desc': 'List all owned principals with an admin count',
                     'message_generator': lambda r: (r.get('m.name') is not None) and f'{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}{log.default} has an admin count{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '139': {
+                '142': {
                     'query': 'MATCH p=(n:User)-[r:ReadGMSAPassword]->(m:User) RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all user ReadGMSAPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '140': {
+                '143': {
                     'query': 'MATCH p=(n:Group)-[r:ReadGMSAPassword]->(m:User) RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all group ReadGMSAPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '141': {
+                '144': {
                     'query': 'MATCH p=(n:Computer)-[r:ReadGMSAPassword]->(m:User) RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List all computer ReadGMSAPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '142': {
+                '145': {
                     'query': 'MATCH (n:Group)-[r:ReadGMSAPassword]->(m:User) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all ReadGMSAPassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },                
-                '143': {
+                '146': {
                     'query': 'MATCH p=(m {owned: true})-[r:ReadGMSAPassword]->(n:User) RETURN n.name,m.name,labels(m) ORDER by m.name',
                     'desc': 'List all ReadGMSAPassword privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '144': {
+                '147': {
                     'query': 'MATCH (n:User)-[r:DCSync]->(m:Domain) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all user DCSync privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '145': {
+                '148': {
                     'query': 'MATCH (n:Group)-[r:DCSync]->(m:Domain) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all group DCSync privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '146': {
+                '149': {
                     'query': 'MATCH (n:Computer)-[r:DCSync]->(m:Domain) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all computer DCSync privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '147': {
+                '150': {
                     'query': 'MATCH (n)-[r:DCSync]->(m:Domain) RETURN n.name,labels(n),m.name ORDER BY n.name',
                     'desc': 'List all DCSync privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '148': {
+                '151': {
                     'query': 'MATCH (n:Group)-[r:DCSync]->(m:Domain) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all DCSync privileges for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.red}{r["n.name"]}{log.reset}{log.default} has DCSync privileges for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '149': {
+                '152': {
                     'query': 'MATCH p=(m {owned: true})-[r:DCSync]->(n:Domain) RETURN n.name,m.name,labels(m) ORDER by m.name',
                     'desc': 'List all DCSync privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["m.name"]}{log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}{log.default} has DCSync privileges for {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '150': {
+                '153': {
                     'query': 'MATCH (n:User)-[r:ForceChangePassword]->(m:User) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all user ForceChangePassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '151': {
+                '154': {
                     'query': 'MATCH (n:Group)-[r:ForceChangePassword]->(m:User) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all group ForceChangePassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '152': {
+                '155': {
                     'query': 'MATCH (n:Computer)-[r:ForceChangePassword]->(m:User) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all computer ForceChangePassword privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '153': {
+                '156': {
                     'query': 'MATCH (n:Group)-[r:ForceChangePassword]->(m:User) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all ForceChangePassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has ForceChangePassword over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '154': {
+                '157': {
                     'query': 'MATCH (n {owned: true})-[r:ForceChangePassword]->(m:User) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all ForceChangePassword privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has ForceChangePassword over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },                
-                '155': {
+                '158': {
                     'query': 'MATCH (n:User)-[r:AddMember]->(m:Group) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all user AddMember privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '156': {
+                '159': {
                     'query': 'MATCH (n:Group)-[r:AddMember]->(m:Group) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all group AddMember privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '157': {
+                '160': {
                     'query': 'MATCH (n:Computer)-[r:AddMember]->(m:Group) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all computer AddMember privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '158': {
+                '161': {
                     'query': 'MATCH (n:Group)-[r:AddMember]->(m:Group) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all AddMember privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddMember over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '159': {
+                '162': {
                     'query': 'MATCH (n {owned: true})-[r:AddMember]->(m:Group) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all AddMember privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has AddMember over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '160': {
+                '163': {
                     'query': 'MATCH (n:User)-[r:AddSelf]->(m:Group) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all user AddSelf privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '161': {
+                '164': {
                     'query': 'MATCH (n:Group)-[r:AddSelf]->(m:Group) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all group AddSelf privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '162': {
+                '165': {
                     'query': 'MATCH (n:Computer)-[r:AddSelf]->(m:Group) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all computer AddSelf privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '163': {
+                '166': {
                     'query': 'MATCH (n:Group)-[r:AddSelf]->(m:Group) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all AddSelf privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddSelf over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '164': {
+                '167': {
                     'query': 'MATCH (n {owned: true})-[r:AddSelf]->(m:Group) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all AddSelf privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has AddSelf over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '165': {
+                '168': {
                     'query': 'MATCH (n:User)-[r:SQLAdmin]->(m:Computer) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all user SQLAdmin privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '166': {
+                '169': {
                     'query': 'MATCH (n:Group)-[r:SQLAdmin]->(m:Computer) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all group SQLAdmin privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '167': {
+                '170': {
                     'query': 'MATCH (n:Computer)-[r:SQLAdmin]->(m:Computer) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all computer SQLAdmin privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '168': {
+                '171': {
                     'query': 'MATCH (n:Group)-[r:SQLAdmin]->(m:Computer) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all SQLAdmin privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has SQLAdmin over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '169': {
+                '172': {
                     'query': 'MATCH (n {owned: true})-[r:SQLAdmin]->(m:Computer) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all SQLAdmin privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has SQLAdmin over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '170': {
+                '173': {
                     'query': 'MATCH (n:User)-[r:CanPSRemote]->(m:Computer) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all user CanPSRemote privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '171': {
+                '174': {
                     'query': 'MATCH (n:Group)-[r:CanPSRemote]->(m:Computer) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all group CanPSRemote privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '172': {
+                '175': {
                     'query': 'MATCH (n:Computer)-[r:CanPSRemote]->(m:Computer) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all computer CanPSRemote privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '173': {
+                '176': {
                     'query': 'MATCH (n:Group)-[r:CanPSRemote]->(m:Computer) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all CanPSRemote privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has CanPSRemote over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '174': {
+                '177': {
                     'query': 'MATCH (n {owned: true})-[r:CanPSRemote]->(m:Computer) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all CanPSRemote privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has CanPSRemote over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '175': {
+                '178': {
                     'query': 'MATCH (n:User)-[r:ExecuteDCOM]->(m:Computer) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all user ExecuteDCOM privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '176': {
+                '179': {
                     'query': 'MATCH (n:Group)-[r:ExecuteDCOM]->(m:Computer) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all group ExecuteDCOM privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '177': {
+                '180': {
                     'query': 'MATCH (n:Computer)-[r:ExecuteDCOM]->(m:Computer) RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List all computer ExecuteDCOM privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '178': {
+                '181': {
                     'query': 'MATCH (n:Group)-[r:ExecuteDCOM]->(m:Computer) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all ExecuteDCOM privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has ExecuteDCOM over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '179': {
+                '182': {
                     'query': 'MATCH (n {owned: true})-[r:ExecuteDCOM]->(m:Computer) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all ExecuteDCOM privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has ExecuteDCOM over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '180': {
+                '183': {
                     'query': 'MATCH (n:User)-[r:AllowedToAct]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user AllowedToAct privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '181': {
+                '184': {
                     'query': 'MATCH (n:Group)-[r:AllowedToAct]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group AllowedToAct privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '182': {
+                '185': {
                     'query': 'MATCH (n:Computer)-[r:AllowedToAct]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer AllowedToAct privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '183': {
+                '186': {
                     'query': 'MATCH (n:Group)-[r:AllowedToAct]->(m:Computer) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all AllowedToAct privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllowedToAct over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '184': {
+                '187': {
                     'query': 'MATCH (n {owned: true})-[r:AllowedToAct]->(m:Computer) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all AllowedToAct privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has AllowedToAct over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '185': {
+                '188': {
                     'query': 'MATCH (n:User)-[r:Owns]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user Owns privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '186': {
+                '189': {
                     'query': 'MATCH (n:Group)-[r:Owns]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group Owns privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '187': {
+                '190': {
                     'query': 'MATCH (n:Computer)-[r:Owns]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer Owns privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '188': {
+                '191': {
                     'query': 'MATCH (n:Group)-[r:Owns]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all Owns privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has Owns over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '189': {
+                '192': {
                     'query': 'MATCH (n {owned: true})-[r:Owns]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all Owns privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has Owns over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '190': {
+                '193': {
                     'query': 'MATCH (n:User)-[r:AllExtendedRights]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user AllExtendedRights privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '191': {
+                '194': {
                     'query': 'MATCH (n:Group)-[r:AllExtendedRights]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group AllExtendedRights privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '192': {
+                '195': {
                     'query': 'MATCH (n:Computer)-[r:AllExtendedRights]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer AllExtendedRights privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '193': {
+                '196': {
                     'query': 'MATCH (n:Group)-[r:AllExtendedRights]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all AllExtendedRights privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '194': {
+                '197': {
                     'query': 'MATCH (n {owned: true})-[r:AllExtendedRights]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all AllExtendedRights privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },                
-                '195': {
+                '198': {
                     'query': 'MATCH (n:User)-[r:MemberOf]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user memberships',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '196': {
+                '199': {
                     'query': 'MATCH (n:Group)-[r:MemberOf]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group memberships',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '197': {
+                '200': {
                     'query': 'MATCH (n:Computer)-[r:MemberOf]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer memberships',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '198': {
+                '201': {
                     'query': 'MATCH (n:Group)-[r:MemberOf]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all memberships for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has MemberOf over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '199': {
+                '202': {
                     'query': 'MATCH (n {owned: true})-[r:MemberOf]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all memberships for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has MemberOf over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '200': {
+                '203': {
                     'query': 'MATCH (n:User)-[r:AddKeyCredentialLink]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user AddKeyCredentialLink privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '201': {
+                '204': {
                     'query': 'MATCH (n:Group)-[r:AddKeyCredentialLink]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group AddKeyCredentialLink privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '202': {
+                '205': {
                     'query': 'MATCH (n:Computer)-[r:AddKeyCredentialLink]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer AddKeyCredentialLink privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '203': {
+                '206': {
                     'query': 'MATCH (n:Group)-[r:AddKeyCredentialLink]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all AddKeyCredentialLink privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '204': {
+                '207': {
                     'query': 'MATCH (n {owned: true})-[r:AddKeyCredentialLink]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all AddKeyCredentialLink privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '205': {
+                '208': {
                     'query': 'MATCH (n:User)-[r:GenericAll]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user GenericAll privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '206': {
+                '209': {
                     'query': 'MATCH (n:Group)-[r:GenericAll]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group GenericAll privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '207': {
+                '210': {
                     'query': 'MATCH (n:Computer)-[r:GenericAll]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer GenericAll privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '208': {
+                '211': {
                     'query': 'MATCH (n:Group)-[r:GenericAll]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all GenericAll privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '209': {
+                '212': {
                     'query': 'MATCH (n {owned: true})-[r:GenericAll]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all GenericAll privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '210': {
+                '213': {
                     'query': 'MATCH (n:User)-[r:WriteDacl]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user WriteDacl privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '211': {
+                '214': {
                     'query': 'MATCH (n:Group)-[r:WriteDacl]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group WriteDacl privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '212': {
+                '215': {
                     'query': 'MATCH (n:Computer)-[r:WriteDacl]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer WriteDacl privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '213': {
+                '216': {
                     'query': 'MATCH (n:Group)-[r:WriteDacl]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all WriteDacl privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '214': {
+                '217': {
                     'query': 'MATCH (n {owned: true})-[r:WriteDacl]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all WriteDacl privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '215': {
+                '218': {
                     'query': 'MATCH (n:User)-[r:WriteOwner]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user WriteOwner privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '216': {
+                '219': {
                     'query': 'MATCH (n:Group)-[r:WriteOwner]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group WriteOwner privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '217': {
+                '220': {
                     'query': 'MATCH (n:Computer)-[r:WriteOwner]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer WriteOwner privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '218': {
+                '221': {
                     'query': 'MATCH (n:Group)-[r:WriteOwner]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all WriteOwner privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },                
-                '219': {
+                '222': {
                     'query': 'MATCH (n {owned: true})-[r:WriteOwner]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all WriteOwner privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },  				
-                '220': {
+                '223': {
                     'query': 'MATCH (n:User)-[r:WriteSPN]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user WriteSPN privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteSPN over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '221': {
+                '224': {
                     'query': 'MATCH (n:Group)-[r:WriteSPN]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group WriteSPN privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteSPN over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '222': {
+                '225': {
                     'query': 'MATCH (n:Computer)-[r:WriteSPN]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer WriteSPN privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteSPN over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '223': {
+                '226': {
                     'query': 'MATCH (n:Group)-[r:WriteSPN]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all WriteSPN privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteSPN over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '224': {
+                '227': {
                     'query': 'MATCH (n {owned: true})-[r:WriteSPN]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all WriteSPN privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has WriteSPN over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },				
-                '225': {
+                '228': {
                     'query': 'MATCH (n:User)-[r:WriteAccountRestrictions]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user WriteAccountRestrictions privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteAccountRestrictions over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '226': {
+                '229': {
                     'query': 'MATCH (n:Group)-[r:WriteAccountRestrictions]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group WriteAccountRestrictions privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteAccountRestrictions over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '227': {
+                '230': {
                     'query': 'MATCH (n:Computer)-[r:WriteAccountRestrictions]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer WriteAccountRestrictions privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteAccountRestrictions over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '228': {
+                '231': {
                     'query': 'MATCH (n:Group)-[r:WriteAccountRestrictions]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all WriteAccountRestrictions privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteAccountRestrictions over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '229': {
+                '232': {
                     'query': 'MATCH (n {owned: true})-[r:WriteAccountRestrictions]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all WriteAccountRestrictions privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has WriteAccountRestrictions over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },                                            
-                '230': {
+                '233': {
                     'query': 'MATCH (n:User)-[r:GenericWrite]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user GenericWrite privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '231': {
+                '234': {
                     'query': 'MATCH (n:Group)-[r:GenericWrite]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group GenericWrite privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '232': {
+                '235': {
                     'query': 'MATCH (n:Computer)-[r:GenericWrite]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer GenericWrite privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '233': {
+                '236': {
                     'query': 'MATCH (n:Group)-[r:GenericWrite]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all GenericWrite privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },  
-                '234': {
+                '237': {
                     'query': 'MATCH (n {owned: true})-[r:GenericWrite]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all GenericWrite privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '235': {
+                '238': {
                     'query': 'MATCH (n:User)-[r:HasSIDHistory]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all user HasSIDHistory privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has HasSIDHistory over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '236': {
+                '239': {
                     'query': 'MATCH (n:Group)-[r:HasSIDHistory]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all group HasSIDHistory privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has HasSIDHistory over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '237': {
+                '240': {
                     'query': 'MATCH (n:Computer)-[r:HasSIDHistory]->(m) RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all computer HasSIDHistory privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has HasSIDHistory over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '238': {
+                '241': {
                     'query': 'MATCH (n:Group)-[r:HasSIDHistory]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List all HasSIDHistory privileges for Users, Domain Users, Authenticated Users, and Everyone groups',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has HasSIDHistory over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '239': {
+                '242': {
                     'query': 'MATCH (n {owned: true})-[r:HasSIDHistory]->(m) RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List all HasSIDHistory privileges for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has HasSIDHistory over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },                          
-                '240': {
+                '243': {
                     'query': 'MATCH (u:User) RETURN u.name,u.description ORDER BY u.name',
                     'desc': 'List all user descriptions',
                     'message_generator': lambda r: (r.get('u.description') is not None and r.get('u.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["u.description"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '241': {
+                '244': {
                     'query': 'MATCH (g:Group) RETURN g.name,g.description ORDER BY g.name',
                     'desc': 'List all group descriptions',
                     'message_generator': lambda r: (r.get('g.description') is not None and r.get('g.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["g.description"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '242': {
+                '245': {
                     'query': 'MATCH (u:User) RETURN u.name,u.email ORDER BY u.name',
                     'desc': 'List all emails',
                     'message_generator': lambda r: (r.get('u.email') is not None and r.get('u.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} email {log.reset}{log.red}{r["u.email"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '243': {
+                '246': {
                     'query': 'MATCH (o:OU) RETURN o.name ORDER BY o.name',
                     'desc': 'List all OUs',
                     'message_generator': lambda r: (r.get('o.name') is not None) and f'{log.default}OU {log.reset}{log.red}{r["o.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '244': {
+                '247': {
                     'query': 'MATCH (c:Container) RETURN c.name ORDER BY c.name',
                     'desc': 'List all Containers',
                     'message_generator': lambda r: (r.get('c.name') is not None) and f'{log.default}Container {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '245': {
+                '248': {
                     'query': 'MATCH (n:Domain) RETURN n.name ORDER BY n.name',
                     'desc': 'List all Domains',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Domain {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '246': {
+                '249': {
                     'query': 'MATCH (d:Domain) RETURN d.name,d.functionallevel ORDER BY d.name',
                     'desc': 'List all Domains functional level',
                     'message_generator': lambda r: (r.get('d.name') is not None and r.get('d.functionallevel') is not None) and f'{log.default}Domain {log.reset}{log.red}{r["d.name"]}{log.reset}{log.default} functional level {log.reset}{log.red}{r["d.functionallevel"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '247': {
+                '250': {
                     'query': 'MATCH (n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(o:OU) RETURN n.name,o.name,TYPE(r),labels(n) ORDER BY n.name',
                     'desc': 'List all object control over OUs',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('o.name') is not None) and f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '248': {
+                '251': {
                     'query': 'MATCH (n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(o:OU) RETURN n.name,o.name,TYPE(r),labels(n) ORDER BY n.name',
                     'desc': 'List all object control over OUs for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('o.name') is not None) and f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over OU {log.reset}{log.red}{r["o.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '249': {
+                '252': {
                     'query': 'MATCH (n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(c:Container) RETURN n.name,c.name,TYPE(r),labels(n) ORDER BY n.name',
                     'desc': 'List all object control over Containers',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('c.name') is not None) and f'{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '250': {
+                '253': {
                     'query': 'MATCH (n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(c:Container) RETURN n.name,c.name,TYPE(r),labels(n) ORDER BY n.name',
                     'desc': 'List all object control over Containers for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('c.name') is not None) and f'{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over Container {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '251': {
+                '254': {
                     'query': 'MATCH (n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO) RETURN n.name,g.name,TYPE(r),labels(n) ORDER BY n.name',
                     'desc': 'List all object control over GPOs',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('g.name') is not None) and f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '252': {
+                '255': {
                     'query': 'MATCH (n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO) RETURN n.name,g.name,TYPE(r),labels(n) ORDER BY n.name',
                     'desc': 'List all object control over GPOs for owned principals',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('g.name') is not None) and f'({r["labels(n)"][0]}/{r["labels(n)"][1]}) {log.red}{r["n.name"]} {log.reset}{log.default}has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over GPO {log.reset}{log.red}{r["g.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '253': {
+                '256': {
                     'query': 'MATCH (g1)-[:GPLink]->(g2) RETURN g1.name,g2.name,labels(g2) ORDER BY g1.name',
                     'desc': 'List all GP Links',
                     'message_generator': lambda r: (r.get('g1.name') is not None and r.get('g2.name') is not None) and f'{log.default}GPO {log.reset}{log.red}{r["g1.name"]}{log.reset}{log.default} is linked to {log.reset}{log.red}{r["g2.name"]}{log.reset}{log.default} ({r["labels(g2)"][0]}/{r["labels(g2)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '254': {
+                '257': {
                     'query': 'MATCH (n:User)-[r]->(m) RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)',
                     'desc': 'List all user privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '255': {
+                '258': {
                     'query': 'MATCH (n:Group)-[r]->(m) RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)',
                     'desc': 'List all group privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '256': {
+                '259': {
                     'query': 'MATCH (n:Computer)-[r]->(m) RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)',
                     'desc': 'List all computer privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '257': {
+                '260': {
                     'query': 'MATCH (n:Group)-[r]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)',
                     'desc': 'List all privileges for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '258': {
+                '261': {
                     'query': 'MATCH (n:Group)-[:MemberOf]->(g:Group)-[r]->(m) WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545") RETURN n.name,TYPE(r),labels(m),m.name,g.name ORDER BY TYPE(r)',
                     'desc': 'List all group-delegated privileges for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["g.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '259': {
+                '262': {
                     'query': 'MATCH (n {owned: true})-[r]->(m) RETURN n.name,TYPE(r),labels(m),labels(n),m.name ORDER BY TYPE(r)',
                     'desc': 'List all privileges for owned principals',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '260': {
+                '263': {
                     'query': 'MATCH (n {owned: true})-[:MemberOf]->(g:Group),(g)-[r]->(m) RETURN n.name,TYPE(r),labels(m),labels(n),m.name,g.name ORDER BY TYPE(r)',
                     'desc': 'List all group-delegated privileges for owned principals',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None and r.get('g.name') is not None) and f'{log.red}{r["n.name"]} {log.reset}{log.default}({r["labels(n)"][0]}/{r["labels(n)"][1]}){log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["g.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '261': {
+                '264': {
                     'query': 'MATCH p=(u:User)-[:CanRDP]->(c:Computer) WHERE u.name =~ \'((?i)USER_SEARCH)\' RETURN u.name,c.name',
                     'desc': 'List this user\'s RDP privileges',
                     'message_generator': lambda r: (r.get('u.name') is not None and r.get('c.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '262': {
+                '265': {
                     'query': 'MATCH (n:User)-[:MemberOf]->(m:Group),(m)-[:CanRDP]->(c:Computer) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name',
                     'desc': 'List this user\'s group-delegated RDP privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None and r.get('c.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which CanRDP to {log.red}{r["c.name"]}{log.default}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '263': {
+                '266': {
                     'query': 'MATCH p=(m:User)-[r:AdminTo]->(n:Computer) WHERE m.name =~ \'((?i)USER_SEARCH)\' RETURN m.name, n.name ORDER BY m.name',
                     'desc': 'List this user\'s AdminTo privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '264': {
+                '267': {
                     'query': 'MATCH (n:User)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name',
                     'desc': 'List this user\'s group-delegated AdminTo privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None and r.get('c.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '265': {
+                '268': {
                     'query': 'MATCH p=(m:Computer)-[r:HasSession]->(n:User) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name',
                     'desc': 'List this user\'s sessions',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} HasSession on {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '266': {
+                '269': {
                     'query': 'MATCH p=(n:User)-[r:ReadLAPSPassword]->(m:Computer) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List this user\'s ReadLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '267': {
+                '270': {
                     'query': 'MATCH p=(n:User)-[r:SyncLAPSPassword]->(m:Computer) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List this user\'s SyncLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '268': {
+                '271': {
                     'query': 'MATCH (n:User)-[r:DumpSMSAPassword]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s DumpSMSAPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DumpSMSAPassword over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '269': {
+                '272': {
                     'query': 'MATCH p=(n:User)-[r:ReadGMSAPassword]->(m:User) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List this user\'s ReadGMSAPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '270': {
+                '273': {
                     'query': 'MATCH (u:User)-[:AllowedToDelegate]->(c:Computer) WHERE u.name =~ \'((?i)USER_SEARCH)\' RETURN u.name,c.name',
                     'desc': 'List this user\'s Constrained Delegation privileges',
                     'message_generator': lambda r: (r.get('u.name') is not None and r.get('c.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '271': {
+                '274': {
                     'query': 'MATCH (n:User)-[r:ForceChangePassword]->(m:User) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this user\'s ForceChangePassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '272': {
+                '275': {
                     'query': 'MATCH (n:User)-[r:AddMember]->(m:Group) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this user\'s AddMember privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '273': {
+                '276': {
                     'query': 'MATCH (n:User)-[r:AddSelf]->(m:Group) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this user\'s AddSelf privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '274': {
+                '277': {
                     'query': 'MATCH (n:User)-[r:SQLAdmin]->(m:Computer) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this user\'s SQLAdmin privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '275': {
+                '278': {
                     'query': 'MATCH (n:User)-[r:CanPSRemote]->(m:Computer) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this user\'s CanPSRemote privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '276': {
+                '279': {
                     'query': 'MATCH (n:User)-[r:ExecuteDCOM]->(m:Computer) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this user\'s ExecuteDCOM privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '277': {
+                '280': {
                     'query': 'MATCH (n:User)-[r:AllowedToAct]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s AllowedToAct privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '278': {
+                '281': {
                     'query': 'MATCH (n:User)-[r:Owns]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s Owns privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '279': {
+                '282': {
                     'query': 'MATCH (n:User)-[r:AllExtendedRights]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s AllExtendedRights privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '280': {
+                '283': {
                     'query': 'MATCH (n:User)-[r:AddKeyCredentialLink]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s AddKeyCredentialLink privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '281': {
+                '284': {
                     'query': 'MATCH (n:User)-[r:GenericAll]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s GenericAll privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '282': {
+                '285': {
                     'query': 'MATCH (n:User)-[r:WriteDacl]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s WriteDacl privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '283': {
+                '286': {
                     'query': 'MATCH (n:User)-[r:WriteOwner]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s WriteOwner privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '284': {
+                '287': {
                     'query': 'MATCH (n:User)-[r:WriteSPN]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s WriteSPN privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteSPN over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '285': {
+                '288': {
                     'query': 'MATCH (n:User)-[r:WriteAccountRestrictions]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s WriteAccountRestrictions privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteAccountRestrictions over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '286': {
+                '289': {
                     'query': 'MATCH (n:User)-[r:GenericWrite]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s GenericWrite privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '287': {
+                '290': {
                     'query': 'MATCH (n:User)-[r:HasSIDHistory]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s HasSIDHistory privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has HasSIDHistory over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '288': {
+                '291': {
                     'query': 'MATCH (u:User) WHERE u.name =~ \'((?i)USER_SEARCH)\' RETURN u.name,u.description ORDER BY u.name',
                     'desc': 'List this user\'s description',
                     'message_generator': lambda r: (r.get('u.description') is not None and r.get('u.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["u.description"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '289': {
+                '292': {
                     'query': 'MATCH (u:User) WHERE u.name =~ \'((?i)USER_SEARCH)\' RETURN u.name,u.email ORDER BY u.name',
                     'desc': 'List this user\'s email',
                     'message_generator': lambda r: (r.get('u.email') is not None) and f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} email {log.reset}{log.red}{r["u.email"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '290': {
+                '293': {
                     'query': 'MATCH (n:User)-[r:MemberOf]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this user\'s group memberships',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '291': {
+                '294': {
                     'query': 'MATCH (u:User {dontreqpreauth: true}) WHERE u.name =~ \'((?i)USER_SEARCH)\' RETURN u.name',
                     'desc': 'List if this user\'s AS-REP roastable',
                     'message_generator': lambda r: (r.get('u.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["u.name"]}{log.reset}{log.default} is AS-REP roastable{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '292': {
+                '295': {
                     'query': 'MATCH (n:User) WHERE n.hasspn=true AND n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name AS result ORDER BY n.name',
                     'desc': 'List if this user\'s kerberoastable',
                     'message_generator': lambda r: (r.get('result') is not None) and f'{log.default}User {log.reset}{log.red}{r["result"]}{log.reset}{log.default} is kerberoastable{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '293': {
+                '296': {
                     'query': 'MATCH (n:User)-[r]->(m) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)',
                     'desc': 'List all privileges for this user',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None and r.get('TYPE(r)') is not None and r.get('labels(m)') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'general',
                 },
-                '294': {
+                '297': {
                     'query': 'MATCH (n:User)-[:MemberOf]->(m:Group),(m)-[r]->(v) WHERE n.name =~ \'((?i)USER_SEARCH)\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name',
                     'desc': 'List all group-delegated privileges for this user',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('m.name') is not None and r.get('v.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'user',
                 },
-                '295': {
-                    'query': 'MATCH (m:User),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n AND m.name =~ \'((?i)USER_SEARCH)\' RETURN m.name,p ORDER BY m.name',
+                '298': {
+                    'query': 'MATCH (m:User),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n AND m.name =~ \'((?i)USER_SEARCH)\' RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to high-value targets for this user',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '296': {
+                '299': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND m.name =~ \'((?i)USER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Domain Admins for this user',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '297': {
+                '300': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND m.name =~ \'((?i)USER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Enterprise Admins for this user',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '298': {
+                '301': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND m.name =~ \'((?i)USER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Domain Controllers for this user',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '299': {
+                '302': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND m.name =~ \'((?i)USER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Exchange groups for this user',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '300': {
+                '303': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND m.name =~ \'((?i)USER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to admin groups for this user',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '301': {
+                '304': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND m.name =~ \'((?i)USER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to sql groups for this user',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '302': {
+                '305': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND m.name =~ \'((?i)USER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to web groups for this user',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '303': {
+                '306': {
                     'query': 'MATCH p=shortestPath((m:User)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND m.name =~ \'((?i)USER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to service groups for this user',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '304': {
+                '307': {
                     'query': 'MATCH p=shortestPath((m)-[r*1..]->(n:User)) WHERE n.name =~ \'((?i)USER_SEARCH)\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to this user',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '305': {
+                '308': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:User)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \'((?i)USER_SEARCH)\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to this user for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },
-                '306': {
+                '309': {
                     'query': 'MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:User)) WHERE n.name =~ \'((?i)USER_SEARCH)\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to this user for owned principals',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'user',
                 },                                
-                '307': {
+                '310': {
                     'query': 'MATCH p=(g:Group)-[:CanRDP]->(c:Computer) WHERE g.name =~ \'((?i)GROUP_SEARCH)\' RETURN g.name,c.name',
                     'desc': 'List this group\'s RDP privileges',
                     'message_generator': lambda r: (r.get('g.name') is not None and r.get('c.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} CanRDP to {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '308': {
+                '311': {
                     'query': 'MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[:CanRDP]->(c:Computer) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name',
                     'desc': 'List this group\'s group-delegated RDP privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('c.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which CanRDP to {log.red}{r["c.name"]}{log.default}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '309': {
+                '312': {
                     'query': 'MATCH p=(m:Group)-[r:AdminTo]->(n:Computer) WHERE m.name =~ \'((?i)GROUP_SEARCH)\' RETURN m.name, n.name ORDER BY m.name',
                     'desc': 'List this group\'s AdminTo privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '310': {
+                '313': {
                     'query': 'MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name',
                     'desc': 'List this group\'s group-delegated AdminTo privileges',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('c.name') is not None and r.get('m.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '311': {
+                '314': {
                     'query': 'MATCH p=(n:Group)-[r:ReadLAPSPassword]->(m:Computer) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List this group\'s ReadLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '312': {
+                '315': {
                     'query': 'MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m:Computer) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List this group\'s SyncLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '313': {
+                '316': {
                     'query': 'MATCH (n:Group)-[r:DumpSMSAPassword]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s DumpSMSAPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DumpSMSAPassword over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '314': {
+                '317': {
                     'query': 'MATCH p=(n:Group)-[r:ReadGMSAPassword]->(m:User) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List this group\'s ReadGMSAPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '315': {
+                '318': {
                     'query': 'MATCH (g:Group)-[:AllowedToDelegate]->(c:Computer) WHERE g.name =~ \'((?i)GROUP_SEARCH)\' RETURN g.name,c.name',
                     'desc': 'List this group\'s Constrained Delegation privileges',
                     'message_generator': lambda r: (r.get('g.name') is not None and r.get('c.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '316': {
+                '319': {
                     'query': 'MATCH (n:Group)-[r:ForceChangePassword]->(m:User) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this group\'s ForceChangePassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '317': {
+                '320': {
                     'query': 'MATCH (n:Group)-[r:AddMember]->(m:Group) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this group\'s AddMember privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '318': {
+                '321': {
                     'query': 'MATCH (n:Group)-[r:AddSelf]->(m:Group) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this group\'s AddSelf privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '319': {
+                '322': {
                     'query': 'MATCH (n:Group)-[r:SQLAdmin]->(m:Computer) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this group\'s SQLAdmin privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '320': {
+                '323': {
                     'query': 'MATCH (n:Group)-[r:CanPSRemote]->(m:Computer) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this group\'s CanPSRemote privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '321': {
+                '324': {
                     'query': 'MATCH (n:Group)-[r:ExecuteDCOM]->(m:Computer) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this group\'s ExecuteDCOM privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '322': {
+                '325': {
                     'query': 'MATCH (n:Group)-[r:AllowedToAct]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s AllowedToAct privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '323': {
+                '326': {
                     'query': 'MATCH (n:Group)-[r:Owns]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s Owns privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '324': {
+                '327': {
                     'query': 'MATCH (n:Group)-[r:AllExtendedRights]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s AllExtendedRights privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '325': {
+                '328': {
                     'query': 'MATCH (n:Group)-[r:AddKeyCredentialLink]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s AddKeyCredentialLink privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '326': {
+                '329': {
                     'query': 'MATCH (n:Group)-[r:GenericAll]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s GenericAll privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '327': {
+                '330': {
                     'query': 'MATCH (n:Group)-[r:WriteDacl]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s WriteDacl privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '328': {
+                '331': {
                     'query': 'MATCH (n:Group)-[r:WriteOwner]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s WriteOwner privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '329': {
+                '332': {
                     'query': 'MATCH (n:Group)-[r:WriteSPN]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s WriteSPN privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteSPN over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '330': {
+                '333': {
                     'query': 'MATCH (n:Group)-[r:WriteAccountRestrictions]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s WriteAccountRestrictions privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteAccountRestrictions over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '331': {
+                '334': {
                     'query': 'MATCH (n:Group)-[r:GenericWrite]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s GenericWrite privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '332': {
+                '335': {
                     'query': 'MATCH (n:Group)-[r:HasSIDHistory]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s HasSIDHistory privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has HasSIDHistory over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '333': {
+                '336': {
                     'query': 'MATCH (g:Group) WHERE g.name =~ \'((?i)GROUP_SEARCH)\' RETURN g.name,g.description ORDER BY g.name',
                     'desc': 'List this group\'s description',
                     'message_generator': lambda r: (r.get('g.description') is not None and r.get('g.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["g.name"]}{log.reset}{log.default} description {log.reset}{log.red}{r["g.description"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '334': {
+                '337': {
                     'query': 'MATCH (n:Group)-[r:MemberOf]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this group\'s group memberships',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '335': {
+                '338': {
                     'query': 'MATCH (n)-[r:MemberOf]->(m) WHERE m.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,m.name,labels(m),labels(n) ORDER BY n.name',
                     'desc': 'List this group\'s members',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.red}{r["n.name"]}{log.reset}{log.default} ({r["labels(n)"][0]}/{r["labels(n)"][1]}) is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '336': {
+                '339': {
                     'query': 'MATCH (n:Group)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|HasSIDHistory|DumpSMSAPassword|WriteSPN|WriteAccountRestrictions|Owns|AddKeyCredentialLink|ReadLAPSPassword|SyncLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)',
                     'desc': 'List all privileges for this group',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '337': {
+                '340': {
                     'query': 'MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[r]->(v) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name',
                     'desc': 'List all group-delegated privileges for this group',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None and r.get('v.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'group',
                 },
-                '338': {
-                    'query': 'MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n AND m.name =~ \'((?i)GROUP_SEARCH)\' RETURN m.name,p ORDER BY m.name',
+                '341': {
+                    'query': 'MATCH (m:Group),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n AND m.name =~ \'((?i)GROUP_SEARCH)\' RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to high-value targets for this group',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '339': {
+                '342': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND NOT m=n AND m.name =~ \'((?i)GROUP_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Domain Admins for this group',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '340': {
+                '343': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND NOT m=n AND m.name =~ \'((?i)GROUP_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Enterprise Admins for this group',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '341': {
+                '344': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND NOT m=n AND m.name =~ \'((?i)GROUP_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Domain Controllers for this group',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '342': {
+                '345': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND NOT m=n AND m.name =~ \'((?i)GROUP_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Exchange groups for this group',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '343': {
+                '346': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND NOT m=n AND m.name =~ \'((?i)GROUP_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to admin groups for this group',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '344': {
+                '347': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND NOT m=n AND m.name =~ \'((?i)GROUP_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to sql groups for this group',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '345': {
+                '348': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND NOT m=n AND m.name =~ \'((?i)GROUP_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to web groups for this group',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '346': {
+                '349': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND NOT m=n AND m.name =~ \'((?i)GROUP_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to service groups for this group',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '347': {
+                '350': {
                     'query': 'MATCH p=shortestPath((m)-[r*1..]->(n:Group)) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to this group',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '348': {
+                '351': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group)) WHERE (m.objectid =~ "(?i)S-1-5-21-.*-513" OR m.objectid =~ "(?i).*-S-1-5-11" OR m.objectid =~ "(?i).*-S-1-1-0" OR m.objectid =~ "(?i).*-S-1-5-32-545") AND n.name =~ \'((?i)GROUP_SEARCH)\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to this group for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '349': {
+                '352': {
                     'query': 'MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group)) WHERE n.name =~ \'((?i)GROUP_SEARCH)\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to this group for owned principals',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'group',
                 },
-                '350': {
+                '353': {
                     'query': 'MATCH p=(m:Computer)-[r:AdminTo]->(n:Computer) WHERE m.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN m.name, n.name ORDER BY m.name',
                     'desc': 'List this computer\'s AdminTo privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} is AdminTo {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '351': {
+                '354': {
                     'query': 'MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN DISTINCT n.name,m.name,c.name ORDER BY m.name',
                     'desc': 'List this computer\'s group-delegated AdminTo privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None and r.get('c.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]}{log.reset}{log.default} which is AdminTo {log.red}{r["c.name"]}{log.default}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '352': {
+                '355': {
                     'query': 'MATCH p=(n:Computer)-[r:ReadLAPSPassword]->(m:Computer) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List this computer\'s ReadLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '353': {
+                '356': {
                     'query': 'MATCH p=(n:Computer)-[r:SyncLAPSPassword]->(m:Computer) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List this computer\'s SyncLAPSPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can sync LAPS passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '354': {
+                '357': {
                     'query': 'MATCH (n:Computer)-[r:DumpSMSAPassword]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s DumpSMSAPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has DumpSMSAPassword over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 }, 
-                '355': {
+                '358': {
                     'query': 'MATCH p=(n:Computer)-[r:ReadGMSAPassword]->(m:User) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name ORDER by n.name',
                     'desc': 'List this computer\'s ReadGMSAPassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can read GMSA passwords for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '356': {
+                '359': {
                     'query': 'MATCH (n:Computer)-[:AllowedToDelegate]->(c:Computer) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,c.name',
                     'desc': 'List this computer\'s Constrained Delegation privileges',
                     'message_generator': lambda r: (r.get('c.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is allowed to delegate for {log.reset}{log.red}{r["c.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '357': {
+                '360': {
                     'query': 'MATCH (n:Computer)-[r:ForceChangePassword]->(m:User) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this computer\'s ForceChangePassword privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can force change password for {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '358': {
+                '361': {
                     'query': 'MATCH (n:Computer)-[r:AddMember]->(m:Group) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this computer\'s AddMember privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add members to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '359': {
+                '362': {
                     'query': 'MATCH (n:Computer)-[r:AddSelf]->(m:Group) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this computer\'s AddSelf privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can add itself to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '360': {
+                '363': {
                     'query': 'MATCH (n:Computer)-[r:SQLAdmin]->(m:Computer) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this computer\'s SQLAdmin privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is SQLAdmin to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '361': {
+                '364': {
                     'query': 'MATCH (n:Computer)-[r:CanPSRemote]->(m:Computer) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this computer\'s CanPSRemote privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can PSRemote to {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '362': {
+                '365': {
                     'query': 'MATCH (n:Computer)-[r:ExecuteDCOM]->(m:Computer) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name ORDER BY n.name',
                     'desc': 'List this computer\'s ExecuteDCOM privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} can ExecuteDCOM on {log.reset}{log.red}{r["m.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '363': {
+                '366': {
                     'query': 'MATCH (n:Computer)-[r:AllowedToAct]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s AllowedToAct privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is AllowedToAct for {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '364': {
+                '367': {
                     'query': 'MATCH (n:Computer)-[r:Owns]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s Owns privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} Owns {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '365': {
+                '368': {
                     'query': 'MATCH (n:Computer)-[r:AllExtendedRights]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s AllExtendedRights privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AllExtendedRights over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '366': {
+                '369': {
                     'query': 'MATCH (n:Computer)-[r:AddKeyCredentialLink]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s AddKeyCredentialLink privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has AddKeyCredentialLink over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '367': {
+                '370': {
                     'query': 'MATCH (n:Computer)-[r:GenericAll]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s GenericAll privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericAll over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '368': {
+                '371': {
                     'query': 'MATCH (n:Computer)-[r:WriteDacl]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s WriteDacl privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteDacl over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '369': {
+                '372': {
                     'query': 'MATCH (n:Computer)-[r:WriteOwner]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s WriteOwner privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteOwner over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '370': {
+                '373': {
                     'query': 'MATCH (n:Computer)-[r:WriteSPN]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s WriteSPN privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteSPN over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 }, 
-                '371': {
+                '374': {
                     'query': 'MATCH (n:Computer)-[r:WriteAccountRestrictions]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s WriteAccountRestrictions privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has WriteAccountRestrictions over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 }, 
-                '372': {
+                '375': {
                     'query': 'MATCH (n:Computer)-[r:GenericWrite]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s GenericWrite privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has GenericWrite over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '373': {
+                '376': {
                     'query': 'MATCH (n:Computer)-[r:HasSIDHistory]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s HasSIDHistory privileges',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has HasSIDHistory over {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },                
-                '374': {
+                '377': {
                     'query': 'MATCH (n:Computer)-[r:MemberOf]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,m.name,labels(m) ORDER BY n.name',
                     'desc': 'List this computer\'s group memberships',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '375': {
+                '378': {
                     'query': 'MATCH (n:Computer)-[r]->(m) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,TYPE(r),labels(m),m.name ORDER BY TYPE(r)',
                     'desc': 'List all privileges for this computer',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}{log.default} has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["m.name"]} {log.reset}{log.default}({r["labels(m)"][0]}/{r["labels(m)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '376': {
+                '379': {
                     'query': 'MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[r]->(v) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN n.name,TYPE(r),labels(v),m.name,v.name ORDER BY m.name',
                     'desc': 'List all group-delegated privileges for this computer',
                     'message_generator': lambda r: (r.get('m.name') is not None and r.get('n.name') is not None and r.get('v.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}is MemberOf {log.reset}{log.red}{r["m.name"]} {log.reset}{log.default}which has {log.reset}{log.red}{r["TYPE(r)"]}{log.reset}{log.default} over {log.red}{r["v.name"]} {log.reset}{log.default}({r["labels(v)"][0]}/{r["labels(v)"][1]}){log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'computer',
                 },
-                '377': {
-                    'query': 'MATCH (m:Computer),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n AND m.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN m.name,p ORDER BY m.name',
+                '380': {
+                    'query': 'MATCH (m:Computer),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") AND NOT m=n AND m.name =~ \'((?i)COMPUTER_SEARCH)\' RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to high-value targets for this computer',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '378': {
+                '381': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-512" AND m.name =~ \'((?i)COMPUTER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Domain Admins for this computer',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '379': {
+                '382': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-519" AND m.name =~ \'((?i)COMPUTER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Enterprise Admins for this computer',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '380': {
+                '383': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.objectid =~ "(?i)S-1-5-21-.*-516" AND m.name =~ \'((?i)COMPUTER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Domain Controllers for this computer',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '381': {
+                '384': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)EXCHANGE).*" AND m.name =~ \'((?i)COMPUTER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to Exchange groups for this computer',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '382': {
+                '385': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)admin|adm).*" AND m.name =~ \'((?i)COMPUTER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to admin groups for this computer',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '383': {
+                '386': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)SQL).*" AND m.name =~ \'((?i)COMPUTER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to sql groups for this computer',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '384': {
+                '387': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)WEB).*" AND m.name =~ \'((?i)COMPUTER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to web groups for this computer',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '385': {
+                '388': {
                     'query': 'MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group)) WHERE n.name =~ ".*((?i)service|svc).*" AND m.name =~ \'((?i)COMPUTER_SEARCH)\' AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to service groups for this computer',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '386': {
+                '389': {
                     'query': 'MATCH p=shortestPath((m)-[r*1..]->(n:Computer)) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to this computer',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '387': {
+                '390': {
                     'query': 'MATCH p=shortestPath((m:Group)-[r*1..]->(n:Computer)) WHERE (m.objectid =~ "(?i)S-1-5-21-.*-513" OR m.objectid =~ "(?i).*-S-1-5-11" OR m.objectid =~ "(?i).*-S-1-1-0" OR m.objectid =~ "(?i).*-S-1-5-32-545") AND n.name =~ \'((?i)COMPUTER_SEARCH)\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to this computer for Users, Domain Users, Authenticated Users, or Everyone groups',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '388': {
+                '391': {
                     'query': 'MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Computer)) WHERE n.name =~ \'((?i)COMPUTER_SEARCH)\' AND NOT m=n AND NONE (r IN relationships(p) WHERE type(r)= "GetChanges") AND NONE (r in relationships(p) WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p) WHERE type(r)="GetChangesInFilteredSet") RETURN m.name,p ORDER BY m.name',
                     'desc': 'List all shortest paths to this computer for owned principals',
                     'message_generator': None,
                     'handler': self.handle_path_query,
                     'type': 'computer',
                 },
-                '389': {
+                '392': {
                     'query': 'MATCH (n:Group) WHERE n.name =~ \'REGEX\' RETURN n.name ORDER BY n.name',
                     'desc': 'Search for groups matching the regex',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'regex',
                 },
-                '390': {
+                '393': {
                     'query': 'MATCH (n:User) WHERE n.name =~ \'REGEX\' RETURN n.name ORDER BY n.name',
                     'desc': 'Search for users matching the regex',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'regex',
                 },
-                '391': {
+                '394': {
                     'query': 'MATCH (n:Computer) WHERE n.name =~ \'REGEX\' RETURN n.name ORDER BY n.name',
                     'desc': 'Search for computers matching the regex',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'regex',
                 },
-                '392': {
+                '395': {
                     'query': 'MATCH (n:User) WHERE n.description =~ \'REGEX\' RETURN n.name,n.description ORDER BY n.name',
                     'desc': 'Search for user descriptions matching the regex',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('n.description') is not None) and f'{log.default}User {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'regex',
                 },
-                '393': {
+                '396': {
                     'query': 'MATCH (n:Group) WHERE n.description =~ \'REGEX\' RETURN n.name,n.description ORDER BY n.name',
                     'desc': 'Search for group descriptions matching the regex',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('n.description') is not None) and f'{log.default}Group {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}description {log.reset}{log.red}{r["n.description"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'regex',
                 },
-                '394': {
+                '397': {
                     'query': 'MATCH (n:Computer) WHERE n.operatingsystem =~ \'REGEX\' RETURN n.name,n.operatingsystem ORDER BY n.name',
                     'desc': 'Search for OSs matching the regex',
                     'message_generator': lambda r: (r.get('n.name') is not None and r.get('n.operatingsystem') is not None) and f'{log.default}Computer {log.reset}{log.red}{r["n.name"]} {log.reset}{log.default}OS {log.reset}{log.red}{r["n.operatingsystem"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'regex',
                 },
-                '395': {
+                '398': {
                     'query': 'MATCH (n:GPO) WHERE n.name =~ \'REGEX\' RETURN n.name ORDER BY n.name',
                     'desc': 'Search for GPOs matching the regex',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}GPO {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'regex',
                 },
-                '396': {
+                '399': {
                     'query': 'MATCH (n:Container) WHERE n.name =~ \'REGEX\' RETURN n.name ORDER BY n.name',
                     'desc': 'Search for Containers matching the regex',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}Container {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,
                     'handler': self.handle_standard_query,
                     'type': 'regex',
                 },
-                '397': {
+                '400': {
                     'query': 'MATCH (n:OU) WHERE n.name =~ \'REGEX\' RETURN n.name ORDER BY n.name',
                     'desc': 'Search for OUs matching the regex',
                     'message_generator': lambda r: (r.get('n.name') is not None) and f'{log.default}OU {log.reset}{log.red}{r["n.name"]}{log.reset}' or None,

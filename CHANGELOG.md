@@ -28,4 +28,4 @@ Expanded cyphers for owned principals as well as the Users, Domain Users, Authen
 
 # 08/09/2023
 
-Added group-delegated CanRDP/Adminto cyphers for the Users, Domain Users, Authenticated Users, and Everyone groups as well as owned principals. Added cyphers for additional relationships including: `WriteSPN`, `WriteAccountRestrictions`, `HasSIDHistory`, and `DumpSMSAPassword`.
+Added group-delegated CanRDP/Adminto cyphers for the Users, Domain Users, Authenticated Users, and Everyone groups as well as owned principals. Added cyphers for additional relationships including: `WriteSPN`, `WriteAccountRestrictions`, `HasSIDHistory`, and `DumpSMSAPassword`. Made a modification to the `add-owned.py` script to allow operators to unset node properties that have been previously modified.

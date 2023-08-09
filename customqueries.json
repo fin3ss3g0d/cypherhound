@@ -86,7 +86,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (c:Computer {unconstraineddelegation:true}) RETURN c ORDER BY c.name"
+                    "query": "MATCH (c:Computer {unconstraineddelegation: true}) RETURN c ORDER BY c.name"
                 }
             ]
         },
@@ -621,12 +621,12 @@
             ]
         },
         {
-            "name": "List all high-value owned principals",
+            "name": "List all high-value users",
             "category": "General",
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m {highvalue:true, owned: true}) RETURN m ORDER BY m.name"
+                    "query": "MATCH (m:User {highvalue: true}) RETURN m ORDER BY m.name"
                 }
             ]
         },
@@ -636,7 +636,37 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:Group {highvalue:true}) RETURN m ORDER BY m.name"
+                    "query": "MATCH (m:Group {highvalue: true}) RETURN m ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all high-value computers",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m:Computer {highvalue: true}) RETURN m ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all high-value principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m {highvalue: true}) RETURN m ORDER BY m.name"
+                }
+            ]
+        },
+        {
+            "name": "List all high-value owned principals",
+            "category": "General",
+            "queryList": [
+                {
+                    "final": true,
+                    "query": "MATCH (m {highvalue: true, owned: true}) RETURN m ORDER BY m.name"
                 }
             ]
         },
@@ -646,7 +676,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=(n:User)-[r:MemberOf*1..]->(m:Group {highvalue:true}) RETURN p ORDER BY n.name"
+                    "query": "MATCH p=(n:User)-[r:MemberOf*1..]->(m:Group {highvalue: true}) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -656,7 +686,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH p=(n {owned: true})-[r:MemberOf*1..]->(m:Group {highvalue:true}) RETURN p ORDER BY n.name"
+                    "query": "MATCH p=(n {owned: true})-[r:MemberOf*1..]->(m:Group {highvalue: true}) RETURN p ORDER BY n.name"
                 }
             ]
         },
@@ -666,7 +696,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:User),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
+                    "query": "MATCH (m:User),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -676,7 +706,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
+                    "query": "MATCH (m:Group),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -686,7 +716,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:Computer),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
+                    "query": "MATCH (m:Computer),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -696,7 +726,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:Group),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
+                    "query": "MATCH (m:Group),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -706,7 +736,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m {owned: true}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
+                    "query": "MATCH (m {owned: true}),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -1046,7 +1076,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:Computer {enabled:TRUE}) RETURN n ORDER BY n.name"
+                    "query": "MATCH (n:Computer {enabled: true}) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1056,7 +1086,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:Computer {enabled:FALSE}) RETURN n ORDER BY n.name"
+                    "query": "MATCH (n:Computer {enabled: false}) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1126,7 +1156,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User {passwordnotreqd:true}) RETURN n ORDER BY n.name"
+                    "query": "MATCH (n:User {passwordnotreqd: true}) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1136,7 +1166,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User {passwordnotreqd:true, owned: true}) RETURN n ORDER BY n.name"
+                    "query": "MATCH (n:User {passwordnotreqd: true, owned: true}) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1146,7 +1176,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User {pwdneverexpires:true}) RETURN n ORDER BY n.name"
+                    "query": "MATCH (n:User {pwdneverexpires: true}) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1156,7 +1186,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (n:User {pwdneverexpires:true, owned: true}) RETURN n ORDER BY n.name"
+                    "query": "MATCH (n:User {pwdneverexpires: true, owned: true}) RETURN n ORDER BY n.name"
                 }
             ]
         },
@@ -1316,7 +1346,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:User {highvalue:true}) RETURN m ORDER BY m.name"
+                    "query": "MATCH (m:User {highvalue: true}) RETURN m ORDER BY m.name"
                 }
             ]
         },
@@ -1326,7 +1356,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:User {sensitive:true}) RETURN m ORDER BY m.name"
+                    "query": "MATCH (m:User {sensitive: true}) RETURN m ORDER BY m.name"
                 }
             ]
         },
@@ -1336,7 +1366,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:User {admincount:true}) RETURN m ORDER BY m.name"
+                    "query": "MATCH (m:User {admincount: true}) RETURN m ORDER BY m.name"
                 }
             ]
         },
@@ -1346,7 +1376,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:Group {admincount:true}) RETURN m ORDER BY m.name"
+                    "query": "MATCH (m:Group {admincount: true}) RETURN m ORDER BY m.name"
                 }
             ]
         },
@@ -1356,7 +1386,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m:Computer {admincount:true}) RETURN m ORDER BY m.name"
+                    "query": "MATCH (m:Computer {admincount: true}) RETURN m ORDER BY m.name"
                 }
             ]
         },
@@ -1366,7 +1396,7 @@
             "queryList": [
                 {
                     "final": true,
-                    "query": "MATCH (m {admincount:true, owned: true}) RETURN m ORDER BY m.name"
+                    "query": "MATCH (m {admincount: true, owned: true}) RETURN m ORDER BY m.name"
                 }
             ]
         },
@@ -3041,7 +3071,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH (m:User {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
+                    "query": "MATCH (m:User {name: $result}),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -3671,7 +3701,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH (m:Group {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
+                    "query": "MATCH (m:Group {name: $result}),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
@@ -4256,7 +4286,7 @@
 				},
                 {
                     "final": true,
-                    "query": "MATCH (m:Computer {name: $result}),(n {highvalue:true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
+                    "query": "MATCH (m:Computer {name: $result}),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n)) WHERE NONE (r IN relationships(p) WHERE type(r)= \"GetChanges\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesAll\") AND NONE (r in relationships(p) WHERE type(r)=\"GetChangesInFilteredSet\") AND NOT m=n RETURN p ORDER BY m.name"
                 }
             ]
         },
