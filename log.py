@@ -4,7 +4,7 @@ red = Fore.RED + Style.BRIGHT
 default = Style.BRIGHT
 reset = Style.RESET_ALL
 green = Style.BRIGHT + Fore.GREEN
-
+yellow = Style.BRIGHT + Fore.YELLOW
 
 def log_command_invalid(e):
     print(f'{red}[-] Invalid command: {e}{reset}')

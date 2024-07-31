@@ -5,6 +5,13 @@ import sys
 import os
 import collections
 
+def escape_special_characters(input_string):
+    # Escape backslash first to avoid double escaping later characters
+    escaped_string = re.sub(r'\\', r'\\\\', input_string)
+    # Escape other special characters
+    escaped_string = re.sub(r'("|\$|`)', r'\\\1', escaped_string)
+    return escaped_string
+
 def process_file(filename, domain):
     user_group_dict = collections.defaultdict(set)
 
@@ -52,7 +59,9 @@ def process_ntds_file(filename, user_group_dict, output_dir):
     print("\nCommandline arguments for DPAT (run from output dir):")
     print("-g", end=' ')
     for file_path in group_files:
-        print(f'"{os.path.basename(file_path)}"', end=' ')
+        basename = os.path.basename(file_path)
+        escaped_basename = escape_special_characters(basename)
+        print(f'"{escaped_basename}"', end=' ')
     print()
 
 if __name__ == "__main__":

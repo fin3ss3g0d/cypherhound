@@ -1,5 +1,5 @@
 {
     "user": "neo4j",
     "pwd": "password",
-    "database": "neo4j"
+    "database": "your_database_name"
 }
