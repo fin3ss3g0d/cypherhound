@@ -8,6 +8,7 @@ import signal
 import log
 import json
 import atexit
+import os
 
 
 def signal_handler(sig, frame):
@@ -77,6 +78,8 @@ if __name__ == "__main__":
         readline.set_completer(terminal.Completer(terminal.OPTIONS).complete)
         readline.parse_and_bind('tab: complete')
         histfile = ('.history')
+        if not os.path.exists(histfile):
+            open(histfile, 'w').close()  # Creates an empty file if it doesn't exist    
         readline.read_history_file(histfile)
         atexit.register(readline.write_history_file, histfile)
         signal.signal(signal.SIGINT, signal_handler)        
