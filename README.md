@@ -167,6 +167,17 @@ The script has the following options:
 
 You need to specify at least `-o` or `-v`
 
+## query-importer.py
+
+This script will read the `customqueries.json` file and import all of them into the new version of BloodHound Community Edition with your API credentials.
+
+### Usage
+
+```
+usage: query-importer.py [-h] --token-id TOKEN_ID --token-key TOKEN_KEY --queries-file QUERIES_FILE [--base-url BASE_URL]
+query-importer.py: error: the following arguments are required: --token-id, --token-key, --queries-file
+```
+
 ## Important Notes
 
 - The program is configured to use the default `Neo4j` database and `URI`

@@ -29,3 +29,7 @@ Added cyphers for additional relationships including: `WriteSPN`, `WriteAccountR
 # 01/30/2024
 
 Added cyphers for cross-domain `DCSync` privileges as well as `AdminTo` privileges to domain controllers. Also fixed some bugs.
+
+# 07/23/2025
+
+Added `query-importer.py` for importing queries from `customqueries.json` into BloodHound CE via API which was only supported for BloodHound legacy prior.
