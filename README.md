@@ -116,7 +116,7 @@ Copy the `customqueries.json` file to `~/.config/bloodhound/`
 
 Copy the `customqueries.json` file to `C:\Users\<YourUsername>\AppData\Roaming\bloodhound\`
 
-## parse-memberships.py
+## scripts/DPAT/parse-memberships.py
 
 This script will parse a raw export from the terminal application, specifically the cypher to list all user group memberships as an example for how this tool's output can be parsed. You will pass this export as a parameter to the script, a `NTDS.dit` file, and an output directory. It will then produce `.txt` files in the output directory for every group name with entries in `DOMAIN\USER` format, compatible with [DPAT](https://github.com/clr2of8/DPAT). It will then also produce the `-g` commandline argument to pass to [DPAT](https://github.com/clr2of8/DPAT), allowing the operator to produce group-specific statistics for every group in a domain.
 
@@ -140,7 +140,7 @@ where:
 - `<ntds_filename>` is the `ntds.dit` file containing user data.
 - `<output_directory>` is the directory where the script will output the group files.
 
-## add-owned.py
+## scripts/bloodhound-ce/add-owned.py
 
 This script will read a list of node names from a `.txt` file and mark them as either owned or high-value in the database.
 
@@ -167,7 +167,7 @@ The script has the following options:
 
 You need to specify at least `-o` or `-v`
 
-## query-importer.py
+## scripts/bloodhound-ce/query-importer.py
 
 This script will read the `customqueries.json` file and import all of them into the new version of BloodHound Community Edition with your API credentials.
 
@@ -178,7 +178,7 @@ usage: query-importer.py [-h] --token-id TOKEN_ID --token-key TOKEN_KEY --querie
 query-importer.py: error: the following arguments are required: --token-id, --token-key, --queries-file
 ```
 
-## purge-queries.py
+## scripts/bloodhound-ce/purge-queries.py
 
 This script will delete all saved queries from BloodHound in order to reset for future imports. It is for BloodHound CE.
 
