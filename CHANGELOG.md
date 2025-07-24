@@ -33,3 +33,7 @@ Added cyphers for cross-domain `DCSync` privileges as well as `AdminTo` privileg
 # 07/23/2025
 
 Added `query-importer.py` for importing queries from `customqueries.json` into BloodHound CE via API which was only supported for BloodHound legacy prior.
+
+# 07/24/2025
+
+Added `purge-queries.py` which will delete all saved queries from BloodHound in order to reset for future imports. It is for BloodHound CE.

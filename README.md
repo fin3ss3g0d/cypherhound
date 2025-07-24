@@ -178,6 +178,25 @@ usage: query-importer.py [-h] --token-id TOKEN_ID --token-key TOKEN_KEY --querie
 query-importer.py: error: the following arguments are required: --token-id, --token-key, --queries-file
 ```
 
+## purge-queries.py
+
+This script will delete all saved queries from BloodHound in order to reset for future imports. It is for BloodHound CE.
+
+### Usage
+
+```
+usage: purge-queries.py [-h] --token-id TOKEN_ID --token-key TOKEN_KEY [--base-url BASE_URL]
+
+Purge all imported BloodHound CE saved queries.
+
+options:
+  -h, --help            show this help message and exit
+  --token-id TOKEN_ID   API token ID
+  --token-key TOKEN_KEY
+                        API token key
+  --base-url BASE_URL   BloodHound API base URL
+```
+
 ## Important Notes
 
 - The program is configured to use the default `Neo4j` database and `URI`
