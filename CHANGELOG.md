@@ -36,4 +36,4 @@ Added `query-importer.py` for importing queries from `customqueries.json` into B
 
 # 07/24/2025
 
-Added `purge-queries.py` which will delete all saved queries from BloodHound in order to reset for future imports. It is for BloodHound CE.
+Added `purge-queries.py` which will delete all saved queries from BloodHound in order to reset for future imports. It is for BloodHound CE. Also added `parse-kerberoastable.py` for adding cracked kerberoastable account statistics into DPAT.

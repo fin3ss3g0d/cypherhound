@@ -118,9 +118,7 @@ Copy the `customqueries.json` file to `C:\Users\<YourUsername>\AppData\Roaming\b
 
 ## scripts/DPAT/parse-memberships.py
 
-This script will parse a raw export from the terminal application, specifically the cypher to list all user group memberships as an example for how this tool's output can be parsed. You will pass this export as a parameter to the script, a `NTDS.dit` file, and an output directory. It will then produce `.txt` files in the output directory for every group name with entries in `DOMAIN\USER` format, compatible with [DPAT](https://github.com/clr2of8/DPAT). It will then also produce the `-g` commandline argument to pass to [DPAT](https://github.com/clr2of8/DPAT), allowing the operator to produce group-specific statistics for every group in a domain.
-
-### Usage
+This script will parse a raw export from the terminal application, specifically the cypher to list all user group memberships as an example for how this tool's output can be parsed. You will pass this export as a parameter to the script, a `NTDS.dit` file, and an output directory. It will then produce `.txt` files in the output directory for every group name with entries in `DOMAIN\USER` format, compatible with [DPAT](https://github.com/clr2of8/DPAT). You will then pass this directory with the the `-g` commandline argument to [DPAT](https://github.com/clr2of8/DPAT), allowing the operator to produce group-specific statistics for every group in a domain.
 
 To use the script, you should have two files ready:
 
@@ -129,16 +127,49 @@ To use the script, you should have two files ready:
 
 The script can be run with the following command:
 
-```bash
-python parse-memberships.py <memberships_filename> <domain> <ntds_filename> <output_directory>
+```
+usage: parse-memberships.py [-m MEMBERSHIPS_FILE] [-d DOMAIN] [-n NTDS_FILE] [-o OUTPUT_DIR] [--netbios NETBIOS] [--encoding ENCODING]
+                            [--debug] [--no-index] [-h]
+
+Map users to groups from memberships file and match against NTDS dump.
+
+options:
+  -m, --memberships-file MEMBERSHIPS_FILE
+                        Path to memberships file (BloodHound-style lines) (default: None)
+  -d, --domain DOMAIN   FQDN domain (e.g., EXAMPLE.COM) used in the membership regex (default: None)
+  -n, --ntds-file NTDS_FILE
+                        Path to NTDS dump (DOMAIN\user:hash or pwdump-style) (default: None)
+  -o, --output-dir OUTPUT_DIR
+                        Directory to write per-group output files (default: None)
+  --netbios NETBIOS     NETBIOS/short domain to prefix when NTDS lines lack a domain (pwdump) (default: None)
+  --encoding ENCODING   Encoding for input files (default: cp1252)
+  --debug               Enable verbose debug output (default: False)
+  --no-index            Name group files after the group instead of numbered files (unsafe chars replaced) (default: False)
+  -h, --help            Show this help message and exit
 ```
 
-where:
-- `parse-memberships.py` is the name of the script file.
-- `<memberships_filename>` is the file containing the group membership data, exported from terminal application.
-- `<domain>` is the domain name to be used for parsing the memberships file.
-- `<ntds_filename>` is the `ntds.dit` file containing user data.
-- `<output_directory>` is the directory where the script will output the group files.
+## scripts/DPAT/parse-kerberoastable.py
+
+This script will parse the raw export for listing all kerberoastable users, match the users up with entries in a `NTDS.dit`, and produce an output file containing all of the kerberoastable user hash entries from the dump. You then pass this output file to DPAT with the flag `--kz` for providing cracked kerberoastable account statistics.
+
+### Usage
+
+```
+usage: parse-kerberoastable.py [-k KERB_FILE] [-n NTDS_FILE] [-d DOMAIN] [-o OUTPUT] [--encoding ENCODING] [--debug] [-h]
+
+Match kerberoastable usernames against an NTDS.dit dump file
+
+options:
+  -k, --kerb-file KERB_FILE
+                        Path to Kerberoast output file (default: None)
+  -n, --ntds-file NTDS_FILE
+                        Path to NTDS dump file (default: None)
+  -d, --domain DOMAIN   Domain (e.g., EXAMPLE.COM) for regex matching (default: None)
+  -o, --output OUTPUT   Path to write matches (default: None)
+  --encoding ENCODING   File encoding to use when reading input files (default: cp1252)
+  --debug               Enable verbose debug output (default: False)
+  -h, --help            Show this help message and exit
+```
 
 ## scripts/bloodhound-ce/add-owned.py
 
