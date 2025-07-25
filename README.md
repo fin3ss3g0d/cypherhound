@@ -116,16 +116,20 @@ Copy the `customqueries.json` file to `~/.config/bloodhound/`
 
 Copy the `customqueries.json` file to `C:\Users\<YourUsername>\AppData\Roaming\bloodhound\`
 
-## scripts/DPAT/parse-memberships.py
+## DPAT Integration
 
-This script will parse a raw export from the terminal application, specifically the cypher to list all user group memberships as an example for how this tool's output can be parsed. You will pass this export as a parameter to the script, a `NTDS.dit` file, and an output directory. It will then produce `.txt` files in the output directory for every group name with entries in `DOMAIN\USER` format, compatible with [DPAT](https://github.com/clr2of8/DPAT). You will then pass this directory with the the `-g` commandline argument to [DPAT](https://github.com/clr2of8/DPAT), allowing the operator to produce group-specific statistics for every group in a domain.
+If you do not see the cypherhound functionality merged into the original [DPAT](https://github.com/clr2of8/DPAT) repository, please access my [DPAT fork](https://github.com/fin3ss3g0d/DPAT) which will have it.
+
+### scripts/DPAT/parse-memberships.py
+
+This script will parse a raw export from the terminal application, specifically the cypher to list all user group memberships as an example for how this tool's output can be parsed. You will pass this export as a parameter to the script, a `NTDS.dit` file, and an output directory. It will then produce `.txt` files in the output directory for every group name with entries in `DOMAIN\USER` format, compatible with DPAT. You will then pass this directory with the the `-g` commandline argument to DPAT, allowing the operator to produce group-specific statistics for every group in a domain.
 
 To use the script, you should have two files ready:
 
 1. The raw export from the terminal application that retrieves all user group memberships
 2. A `NTDS.dit` file with lines in the following format: `domain\user:RID:LMhash:NTLMhash:::`
 
-The script can be run with the following command:
+**Usage**
 
 ```
 usage: parse-memberships.py [-m MEMBERSHIPS_FILE] [-d DOMAIN] [-n NTDS_FILE] [-o OUTPUT_DIR] [--netbios NETBIOS] [--encoding ENCODING]
@@ -148,11 +152,11 @@ options:
   -h, --help            Show this help message and exit
 ```
 
-## scripts/DPAT/parse-kerberoastable.py
+### scripts/DPAT/parse-kerberoastable.py
 
-This script will parse the raw export for listing all kerberoastable users, match the users up with entries in a `NTDS.dit`, and produce an output file containing all of the kerberoastable user hash entries from the dump. You then pass this output file to DPAT with the flag `--kz` for providing cracked kerberoastable account statistics.
+This script will parse the raw export for listing all kerberoastable users, match the users up with entries in a `NTDS.dit`, and produce an output file containing all of the kerberoastable user hash entries from the dump. You then pass this output file to DPAT with the flag `-kz` for providing cracked kerberoastable account statistics.
 
-### Usage
+**Usage**
 
 ```
 usage: parse-kerberoastable.py [-k KERB_FILE] [-n NTDS_FILE] [-d DOMAIN] [-o OUTPUT] [--encoding ENCODING] [--debug] [-h]
@@ -171,11 +175,13 @@ options:
   -h, --help            Show this help message and exit
 ```
 
-## scripts/bloodhound-ce/add-owned.py
+## BloodHound CE Integration
+
+### scripts/bloodhound-ce/add-owned.py
 
 This script will read a list of node names from a `.txt` file and mark them as either owned or high-value in the database.
 
-### Usage
+**Usage**
 
 To use the script, you should have two files ready:
 
@@ -198,22 +204,22 @@ The script has the following options:
 
 You need to specify at least `-o` or `-v`
 
-## scripts/bloodhound-ce/query-importer.py
+### scripts/bloodhound-ce/query-importer.py
 
 This script will read the `customqueries.json` file and import all of them into the new version of BloodHound Community Edition with your API credentials.
 
-### Usage
+**Usage**
 
 ```
 usage: query-importer.py [-h] --token-id TOKEN_ID --token-key TOKEN_KEY --queries-file QUERIES_FILE [--base-url BASE_URL]
 query-importer.py: error: the following arguments are required: --token-id, --token-key, --queries-file
 ```
 
-## scripts/bloodhound-ce/purge-queries.py
+### scripts/bloodhound-ce/purge-queries.py
 
 This script will delete all saved queries from BloodHound in order to reset for future imports. It is for BloodHound CE.
 
-### Usage
+**Usage**
 
 ```
 usage: purge-queries.py [-h] --token-id TOKEN_ID --token-key TOKEN_KEY [--base-url BASE_URL]
