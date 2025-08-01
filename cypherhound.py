@@ -60,10 +60,10 @@ banner = """:::::::------::-----::::-------::---------::-----------------=+++*++
                                       cypherhound (Author: Dylan Evans|fin3ss3g0d)
 """
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Python terminal app that runs various Neo4j cyphers on BloodHound data sets.")
     parser.add_argument("-c", "--config", help="Config file", required=True)
+    parser.add_argument("-y", "--yaml", help="Path to queries YAML file", default="queries.yaml")
     args = parser.parse_args()
 
     try:
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         readline.read_history_file(histfile)
         atexit.register(readline.write_history_file, histfile)
         signal.signal(signal.SIGINT, signal_handler)        
-        term = terminal.Terminal(config["user"], config["pwd"], config["database"])        
+        term = terminal.Terminal(config["user"], config["pwd"], config["database"], args.yaml)
         term.input_loop()
     except Exception as e:
         log.log_error(e)

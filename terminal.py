@@ -32,9 +32,9 @@ class Completer:
 
 
 class Terminal:
-    def __init__(self, user, pwd, db):
+    def __init__(self, user, pwd, db, yaml_file):
         try:
-            self.driver = database.Driver(user, pwd, db)
+            self.driver = database.Driver(user, pwd, db, template_file=yaml_file)
         except Exception as e:
             log.log_error(e)
             
@@ -137,7 +137,7 @@ class Terminal:
                         if not util.validate_list_command(option):
                             log.log_invalid_option(option)
                         else:
-                            self.driver.print_queries_by_type(option)
+                            self.driver.print_queries_by_group(option)
                 elif command[0] == "search":
                     if len(command) < 2:
                         log.log_command_invalid(line)

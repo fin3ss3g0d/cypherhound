@@ -1,6 +1,8 @@
 # cypherhound
 
-A `Python3` terminal application that contains 405 `Neo4j` cyphers for BloodHound data sets and a `customqueries.json` file containing 388 cyphers for the GUI.
+A `Python3` terminal application that contains `Neo4j` cyphers for BloodHound data sets and a `customqueries.json` file containing cyphers for the legacy GUI with a script to automate importing them into BloodHound CE.
+
+![demo](images/demo%20output.png)
 
 ## Why?
 
@@ -17,14 +19,14 @@ This tool can also help blue teams to reveal detailed information about their Ac
 
 Take back control of your `BloodHound` data with `cypherhound`!
 
-- 405 cyphers as of date
+- Read cypher templates from a YAML file
   - Set cyphers to search based on user input (user, group, and computer-specific)
   - User-defined regex cyphers
 - User-defined exporting of all results
   - Default export will be just end object to be used as target list with tools
   - Raw export option available in `grep/cut/awk`-friendly format
 - `customqueries.json` file included
-  - Run the same queries from the GUI
+  - Run the same queries from the GUI - both legacy and CE
 
 ## Installation
 
@@ -34,7 +36,7 @@ Make sure to have `python3` installed and run:
 
 ## Usage
 
-Start the program with: `python3 cypherhound.py -c config.json`
+Start the program with: `python3 cypherhound.py -c config.json -y queries.yaml`
 
 ## config.json
 
@@ -52,6 +54,59 @@ where:
 - `user` is your `Neo4j` username
 - `pwd` is your `Neo4j` password
 - `database` is your `Neo4j` database
+
+## queries.yaml
+
+The program reads queries from a YAML file in the format below:
+
+```yaml
+queries:
+- group: general
+  desc: List all AddKeyCredentialLink privileges for owned principals
+  cypher: |-
+    MATCH (n {owned: true})-[r:AddKeyCredentialLink]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    ORDER BY n.name
+  msg_template: |-
+    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has AddKeyCredentialLink over {{ m_name }} ({{
+    labels(m)[0] }}/{{ labels(m)[1] }})
+```
+
+A table breakdown of the keys/value pairs can be seen below:
+
+| Key          | Description                                                                                       |
+|--------------|---------------------------------------------------------------------------------------------------|
+| `group`        | The group this query belongs to, groups are user-defined e.g. "general"                         |
+| `desc`         | The description of the query                                                                      |
+| `cypher`       | The query itself in Neo4j format                                                                  |
+| `msg_template` | Jinja2 template for the terminal output based on cypher variables, **use aliases for Neo4j variables** |
+
+**YAML Keywords**
+
+The program supports inserting keywords into the YAML file for dynamic searching at runtime. For example, if you would like a query to behave dynamically in order to search against a specific user, group, computer, or regular expression. An example of this is shown below:
+
+```yaml
+- group: user
+  desc: List all shortest paths to admin groups for this user
+  cypher: |-
+    MATCH p=shortestPath((m:User)-[r*1..]->(n:Group))
+    WHERE n.name =~ ".*((?i)admin|adm).*" AND m.name =~ '((?i)USER_SEARCH)' AND NONE (r IN relationships(p)
+    WHERE type(r)= "GetChanges") AND NONE (r in relationships(p)
+    WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p)
+    WHERE type(r)="GetChangesInFilteredSet")
+    RETURN m.name AS m_name, p
+    ORDER BY m.name
+  msg_template: null
+```
+
+A table breakdown of the supported keywords and their descriptions can be seen below:
+
+| Keyword | Description |
+|---------|-------------|
+| `USER_SEARCH` | This will be replaced by the user string you configure with the `set` command at runtime |
+| `GROUP_SEARCH` | This will be replaced by the group string you configure with the `set` command at runtime |
+| `COMPUTER_SEARCH` | This will be replaced by the group string you configure with the `set` command at runtime |
+| `REGEX` | This will be replaced by the regular expression string you configure with the `set` command at runtime |
 
 ## Commands
 
@@ -104,15 +159,17 @@ help, ? - used to display this help menu
 
 ## customqueries.json
 
-Almost all cyphers included in the terminal application (388 to be exact) have been ported over to `json` format for direct usage in the GUI. Follow the instructions below in order to begin using them!
+Almost all cyphers included in the terminal application have been ported over to `json` format for direct usage in the legacy GUI. There is also a [query-importer.py](scripts/bloodhound-ce/query-importer.py) script included in this project that will read the `customqueries.json` file and automate importing each of the queries into BloodHound CE.
 
 ![customqueries.json](images/gui-cypher-list.png)
 
-### Linux
+Follow the instructions below in order to begin using them in BloodHound Legacy!
+
+**Linux**
 
 Copy the `customqueries.json` file to `~/.config/bloodhound/`
 
-### Windows
+**Windows**
 
 Copy the `customqueries.json` file to `C:\Users\<YourUsername>\AppData\Roaming\bloodhound\`
 
