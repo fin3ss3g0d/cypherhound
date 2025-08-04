@@ -65,11 +65,11 @@ queries:
   desc: List all AddKeyCredentialLink privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:AddKeyCredentialLink]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has AddKeyCredentialLink over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has AddKeyCredentialLink over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
 ```
 
 A table breakdown of the keys/value pairs can be seen below:
