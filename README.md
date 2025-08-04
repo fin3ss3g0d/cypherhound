@@ -57,7 +57,7 @@ where:
 
 ## YAML Format
 
-The program reads queries from a YAML file in the format below. [ad-queries.yaml](ad-queries.yaml) has been provided as an example containing queries related to Active Directory.
+The program reads queries from a YAML file in the format below. [ad-queries.yaml](ad-queries.yaml) has been provided as an example containing queries related to Active Directory. ***msg_template is not required for shortest paths queries but they must return the variable containing the path***
 
 ```yaml
 queries:
@@ -79,7 +79,7 @@ A table breakdown of the keys/value pairs can be seen below:
 | `group`        | The group this query belongs to, groups are user-defined e.g. "general"                         |
 | `desc`         | The description of the query                                                                      |
 | `cypher`       | The query itself in Neo4j format                                                                  |
-| `msg_template` | Jinja2 template for the terminal output based on cypher variables, **use aliases for Neo4j variables** |
+| `msg_template` | Jinja2 template for the terminal output based on cypher variables, **use aliases for Neo4j variables to avoid Jinja attempting to render as nested variables** |
 
 **YAML Keywords**
 
