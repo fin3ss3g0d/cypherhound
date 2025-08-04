@@ -91,7 +91,7 @@ class Terminal:
                                     log.log_error("Computer is empty or is missing @!")
                             elif option == "regex":
                                 r_in = line[10:]
-                                if util.validate_regex_config(r_in):
+                                if util.validate_common_config(r_in):
                                     util.validate_user_input(r_in)
                                     self.driver.set_regex(r_in)
                                     log.log_successful_set("regex", r_in)

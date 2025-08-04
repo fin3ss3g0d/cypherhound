@@ -26,16 +26,8 @@ def validate_set_option(option):
         return True
 
 
-# Will validate for group, user, and computer input
+# Will validate for group, user, computer, and regex input
 def validate_common_config(c):
-    if c == "":
-        return False
-    else:
-        return True
-
-
-# Will validate for regex input, special case
-def validate_regex_config(c):
     if c == "":
         return False
     else:

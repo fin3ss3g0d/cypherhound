@@ -55,9 +55,9 @@ where:
 - `pwd` is your `Neo4j` password
 - `database` is your `Neo4j` database
 
-## queries.yaml
+## YAML Format
 
-The program reads queries from a YAML file in the format below:
+The program reads queries from a YAML file in the format below. [ad-queries.yaml](ad-queries.yaml) has been provided as an example containing queries related to Active Directory.
 
 ```yaml
 queries:
@@ -172,6 +172,17 @@ Copy the `customqueries.json` file to `~/.config/bloodhound/`
 **Windows**
 
 Copy the `customqueries.json` file to `C:\Users\<YourUsername>\AppData\Roaming\bloodhound\`
+
+## Helper Scripts
+
+### scripts/helpers/format_yaml_queries.py
+
+Re-format an *existing* BloodHound queries YAML so that:
+
+- dotted RETURN columns are aliased (foo.bar → foo_bar, labels(x) → labels_x[0])
+- message templates are rewritten to use the aliases
+- Cypher is pretty-printed (one major clause per line)
+- long strings are literal block scalars (|) and wrapped to 100 chars
 
 ## DPAT Integration
 

@@ -41,3 +41,7 @@ Added `purge-queries.py` which will delete all saved queries from BloodHound in 
 # 08/01/2025
 
 Refactored the project to use a dynamic yaml file for storing cyphers.
+
+# 08/04/2025
+
+Added format_yaml_queries.py helper script.

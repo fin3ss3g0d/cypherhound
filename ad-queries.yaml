@@ -3,65 +3,64 @@ queries:
   desc: List all AddKeyCredentialLink privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:AddKeyCredentialLink]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has AddKeyCredentialLink over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has AddKeyCredentialLink over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all AddKeyCredentialLink privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:AddKeyCredentialLink]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1]
-    }})
+    Group {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all AddMember privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:AddMember]->(m:Group)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has AddMember over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has AddMember over {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
 - group: general
   desc: List all AddMember privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:AddMember]->(m:Group)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has AddMember over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has AddMember over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all AddSelf privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:AddSelf]->(m:Group)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has AddSelf over {{ m_name }} ({{ labels(m)[0]
-    }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has AddSelf over {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
 - group: general
   desc: List all AddSelf privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:AddSelf]->(m:Group)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has AddSelf over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has AddSelf over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all AdminTo privileges for owned principals
   cypher: |-
     MATCH p=(m {owned: true})-[r:AdminTo]->(n:Computer)
-    RETURN m.name AS m_name, n.name AS n_name, labels(m)
+    RETURN m.name AS m_name, n.name AS n_name, labels(m) AS labels_m
     ORDER BY m.name
   msg_template: |-
-    {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }}) is AdminTo {{ n_name }}
+    {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }}) is AdminTo {{ n_name }}
 - group: general
   desc: List all AdminTo privileges for Users, Domain Users, Authenticated Users, or Everyone groups
   cypher: |-
@@ -76,46 +75,46 @@ queries:
   cypher: |-
     MATCH (m)-[:AdminTo]->(n:Computer)-[:MemberOf]->(g:Group)
     WHERE g.objectid =~ "(?i)S-1-5-21-.*-516"
-    RETURN m.name AS m_name, n.name AS n_name, labels(m)
+    RETURN m.name AS m_name, n.name AS n_name, labels(m) AS labels_m
     ORDER BY m.name
   msg_template: |-
-    {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }}) is AdminTo {{ n_name }}
+    {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }}) is AdminTo {{ n_name }}
 - group: general
   desc: List all AllExtendedRights privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:AllExtendedRights]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has AllExtendedRights over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has AllExtendedRights over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all AllExtendedRights privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:AllExtendedRights]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all AllowedToAct privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:AllowedToAct]->(m:Computer)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has AllowedToAct over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has AllowedToAct over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all AllowedToAct privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:AllowedToAct]->(m:Computer)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has AllowedToAct over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has AllowedToAct over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all AS-REP roastable users
   cypher: |-
@@ -136,28 +135,28 @@ queries:
   desc: List all CanPSRemote privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:CanPSRemote]->(m:Computer)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has CanPSRemote over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has CanPSRemote over {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
 - group: general
   desc: List all CanPSRemote privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:CanPSRemote]->(m:Computer)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has CanPSRemote over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has CanPSRemote over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer AddKeyCredentialLink privileges
   cypher: |-
     MATCH (n:Computer)-[r:AddKeyCredentialLink]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1]
+    Computer {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1]
     }})
 - group: general
   desc: List all computer AddMember privileges
@@ -187,19 +186,18 @@ queries:
   desc: List all computer AllExtendedRights privileges
   cypher: |-
     MATCH (n:Computer)-[r:AllExtendedRights]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1]
-    }})
+    Computer {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer AllowedToAct privileges
   cypher: |-
     MATCH (n:Computer)-[r:AllowedToAct]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer CanPSRemote privileges
   cypher: |-
@@ -237,10 +235,10 @@ queries:
   desc: List all computer DumpSMSAPassword privileges
   cypher: |-
     MATCH (n:Computer)-[r:DumpSMSAPassword]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer ExecuteDCOM privileges
   cypher: |-
@@ -261,50 +259,50 @@ queries:
   desc: List all computer GenericAll privileges
   cypher: |-
     MATCH (n:Computer)-[r:GenericAll]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has GenericAll over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has GenericAll over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer GenericWrite privileges
   cypher: |-
     MATCH (n:Computer)-[r:GenericWrite]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer HasSIDHistory privileges
   cypher: |-
     MATCH (n:Computer)-[r:HasSIDHistory]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer memberships
   cypher: |-
     MATCH (n:Computer)-[r:MemberOf]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} is MemberOf {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer Owns privileges
   cypher: |-
     MATCH (n:Computer)-[r:Owns]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} Owns {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} Owns {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer privileges
   cypher: |-
     MATCH (n:Computer)-[r]->(m)
-    RETURN n.name AS n_name, TYPE(r), labels(m), m.name AS m_name
+    RETURN n.name AS n_name, TYPE(r), labels(m) AS labels_m, m.name AS m_name
     ORDER BY TYPE(r)
   msg_template: |-
-    Computer {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer ReadGMSAPassword privileges
   cypher: |-
@@ -451,35 +449,35 @@ queries:
   desc: List all computer WriteAccountRestrictions privileges
   cypher: |-
     MATCH (n:Computer)-[r:WriteAccountRestrictions]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels(m)[0] }}/{{
-    labels(m)[1] }})
+    Computer {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels_m[0] }}/{{
+    labels_m[1] }})
 - group: general
   desc: List all computer WriteDacl privileges
   cypher: |-
     MATCH (n:Computer)-[r:WriteDacl]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer WriteOwner privileges
   cypher: |-
     MATCH (n:Computer)-[r:WriteOwner]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer WriteSPN privileges
   cypher: |-
     MATCH (n:Computer)-[r:WriteSPN]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computers
   cypher: |-
@@ -508,18 +506,18 @@ queries:
   desc: List all DCSync privileges
   cypher: |-
     MATCH (n)-[r:DCSync]->(m:Domain)
-    RETURN n.name AS n_name, labels(n), m.name AS m_name
+    RETURN n.name AS n_name, labels(n) AS labels_n, m.name AS m_name
     ORDER BY n.name
   msg_template: |-
-    ({{ labels(n)[0] }}/{{ labels(n)[1] }}) {{ n_name }} has DCSync privileges for {{ m_name }}
+    ({{ labels_n[0] }}/{{ labels_n[1] }}) {{ n_name }} has DCSync privileges for {{ m_name }}
 - group: general
   desc: List all DCSync privileges for owned principals
   cypher: |-
     MATCH p=(m {owned: true})-[r:DCSync]->(n:Domain)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER by m.name
   msg_template: |-
-    {{ m_name }}({{ labels(m)[0] }}/{{ labels(m)[1] }}) has DCSync privileges for {{ n_name }}
+    {{ m_name }}({{ labels_m[0] }}/{{ labels_m[1] }}) has DCSync privileges for {{ n_name }}
 - group: general
   desc: List all DCSync privileges for Users, Domain Users, Authenticated Users, or Everyone groups
   cypher: |-
@@ -627,20 +625,20 @@ queries:
   desc: List all DumpSMSAPassword privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:DumpSMSAPassword]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has DumpSMSAPassword over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has DumpSMSAPassword over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all DumpSMSAPassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:DumpSMSAPassword]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all emails
   cypher: |-
@@ -672,82 +670,82 @@ queries:
   desc: List all ExecuteDCOM privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:ExecuteDCOM]->(m:Computer)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has ExecuteDCOM over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has ExecuteDCOM over {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
 - group: general
   desc: List all ExecuteDCOM privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:ExecuteDCOM]->(m:Computer)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has ExecuteDCOM over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has ExecuteDCOM over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all ForceChangePassword privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:ForceChangePassword]->(m:User)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has ForceChangePassword over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has ForceChangePassword over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all ForceChangePassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:ForceChangePassword]->(m:User)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has ForceChangePassword over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has ForceChangePassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all GenericAll privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:GenericAll]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has GenericAll over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has GenericAll over {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
 - group: general
   desc: List all GenericAll privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:GenericAll]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has GenericAll over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has GenericAll over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all GenericWrite privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:GenericWrite]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has GenericWrite over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has GenericWrite over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all GenericWrite privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:GenericWrite]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all GP Links
   cypher: |-
     MATCH (g1)-[:GPLink]->(g2)
-    RETURN g1.name AS g1_name, g2.name AS g2_name, labels(g2)
+    RETURN g1.name AS g1_name, g2.name AS g2_name, labels(g2) AS labels_g2
     ORDER BY g1.name
   msg_template: |-
-    GPO {{ g1_name }} is linked to {{ g2_name }} ({{ labels(g2)[0] }}/{{ labels(g2)[1] }})
+    GPO {{ g1_name }} is linked to {{ g2_name }} ({{ labels_g2[0] }}/{{ labels_g2[1] }})
 - group: general
   desc: List all GPOs
   cypher: |-
@@ -760,11 +758,10 @@ queries:
   desc: List all group AddKeyCredentialLink privileges
   cypher: |-
     MATCH (n:Group)-[r:AddKeyCredentialLink]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1]
-    }})
+    Group {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group AddMember privileges
   cypher: |-
@@ -793,18 +790,18 @@ queries:
   desc: List all group AllExtendedRights privileges
   cypher: |-
     MATCH (n:Group)-[r:AllExtendedRights]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group AllowedToAct privileges
   cypher: |-
     MATCH (n:Group)-[r:AllowedToAct]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group CanPSRemote privileges
   cypher: |-
@@ -850,10 +847,10 @@ queries:
   desc: List all group DumpSMSAPassword privileges
   cypher: |-
     MATCH (n:Group)-[r:DumpSMSAPassword]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group ExecuteDCOM privileges
   cypher: |-
@@ -874,50 +871,50 @@ queries:
   desc: List all group GenericAll privileges
   cypher: |-
     MATCH (n:Group)-[r:GenericAll]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has GenericAll over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has GenericAll over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group GenericWrite privileges
   cypher: |-
     MATCH (n:Group)-[r:GenericWrite]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group HasSIDHistory privileges
   cypher: |-
     MATCH (n:Group)-[r:HasSIDHistory]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group memberships
   cypher: |-
     MATCH (n:Group)-[r:MemberOf]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} is MemberOf {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group Owns privileges
   cypher: |-
     MATCH (n:Group)-[r:Owns]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} Owns {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} Owns {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group privileges
   cypher: |-
     MATCH (n:Group)-[r]->(m)
-    RETURN n.name AS n_name, TYPE(r), labels(m), m.name AS m_name
+    RETURN n.name AS n_name, TYPE(r), labels(m) AS labels_m, m.name AS m_name
     ORDER BY TYPE(r)
   msg_template: |-
-    Group {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group RDP privileges
   cypher: |-
@@ -1072,43 +1069,43 @@ queries:
   desc: List all group WriteAccountRestrictions privileges
   cypher: |-
     MATCH (n:Group)-[r:WriteAccountRestrictions]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels(m)[0] }}/{{
-    labels(m)[1] }})
+    Group {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1]
+    }})
 - group: general
   desc: List all group WriteDacl privileges
   cypher: |-
     MATCH (n:Group)-[r:WriteDacl]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group WriteOwner privileges
   cypher: |-
     MATCH (n:Group)-[r:WriteOwner]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group WriteSPN privileges
   cypher: |-
     MATCH (n:Group)-[r:WriteSPN]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group-delegated AdminTo privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[:MemberOf]->(g:Group)-[:AdminTo]->(m:Computer)
-    RETURN n.name AS n_name, labels(n), m.name AS m_name, g.name AS g_name
+    RETURN n.name AS n_name, labels(n) AS labels_n, m.name AS m_name, g.name AS g_name
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) is MemberOf {{ g_name }} which is AdminTo {{
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) is MemberOf {{ g_name }} which is AdminTo {{
     m_name }}
 - group: general
   desc: List all group-delegated AdminTo privileges for Users, Domain Users, Authenticated Users, or Everyone groups
@@ -1123,59 +1120,59 @@ queries:
   desc: List all group-delegated privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[:MemberOf]->(g:Group),(g)-[r]->(m)
-    RETURN n.name AS n_name, TYPE(r), labels(m), labels(n), m.name AS m_name, g.name AS g_name
+    RETURN n.name AS n_name, TYPE(r), labels(m) AS labels_m, labels(n) AS labels_n, m.name AS m_name, g.name AS g_name
     ORDER BY TYPE(r)
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) is MemberOf {{ g_name }} which has {{ TYPE(r)
-    }} over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) is MemberOf {{ g_name }} which has {{ TYPE(r)
+    }} over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List all group-delegated privileges for this computer
   cypher: |-
     MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[r]->(v)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, TYPE(r), labels(v), m.name AS m_name, v.name AS v_name
+    RETURN n.name AS n_name, TYPE(r), labels(v) AS labels_v, m.name AS m_name, v.name AS v_name
     ORDER BY m.name
   msg_template: |-
     Computer {{ n_name }} is MemberOf {{ m_name }} which has {{ TYPE(r) }} over {{ v_name }} ({{
-    labels(v)[0] }}/{{ labels(v)[1] }})
+    labels_v[0] }}/{{ labels_v[1] }})
 - group: group
   desc: List all group-delegated privileges for this group
   cypher: |-
     MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[r]->(v)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, TYPE(r), labels(v), m.name AS m_name, v.name AS v_name
+    RETURN n.name AS n_name, TYPE(r), labels(v) AS labels_v, m.name AS m_name, v.name AS v_name
     ORDER BY m.name
   msg_template: |-
     Group {{ n_name }} is MemberOf {{ m_name }} which has {{ TYPE(r) }} over {{ v_name }} ({{
-    labels(v)[0] }}/{{ labels(v)[1] }})
+    labels_v[0] }}/{{ labels_v[1] }})
 - group: user
   desc: List all group-delegated privileges for this user
   cypher: |-
     MATCH (n:User)-[:MemberOf]->(m:Group),(m)-[r]->(v)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, TYPE(r), labels(v), m.name AS m_name, v.name AS v_name
+    RETURN n.name AS n_name, TYPE(r), labels(v) AS labels_v, m.name AS m_name, v.name AS v_name
     ORDER BY m.name
   msg_template: |-
-    User {{ n_name }} is MemberOf {{ m_name }} which has {{ TYPE(r) }} over {{ v_name }} ({{
-    labels(v)[0] }}/{{ labels(v)[1] }})
+    User {{ n_name }} is MemberOf {{ m_name }} which has {{ TYPE(r) }} over {{ v_name }} ({{ labels_v[0]
+    }}/{{ labels_v[1] }})
 - group: general
   desc: List all group-delegated privileges for Users, Domain Users, Authenticated Users, or Everyone groups
   cypher: |-
     MATCH (n:Group)-[:MemberOf]->(g:Group)-[r]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, TYPE(r), labels(m), m.name AS m_name, g.name AS g_name
+    RETURN n.name AS n_name, TYPE(r), labels(m) AS labels_m, m.name AS m_name, g.name AS g_name
     ORDER BY TYPE(r)
   msg_template: |-
     Group {{ n_name }} is MemberOf {{ g_name }} which has {{ TYPE(r) }} over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group-delegated RDP privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[:MemberOf]->(g:Group)-[:CanRDP]->(m:Computer)
-    RETURN n.name AS n_name, labels(n), m.name AS m_name, g.name AS g_name
+    RETURN n.name AS n_name, labels(n) AS labels_n, m.name AS m_name, g.name AS g_name
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) is MemberOf {{ g_name }} which CanRDP to {{
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) is MemberOf {{ g_name }} which CanRDP to {{
     m_name }}
 - group: general
   desc: List all group-delegated RDP privileges for Users, Domain Users, Authenticated Users, or Everyone groups
@@ -1206,20 +1203,20 @@ queries:
   desc: List all HasSIDHistory privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:HasSIDHistory]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has HasSIDHistory over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has HasSIDHistory over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all HasSIDHistory privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:HasSIDHistory]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all high-value computers
   cypher: |-
@@ -1240,18 +1237,18 @@ queries:
   desc: List all high-value owned principals
   cypher: |-
     MATCH (m {highvalue: true, owned: true})
-    RETURN m.name AS m_name, labels(m)
+    RETURN m.name AS m_name, labels(m) AS labels_m
     ORDER BY m.name
   msg_template: |-
-    {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }}) is high value
+    {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }}) is high value
 - group: general
   desc: List all high-value principals
   cypher: |-
     MATCH p=(n {highvalue: true})
-    RETURN n.name AS n_name, labels(n)
+    RETURN n.name AS n_name, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) is high value
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) is high value
 - group: general
   desc: List all high-value users
   cypher: |-
@@ -1296,76 +1293,76 @@ queries:
   desc: List all members of high-value groups for owned principals
   cypher: |-
     MATCH p=(n {owned: true})-[r:MemberOf*1..]->(m:Group {highvalue: true})
-    RETURN n.name AS n_name, m.name AS m_name, labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) is MemberOf high value group {{ m_name }}
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) is MemberOf high value group {{ m_name }}
 - group: general
   desc: List all memberships for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:MemberOf]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has MemberOf over {{ m_name }} ({{ labels(m)[0]
-    }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has MemberOf over {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
 - group: general
   desc: List all memberships for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:MemberOf]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has MemberOf over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has MemberOf over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all object control over Containers
   cypher: |-
     MATCH (n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(c:Container)
-    RETURN n.name AS n_name, c.name AS c_name, TYPE(r), labels(n)
+    RETURN n.name AS n_name, c.name AS c_name, TYPE(r), labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    ({{ labels(n)[0] }}/{{ labels(n)[1] }}) {{ n_name }} has {{ TYPE(r) }} over Container {{ c_name }}
+    ({{ labels_n[0] }}/{{ labels_n[1] }}) {{ n_name }} has {{ TYPE(r) }} over Container {{ c_name }}
 - group: general
   desc: List all object control over Containers for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(c:Container)
-    RETURN n.name AS n_name, c.name AS c_name, TYPE(r), labels(n)
+    RETURN n.name AS n_name, c.name AS c_name, TYPE(r), labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    ({{ labels(n)[0] }}/{{ labels(n)[1] }}) {{ n_name }} has {{ TYPE(r) }} over Container {{ c_name }}
+    ({{ labels_n[0] }}/{{ labels_n[1] }}) {{ n_name }} has {{ TYPE(r) }} over Container {{ c_name }}
 - group: general
   desc: List all object control over GPOs
   cypher: |-
     MATCH (n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO)
-    RETURN n.name AS n_name, g.name AS g_name, TYPE(r), labels(n)
+    RETURN n.name AS n_name, g.name AS g_name, TYPE(r), labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    ({{ labels(n)[0] }}/{{ labels(n)[1] }}) {{ n_name }} has {{ TYPE(r) }} over GPO {{ g_name }}
+    ({{ labels_n[0] }}/{{ labels_n[1] }}) {{ n_name }} has {{ TYPE(r) }} over GPO {{ g_name }}
 - group: general
   desc: List all object control over GPOs for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(g:GPO)
-    RETURN n.name AS n_name, g.name AS g_name, TYPE(r), labels(n)
+    RETURN n.name AS n_name, g.name AS g_name, TYPE(r), labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    ({{ labels(n)[0] }}/{{ labels(n)[1] }}) {{ n_name }} has {{ TYPE(r) }} over GPO {{ g_name }}
+    ({{ labels_n[0] }}/{{ labels_n[1] }}) {{ n_name }} has {{ TYPE(r) }} over GPO {{ g_name }}
 - group: general
   desc: List all object control over OUs
   cypher: |-
     MATCH (n)-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(o:OU)
-    RETURN n.name AS n_name, o.name AS o_name, TYPE(r), labels(n)
+    RETURN n.name AS n_name, o.name AS o_name, TYPE(r), labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    ({{ labels(n)[0] }}/{{ labels(n)[1] }}) {{ n_name }} has {{ TYPE(r) }} over OU {{ o_name }}
+    ({{ labels_n[0] }}/{{ labels_n[1] }}) {{ n_name }} has {{ TYPE(r) }} over OU {{ o_name }}
 - group: general
   desc: List all object control over OUs for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:Owns|AllExtendedRights|WriteDacl|GenericAll|WriteOwner|GenericWrite]->(o:OU)
-    RETURN n.name AS n_name, o.name AS o_name, TYPE(r), labels(n)
+    RETURN n.name AS n_name, o.name AS o_name, TYPE(r), labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    ({{ labels(n)[0] }}/{{ labels(n)[1] }}) {{ n_name }} has {{ TYPE(r) }} over OU {{ o_name }}
+    ({{ labels_n[0] }}/{{ labels_n[1] }}) {{ n_name }} has {{ TYPE(r) }} over OU {{ o_name }}
 - group: general
   desc: List all OUs
   cypher: |-
@@ -1378,89 +1375,89 @@ queries:
   desc: List all owned principals
   cypher: |-
     MATCH (m {owned: true})
-    RETURN m.name AS m_name, labels(m)
+    RETURN m.name AS m_name, labels(m) AS labels_m
     ORDER BY m.name
   msg_template: |-
-    Owned principal {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Owned principal {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all owned principals with an admin count
   cypher: |-
     MATCH (m {admincount: true, owned: true})
-    RETURN labels(m), m.name AS m_name
+    RETURN labels(m) AS labels_m, m.name AS m_name
     ORDER BY m.name
   msg_template: |-
-    {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }}) has an admin count
+    {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }}) has an admin count
 - group: general
   desc: List all Owns privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:Owns]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has Owns over {{ m_name }} ({{ labels(m)[0]
-    }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has Owns over {{ m_name }} ({{ labels_m[0] }}/{{
+    labels_m[1] }})
 - group: general
   desc: List all Owns privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:Owns]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has Owns over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has Owns over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r]->(m)
-    RETURN n.name AS n_name, TYPE(r), labels(m), labels(n), m.name AS m_name
+    RETURN n.name AS n_name, TYPE(r), labels(m) AS labels_m, labels(n) AS labels_n, m.name AS m_name
     ORDER BY TYPE(r)
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has {{ TYPE(r) }} over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has {{ TYPE(r) }} over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List all privileges for this computer
   cypher: |-
     MATCH (n:Computer)-[r]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, TYPE(r), labels(m), m.name AS m_name
+    RETURN n.name AS n_name, TYPE(r), labels(m) AS labels_m, m.name AS m_name
     ORDER BY TYPE(r)
   msg_template: |-
-    Computer {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List all privileges for this group
   cypher: |-
     MATCH (n:Group)-[r:AdminTo|HasSession|ForceChangePassword|AddMember|AddSelf|CanPSRemote|ExecuteDCOM|SQLAdmin|AllowedToDelegate|GenericAll|GenericWrite|WriteDacl|HasSIDHistory|DumpSMSAPassword|WriteSPN|WriteAccountRestrictions|Owns|AddKeyCredentialLink|ReadLAPSPassword|SyncLAPSPassword|ReadGMSAPassword|AllExtendedRights|AllowedToAct]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, TYPE(r), labels(m), m.name AS m_name
+    RETURN n.name AS n_name, TYPE(r), labels(m) AS labels_m, m.name AS m_name
     ORDER BY TYPE(r)
   msg_template: |-
-    Group {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all privileges for this user
   cypher: |-
     MATCH (n:User)-[r]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, TYPE(r), labels(m), m.name AS m_name
+    RETURN n.name AS n_name, TYPE(r), labels(m) AS labels_m, m.name AS m_name
     ORDER BY TYPE(r)
   msg_template: |-
-    User {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all privileges for Users, Domain Users, Authenticated Users, or Everyone groups
   cypher: |-
     MATCH (n:Group)-[r]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, TYPE(r), labels(m), m.name AS m_name
+    RETURN n.name AS n_name, TYPE(r), labels(m) AS labels_m, m.name AS m_name
     ORDER BY TYPE(r)
   msg_template: |-
-    Group {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all RDP privileges for owned principals
   cypher: |-
     MATCH p=(m {owned: true})-[:CanRDP]->(c:Computer)
-    RETURN m.name AS m_name, c.name AS c_name, labels(m)
+    RETURN m.name AS m_name, c.name AS c_name, labels(m) AS labels_m
     ORDER BY m.name
   msg_template: |-
-    {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }}) CanRDP to {{ c_name }}
+    {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }}) CanRDP to {{ c_name }}
 - group: general
   desc: List all RDP privileges for Users, Domain Users, Authenticated Users, or Everyone groups
   cypher: |-
@@ -1474,27 +1471,27 @@ queries:
   desc: List all ReadGMSAPassword privileges for owned principals
   cypher: |-
     MATCH p=(m {owned: true})-[r:ReadGMSAPassword]->(n:User)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER by m.name
   msg_template: |-
-    {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }}) can read GMSA passwords for {{ n_name }}
+    {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }}) can read GMSA passwords for {{ n_name }}
 - group: general
   desc: List all ReadGMSAPassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:ReadGMSAPassword]->(m:User)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} can read GMSA passwords for {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} can read GMSA passwords for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all ReadLAPSPassword privileges for owned principals
   cypher: |-
     MATCH p=(m {owned: true})-[r:ReadLAPSPassword]->(n:Computer)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER by m.name
   msg_template: |-
-    {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }}) can read LAPS passwords for {{ n_name }}
+    {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }}) can read LAPS passwords for {{ n_name }}
 - group: general
   desc: List all ReadLAPSPassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups
   cypher: |-
@@ -2148,28 +2145,28 @@ queries:
   desc: List all SQLAdmin privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:SQLAdmin]->(m:Computer)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has SQLAdmin over {{ m_name }} ({{ labels(m)[0]
-    }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has SQLAdmin over {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
 - group: general
   desc: List all SQLAdmin privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:SQLAdmin]->(m:Computer)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has SQLAdmin over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has SQLAdmin over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all SyncLAPSPassword privileges for owned principals
   cypher: |-
     MATCH p=(m {owned: true})-[r:SyncLAPSPassword]->(n:Computer)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER by m.name
   msg_template: |-
-    {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }}) can sync LAPS passwords for {{ n_name }}
+    {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }}) can sync LAPS passwords for {{ n_name }}
 - group: general
   desc: List all SyncLAPSPassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups
   cypher: |-
@@ -2200,10 +2197,10 @@ queries:
   desc: List all user AddKeyCredentialLink privileges
   cypher: |-
     MATCH (n:User)-[r:AddKeyCredentialLink]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user AddMember privileges
   cypher: |-
@@ -2232,18 +2229,18 @@ queries:
   desc: List all user AllExtendedRights privileges
   cypher: |-
     MATCH (n:User)-[r:AllExtendedRights]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user AllowedToAct privileges
   cypher: |-
     MATCH (n:User)-[r:AllowedToAct]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user CanPSRemote privileges
   cypher: |-
@@ -2289,10 +2286,10 @@ queries:
   desc: List all user DumpSMSAPassword privileges
   cypher: |-
     MATCH (n:User)-[r:DumpSMSAPassword]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user ExecuteDCOM privileges
   cypher: |-
@@ -2313,50 +2310,50 @@ queries:
   desc: List all user GenericAll privileges
   cypher: |-
     MATCH (n:User)-[r:GenericAll]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has GenericAll over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has GenericAll over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user GenericWrite privileges
   cypher: |-
     MATCH (n:User)-[r:GenericWrite]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user HasSIDHistory privileges
   cypher: |-
     MATCH (n:User)-[r:HasSIDHistory]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user memberships
   cypher: |-
     MATCH (n:User)-[r:MemberOf]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} is MemberOf {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user Owns privileges
   cypher: |-
     MATCH (n:User)-[r:Owns]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} Owns {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} Owns {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user privileges
   cypher: |-
     MATCH (n:User)-[r]->(m)
-    RETURN n.name AS n_name, TYPE(r), labels(m), m.name AS m_name
+    RETURN n.name AS n_name, TYPE(r), labels(m) AS labels_m, m.name AS m_name
     ORDER BY TYPE(r)
   msg_template: |-
-    User {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user RDP privileges
   cypher: |-
@@ -2511,35 +2508,35 @@ queries:
   desc: List all user WriteAccountRestrictions privileges
   cypher: |-
     MATCH (n:User)-[r:WriteAccountRestrictions]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1]
+    User {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1]
     }})
 - group: general
   desc: List all user WriteDacl privileges
   cypher: |-
     MATCH (n:User)-[r:WriteDacl]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user WriteOwner privileges
   cypher: |-
     MATCH (n:User)-[r:WriteOwner]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user WriteSPN privileges
   cypher: |-
     MATCH (n:User)-[r:WriteSPN]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all users
   cypher: |-
@@ -2592,75 +2589,75 @@ queries:
   desc: List all WriteAccountRestrictions privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:WriteAccountRestrictions]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has WriteAccountRestrictions over {{ m_name }}
-    ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has WriteAccountRestrictions over {{ m_name }}
+    ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all WriteAccountRestrictions privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:WriteAccountRestrictions]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels(m)[0] }}/{{
-    labels(m)[1] }})
+    Group {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1]
+    }})
 - group: general
   desc: List all WriteDacl privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:WriteDacl]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has WriteDacl over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has WriteDacl over {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
 - group: general
   desc: List all WriteDacl privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:WriteDacl]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all WriteOwner privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:WriteOwner]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has WriteOwner over {{ m_name }} ({{
-    labels(m)[0] }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has WriteOwner over {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
 - group: general
   desc: List all WriteOwner privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:WriteOwner]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all WriteSPN privileges for owned principals
   cypher: |-
     MATCH (n {owned: true})-[r:WriteSPN]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) has WriteSPN over {{ m_name }} ({{ labels(m)[0]
-    }}/{{ labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has WriteSPN over {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
 - group: general
   desc: List all WriteSPN privileges for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:WriteSPN]->(m)
     WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List computers containing "dev"
   cypher: |-
@@ -2822,10 +2819,10 @@ queries:
   cypher: |-
     MATCH (n:Computer)-[r:AddKeyCredentialLink]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1]
+    Computer {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1]
     }})
 - group: computer
   desc: List this computer's AddMember privileges
@@ -2859,20 +2856,19 @@ queries:
   cypher: |-
     MATCH (n:Computer)-[r:AllExtendedRights]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1]
-    }})
+    Computer {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's AllowedToAct privileges
   cypher: |-
     MATCH (n:Computer)-[r:AllowedToAct]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's CanPSRemote privileges
   cypher: |-
@@ -2895,10 +2891,10 @@ queries:
   cypher: |-
     MATCH (n:Computer)-[r:DumpSMSAPassword]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's ExecuteDCOM privileges
   cypher: |-
@@ -2922,28 +2918,28 @@ queries:
   cypher: |-
     MATCH (n:Computer)-[r:GenericAll]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has GenericAll over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has GenericAll over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's GenericWrite privileges
   cypher: |-
     MATCH (n:Computer)-[r:GenericWrite]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's group memberships
   cypher: |-
     MATCH (n:Computer)-[r:MemberOf]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} is MemberOf {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's group-delegated AdminTo privileges
   cypher: |-
@@ -2958,19 +2954,19 @@ queries:
   cypher: |-
     MATCH (n:Computer)-[r:HasSIDHistory]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's Owns privileges
   cypher: |-
     MATCH (n:Computer)-[r:Owns]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} Owns {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} Owns {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's ReadGMSAPassword privileges
   cypher: |-
@@ -3012,48 +3008,47 @@ queries:
   cypher: |-
     MATCH (n:Computer)-[r:WriteAccountRestrictions]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels(m)[0] }}/{{
-    labels(m)[1] }})
+    Computer {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels_m[0] }}/{{
+    labels_m[1] }})
 - group: computer
   desc: List this computer's WriteDacl privileges
   cypher: |-
     MATCH (n:Computer)-[r:WriteDacl]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's WriteOwner privileges
   cypher: |-
     MATCH (n:Computer)-[r:WriteOwner]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's WriteSPN privileges
   cypher: |-
     MATCH (n:Computer)-[r:WriteSPN]->(m)
     WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Computer {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Computer {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's AddKeyCredentialLink privileges
   cypher: |-
     MATCH (n:Group)-[r:AddKeyCredentialLink]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1]
-    }})
+    Group {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's AddMember privileges
   cypher: |-
@@ -3086,19 +3081,19 @@ queries:
   cypher: |-
     MATCH (n:Group)-[r:AllExtendedRights]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's AllowedToAct privileges
   cypher: |-
     MATCH (n:Group)-[r:AllowedToAct]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's CanPSRemote privileges
   cypher: |-
@@ -3130,10 +3125,10 @@ queries:
   cypher: |-
     MATCH (n:Group)-[r:DumpSMSAPassword]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's ExecuteDCOM privileges
   cypher: |-
@@ -3157,28 +3152,28 @@ queries:
   cypher: |-
     MATCH (n:Group)-[r:GenericAll]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has GenericAll over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has GenericAll over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's GenericWrite privileges
   cypher: |-
     MATCH (n:Group)-[r:GenericWrite]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's group memberships
   cypher: |-
     MATCH (n:Group)-[r:MemberOf]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} is MemberOf {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's group-delegated AdminTo privileges
   cypher: |-
@@ -3202,29 +3197,29 @@ queries:
   cypher: |-
     MATCH (n:Group)-[r:HasSIDHistory]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's members
   cypher: |-
     MATCH (n)-[r:MemberOf]->(m)
     WHERE m.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m), labels(n)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
     ORDER BY n.name
   msg_template: |-
-    {{ n_name }} ({{ labels(n)[0] }}/{{ labels(n)[1] }}) is MemberOf {{ m_name }} ({{ labels(m)[0] }}/{{
-    labels(m)[1] }})
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{
+    labels_m[1] }})
 - group: group
   desc: List this group's Owns privileges
   cypher: |-
     MATCH (n:Group)-[r:Owns]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} Owns {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} Owns {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's RDP privileges
   cypher: |-
@@ -3274,47 +3269,47 @@ queries:
   cypher: |-
     MATCH (n:Group)-[r:WriteAccountRestrictions]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels(m)[0] }}/{{
-    labels(m)[1] }})
+    Group {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1]
+    }})
 - group: group
   desc: List this group's WriteDacl privileges
   cypher: |-
     MATCH (n:Group)-[r:WriteDacl]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's WriteOwner privileges
   cypher: |-
     MATCH (n:Group)-[r:WriteOwner]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's WriteSPN privileges
   cypher: |-
     MATCH (n:Group)-[r:WriteSPN]->(m)
     WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    Group {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's AddKeyCredentialLink privileges
   cypher: |-
     MATCH (n:User)-[r:AddKeyCredentialLink]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has AddKeyCredentialLink over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's AddMember privileges
   cypher: |-
@@ -3347,19 +3342,19 @@ queries:
   cypher: |-
     MATCH (n:User)-[r:AllExtendedRights]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has AllExtendedRights over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's AllowedToAct privileges
   cypher: |-
     MATCH (n:User)-[r:AllowedToAct]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's CanPSRemote privileges
   cypher: |-
@@ -3391,10 +3386,10 @@ queries:
   cypher: |-
     MATCH (n:User)-[r:DumpSMSAPassword]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has DumpSMSAPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's email
   cypher: |-
@@ -3427,28 +3422,28 @@ queries:
   cypher: |-
     MATCH (n:User)-[r:GenericAll]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has GenericAll over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has GenericAll over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's GenericWrite privileges
   cypher: |-
     MATCH (n:User)-[r:GenericWrite]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has GenericWrite over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's group memberships
   cypher: |-
     MATCH (n:User)-[r:MemberOf]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} is MemberOf {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's group-delegated AdminTo privileges
   cypher: |-
@@ -3472,19 +3467,19 @@ queries:
   cypher: |-
     MATCH (n:User)-[r:HasSIDHistory]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has HasSIDHistory over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's Owns privileges
   cypher: |-
     MATCH (n:User)-[r:Owns]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} Owns {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} Owns {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's RDP privileges
   cypher: |-
@@ -3542,38 +3537,38 @@ queries:
   cypher: |-
     MATCH (n:User)-[r:WriteAccountRestrictions]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1]
+    User {{ n_name }} has WriteAccountRestrictions over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1]
     }})
 - group: user
   desc: List this user's WriteDacl privileges
   cypher: |-
     MATCH (n:User)-[r:WriteDacl]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has WriteDacl over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's WriteOwner privileges
   cypher: |-
     MATCH (n:User)-[r:WriteOwner]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has WriteOwner over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's WriteSPN privileges
   cypher: |-
     MATCH (n:User)-[r:WriteSPN]->(m)
     WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    User {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels(m)[0] }}/{{ labels(m)[1] }})
+    User {{ n_name }} has WriteSPN over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List users containing "admin"
   cypher: |-
