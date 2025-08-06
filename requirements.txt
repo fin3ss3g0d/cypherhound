@@ -1,4 +1,4 @@
-colorama==0.4.5
-neo4j==5.1.0
-pytz==2022.4
-termcolor==2.0.1
+colorama==0.4.6
+neo4j==5.28.2
+pytz==2025.2
+cmd2==2.7.0

@@ -1,34 +1,16 @@
 #!/usr/bin/env python3
-import sys
+import sys, yaml
 from tempfile import template
 
-from flask import ctx
-
-import util
-import log
+from util import redify, deep_redify, greenify, yellowify, strip_ansi_escape_sequences, handle_export
+from log import log_default, log_error, log_no_results, log_green, log_red, log_yellow
 
 from neo4j import GraphDatabase
 from collections import OrderedDict
 from pathlib import Path
 
-import yaml
-from jinja2 import Template
-from neo4j.graph import Path as NeoPath
 from jinja2 import Template, UndefinedError
-
-
-def redify(value):
-    return f"{log.red}{value}{log.reset}"
-
-
-def deep_redify(obj):
-    if isinstance(obj, (str, int, float, bool)):
-        return log.red + str(obj) + log.reset
-    if isinstance(obj, list):
-        return [deep_redify(x) for x in obj]
-    if isinstance(obj, dict):
-        return {k: deep_redify(v) for k, v in obj.items()}
-    return obj       # Path objects, datetimes, etc.
+from pathlib import Path
 
 
 def _looks_like_path(obj) -> bool:
@@ -126,27 +108,27 @@ class Driver:
         results = {k: v for k, v in self.queries.items() if search_string.lower() in v['desc'].lower()}
     
         if results:
-            print(f'{log.green}Cypher matches for "{search_string}":{log.reset}')
+            log_green(f'Cypher matches for "{search_string}":')
             for key, value in results.items():
-                print(f'{log.red}{key}.{log.reset} {value["desc"]}')
+                print(f'{redify(key + ".")} {value["desc"]}')
         else:
-            print(f'{log.yellow}No matches found for "{search_string}".{log.reset}')
+            log_yellow(f'No matches found for "{search_string}".')
 
 
     def print_queries_by_group(self, group):
         if group == "all":
             self.print_all_queries()
             return
-        print(f'{log.default}{group.capitalize()} Cyphers{log.reset}')
+        log_green(f'{group.capitalize()} Cyphers:')
         for num, data in self.queries.items():
             if data['group'] == group:
-                print(f'{log.default}{num}.) {log.reset}{data["desc"]}')
+                print(f'{redify(num + ".")} {data["desc"]}')
 
 
     def print_all_queries(self):
-        print(f'{log.default}All Cyphers{log.reset}')
+        log_green(f'All Cyphers:')
         for num, data in self.queries.items():
-            print(f'{log.default}{num}.) {log.reset}{data["desc"]}')
+            print(f'{redify(num + ".")} {data["desc"]}')
 
 
     def replace_fillers_in_string(self, string):
@@ -173,7 +155,7 @@ class Driver:
                 results = session.run(cypher)
 
                 if results.peek() is None:
-                    log.log_no_results()
+                    log_no_results()
                     return
 
                 # Pre-compile the template once
@@ -199,12 +181,12 @@ class Driver:
                     count += 1
 
                 if count == 0:
-                    log.log_no_results()
+                    log_no_results()
                 if outfile:
-                    util.handle_export(count, outfile)
+                    handle_export(count, outfile)
 
         except Exception as e:
-            log.log_error(e)
+            log_error(e)
 
 
     # --------------------------------------------------------------------- #
@@ -217,7 +199,7 @@ class Driver:
                 results  = session.run(cypher)
 
                 if results.peek() is None:
-                    log.log_no_results()
+                    log_no_results()
                     return
 
                 template = Template(query_data["msg_template"]) \
@@ -266,7 +248,7 @@ class Driver:
                         try:
                             msg = template.render(**ctx)
                         except UndefinedError as ue:
-                            log.log_error(f"Template error: {ue}")
+                            log_error(f"Template error: {ue}")
                             msg = None
                     else:
                         # default text – 1 line per hop
@@ -285,12 +267,12 @@ class Driver:
                         path_idx += 1
 
                 if count == 0:
-                    log.log_no_results()
+                    log_no_results()
                 if outfile:
-                    util.handle_export(count, outfile)
+                    handle_export(count, outfile)
 
         except Exception as e:
-            log.log_error(e)
+            log_error(e)
 
 
     def handle_output(self, f, message):
@@ -299,7 +281,7 @@ class Driver:
         else:
             with open(f, 'a+', encoding=sys.getfilesystemencoding(), errors='replace') as file:
                 print(message)
-                file.write(util.strip_ansi_escape_sequences(message) + '\n')
+                file.write(strip_ansi_escape_sequences(message) + '\n')
 
 
     def handle_query(self, query_data: dict, outfile: str):
@@ -316,6 +298,6 @@ class Driver:
                 if q:
                     self.handle_query(q, outfile)
                 else:
-                    log.log_error("Cypher does not exist!")
+                    log_error("Cypher does not exist!")
             except Exception as e:
-                log.log_error(e)
+                log_error(e)

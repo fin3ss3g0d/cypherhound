@@ -51,8 +51,31 @@ def handle_export(count, path):
     else:
         file.close()
         log.log_successful_export(path)
-        
+
 
 def strip_ansi_escape_sequences(text):
     ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
     return ansi_escape.sub('', text)        
+
+
+# Color work
+def redify(value):
+    return f"{log.red}{value}{log.reset}"
+
+
+def greenify(value):
+    return f"{log.green}{value}{log.reset}"
+
+
+def yellowify(value):
+    return f"{log.yellow}{value}{log.reset}"
+
+
+def deep_redify(obj):
+    if isinstance(obj, (str, int, float, bool)):
+        return log.red + str(obj) + log.reset
+    if isinstance(obj, list):
+        return [deep_redify(x) for x in obj]
+    if isinstance(obj, dict):
+        return {k: deep_redify(v) for k, v in obj.items()}
+    return obj       # Path objects, datetimes, etc.

@@ -1,21 +1,11 @@
 #!/usr/bin/python3
 # Author: Dylan Evans|fin3ss3g0d
-import argparse
-import terminal
-import readline
-import sys
-import signal
+import os, sys, json, argparse
 import log
-import json
-import atexit
-import os
+from log import log_default
+from query_shell import QueryShell
 
 
-def signal_handler(sig, frame):
-    log.log_error("Exit program with 'q', 'quit', 'exit', or 'stop'")
-    print(": ", end="")
-            
-            
 banner = """:::::::------::-----::::-------::---------::-----------------=+++*++=++***++===+**######*++++**#####*****+===+===-----=+
 :::::::------::------::::-------:-------::::-----------------===++++++****++===+**#%%%%##***+**#######**++==++++==----=+
 ::::::-------::------::::-------:------::::::---:::::::...:::-==++*++**++*++===+*##%%%%%##*+++**##**#***++==+++++=---==+
@@ -60,12 +50,14 @@ banner = """:::::::------::-----::::-------::---------::-----------------=+++*++
                                       cypherhound (Author: Dylan Evans|fin3ss3g0d)
 """
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Python terminal app that runs various Neo4j cyphers on BloodHound data sets.")
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Python terminal app that runs various Neo4j cyphers.")
     parser.add_argument("-c", "--config", help="Config file", required=True)
     parser.add_argument("-y", "--yaml", help="Path to queries YAML file", default="queries.yaml")
     args = parser.parse_args()
 
+    # Read the config file
     try:
         with open(args.config) as f:
             config = json.load(f)
@@ -73,18 +65,31 @@ if __name__ == "__main__":
         log.log_error(e)
         sys.exit(1)    
 
-    try:
-        print(f'{log.default}{banner}{log.reset}')
-        readline.set_completer(terminal.Completer(terminal.OPTIONS).complete)
-        readline.parse_and_bind('tab: complete')
-        histfile = ('.history')
-        if not os.path.exists(histfile):
-            open(histfile, 'w').close()  # Creates an empty file if it doesn't exist    
-        readline.read_history_file(histfile)
-        atexit.register(readline.write_history_file, histfile)
-        signal.signal(signal.SIGINT, signal_handler)        
-        term = terminal.Terminal(config["user"], config["pwd"], config["database"], args.yaml)
-        term.input_loop()
-    except Exception as e:
-        log.log_error(e)
+    # Check if yaml file exists
+    if not os.path.exists(args.yaml):
+        log.log_error(f"YAML file '{args.yaml}' does not exist.")
         sys.exit(1)
+
+    # Display the banner
+    log_default(banner)
+
+    # Run the shell loop
+    try:
+        # Initialize the query shell
+        shell = QueryShell(
+            user=config.get("user"),
+            pwd=config.get("pwd"),
+            db=config.get("database", "neo4j"),
+            yaml_file=args.yaml,
+            persistent_history_file=".history"
+        )
+        shell.cmdloop()                      # drops into the REPL
+    except Exception as e:
+        log.log_error(e)        
+    finally:
+        shell.driver.close()                 # tidy shutdown
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

@@ -45,3 +45,7 @@ Refactored the project to use a dynamic yaml file for storing cyphers.
 # 08/04/2025
 
 Added format_yaml_queries.py helper script.
+
+# 08/06/2025
+
+Refactored the terminal logic for easier maintainability, bumped library versions.

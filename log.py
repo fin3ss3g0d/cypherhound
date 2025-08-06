@@ -32,3 +32,19 @@ def log_config_not_set(c):
 
 def log_successful_set(i, r):
     print(f'{green}[+] {i} set to {r} successfully!{reset}')
+
+
+def log_red(message):
+    print(f'{red}{message}{reset}')
+
+
+def log_green(message):
+    print(f'{green}{message}{reset}')
+
+
+def log_yellow(message):
+    print(f'{yellow}{message}{reset}')
+
+
+def log_default(message):
+    print(f'{default}{message}{reset}')

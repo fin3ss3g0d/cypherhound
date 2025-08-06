@@ -113,48 +113,28 @@ A table breakdown of the supported keywords and their descriptions can be seen b
 The full command menu is shown below:
 
 ```
-Command Menu
-set - used to set search parameters for cyphers, double/single quotes not required for any sub-commands
-    sub-commands
-        user - the user to use in user-specific cyphers (MUST include @domain.name)
-        group - the group to use in group-specific cyphers (MUST include @domain.name)
-        computer - the computer to use in computer-specific cyphers (SHOULD include .domain.name or @domain.name)
-        regex - the regex to use in regex-specific cyphers
-    example
-        set user svc-test@domain.local
-        set group domain admins@domain.local
-        set computer dc01.domain.local
-        set regex .*((?i)web).*
-run - used to run cyphers
-    parameters
-        cypher number - the number of the cypher to run
-    example
-        run 7
-export - used to export cypher results to txt files
-    parameters
-        cypher number - the number of the cypher to run and then export
-        output filename - the number of the output file, extension not needed
-    example
-        export 31 results
-list - used to show a list of cyphers
-    parameters
-        list type - the type of cyphers to list (general, user, group, computer, regex, all)
-    example
-        list general
-        list user
-        list group
-        list computer
-        list regex
-        list all
-search - used to search the list of cyphers
-    parameters
-        search query - the search string
-    example
-        search domain admin
-        search shortest
-q, quit, exit, stop - used to exit the program
-clear, cls - used to clear the terminal
-help, ? - used to display this help menu
+Documented commands (use 'help -v' for verbose/'help <topic>' for details):
+======================================================================================================
+alias                 Manage aliases
+clear                 Clear the terminal.
+cls                   Clear the terminal.
+edit                  Run a text editor and optionally open a file with it
+export                Run a query and save its results
+help                  List available commands or provide detailed help for a specific command
+history               View, run, edit, save, or clear previously entered commands
+list                  List queries by group.
+macro                 Manage macros
+run                   Execute a query
+run_pyscript          Run a Python script file inside the console
+run_script            Run commands in script file that is encoded as either ASCII or UTF-8 text
+search                Full-text search through stored queries.
+set                   Update query parameters
+shell                 Execute a command as if at the OS prompt
+shortcuts             List available shortcuts
+
+Undocumented commands:
+======================
+exit  q  quit  stop
 ```
 
 ## customqueries.json
@@ -305,8 +285,7 @@ options:
 ## Important Notes
 
 - The program is configured to use the default `Neo4j` database and `URI`
-- Built for `BloodHound 4.3.1`, certain edges will not work for previous versions
-- `Windows` users must run `pip3 install pyreadline3`
+- Built for versions at or above `BloodHound 4.3.1`, certain edges will not work for previous versions
 
 ## A Word About Sponsorship
 
