@@ -1,8 +1,19 @@
 # cypherhound
 
+![logo](images/logo.png)
+
 A `Python3` terminal application that contains `Neo4j` cyphers for BloodHound data sets and a `customqueries.json` file containing cyphers for the legacy GUI with a script to automate importing them into BloodHound CE.
 
+## Output Samples
+
+**Terminal**
+
 ![demo](images/demo%20output.png)
+
+**HTML Report**
+
+![report summary](images/report%20summary.png)
+![details sample](images/adminto%20report%20sample.png)
 
 ## Why?
 
