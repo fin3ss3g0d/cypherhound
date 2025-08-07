@@ -124,6 +124,7 @@ help                  List available commands or provide detailed help for a spe
 history               View, run, edit, save, or clear previously entered commands
 list                  List queries by group.
 macro                 Manage macros
+report                Run multiple queries and generate a HTML report
 run                   Execute a query
 run_pyscript          Run a Python script file inside the console
 run_script            Run commands in script file that is encoded as either ASCII or UTF-8 text

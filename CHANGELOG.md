@@ -49,3 +49,7 @@ Added format_yaml_queries.py helper script.
 # 08/06/2025
 
 Refactored the terminal logic for easier maintainability, bumped library versions.
+
+# 08/07/2025
+
+Added the report functionality to allow running multiple cyphers and outputting the results to a HTML report.

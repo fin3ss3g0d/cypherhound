@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, yaml
+import sys, yaml, re
 from tempfile import template
 
 from util import redify, deep_redify, greenify, yellowify, strip_ansi_escape_sequences, handle_export
@@ -9,7 +9,8 @@ from neo4j import GraphDatabase
 from collections import OrderedDict
 from pathlib import Path
 
-from jinja2 import Template, UndefinedError
+from jinja2 import Template, UndefinedError, Environment, FileSystemLoader, select_autoescape
+from datetime import datetime
 from pathlib import Path
 
 
@@ -131,7 +132,7 @@ class Driver:
             print(f'{redify(num + ".")} {data["desc"]}')
 
 
-    def replace_fillers_in_string(self, string):
+    def _replace_fillers_in_string(self, string):
         replacements = {
             'USER_SEARCH': self.user_search,
             'GROUP_SEARCH': self.group_search,
@@ -148,10 +149,10 @@ class Driver:
     # --------------------------------------------------------------------- #
     # STANDARD query executor – Jinja2 templating
     # --------------------------------------------------------------------- #
-    def handle_standard_query(self, query_data: dict, outfile: str):
+    def _handle_standard_query(self, query_data: dict, outfile: str):
         try:
             with self.driver.session(database=self.database) as session:
-                cypher = self.replace_fillers_in_string(query_data["query"])
+                cypher = self._replace_fillers_in_string(query_data["query"])
                 results = session.run(cypher)
 
                 if results.peek() is None:
@@ -177,7 +178,7 @@ class Driver:
 
                     if not msg:
                         continue
-                    self.handle_output(outfile, msg)
+                    self._handle_output(outfile, msg)
                     count += 1
 
                 if count == 0:
@@ -192,10 +193,10 @@ class Driver:
     # --------------------------------------------------------------------- #
     # PATH query executor
     # --------------------------------------------------------------------- #
-    def handle_path_query(self, query_data: dict, outfile: str):
+    def _handle_path_query(self, query_data: dict, outfile: str):
         try:
             with self.driver.session(database=self.database) as session:
-                cypher   = self.replace_fillers_in_string(query_data["query"])
+                cypher   = self._replace_fillers_in_string(query_data["query"])
                 results  = session.run(cypher)
 
                 if results.peek() is None:
@@ -262,7 +263,7 @@ class Driver:
                         msg = "\n".join(pieces)
 
                     if msg:
-                        self.handle_output(outfile, msg)
+                        self._handle_output(outfile, msg)
                         count += 1
                         path_idx += 1
 
@@ -275,7 +276,150 @@ class Driver:
             log_error(e)
 
 
-    def handle_output(self, f, message):
+    # -------------------------------------------------- #
+    # public helper – run several queries → HTML report
+    # -------------------------------------------------- #
+    def run_queries_to_html(
+            self,
+            query_ids: list[str] | None,
+            report_root: str | Path
+        ) -> None:
+        """
+        Execute multiple queries and write a Bootstrap-styled HTML report.
+
+        :param query_ids:  list of string IDs from self.queries.
+                           If None → run them all.
+        :param report_root: folder under which the timestamped report
+                            directory will be created.
+        """
+        ts_dir = Path(report_root) / datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        ts_dir.mkdir(parents=True, exist_ok=True)
+        env = Environment(
+            loader=FileSystemLoader("templates"),
+            autoescape=select_autoescape(["html", "xml"])
+        )
+
+        master_rows: list[dict] = []
+
+        # choose which queries to run
+        chosen = (query_ids or list(self.queries.keys()))
+
+        for qid in chosen:
+            q = self.queries.get(str(qid))
+            if not q:
+                log_yellow(f"[!] Unknown query id {qid}; skipping")
+                continue
+
+            # -- run it -------------------------------------------------- #
+            print(f"{greenify('[+] Running query ' + qid + ':')} {q['desc']}")
+            if self._is_path_query(q):
+                messages = self._render_path_msgs(q)
+            else:
+                messages = self._render_standard_msgs(q)
+
+            # write details page
+            slug = self._slugify(q["desc"])[:60]
+            details_name = f"q-{qid.zfill(2)}_{slug}.html"
+            details_path = ts_dir / details_name
+
+            with (details_path.open("w", encoding="utf-8") as fh):
+                env.get_template("details.html.j2").stream(
+                    desc=q["desc"],
+                    rows=messages,
+                    qid=qid,
+                ).dump(fh)
+
+            master_rows.append({
+                "desc": q["desc"],
+                "file": details_name,
+                "count": len(messages)
+            })
+
+        # write index page
+        with (ts_dir / "index.html").open("w", encoding="utf-8") as fh:
+            env.get_template("master.html.j2").stream(
+                generated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                rows=master_rows,
+            ).dump(fh)
+
+        print(f"{greenify('[+] HTML report written to:')} {ts_dir / 'index.html'}")
+
+    # -------------------------------------------------- #
+    # “Standard” (table-like) rows → list[str]
+    # -------------------------------------------------- #
+    def _render_standard_msgs(self, q: dict) -> list[str]:
+        msgs: list[str] = []
+        with self.driver.session(database=self.database) as ses:
+            res = ses.run(self._replace_fillers_in_string(q["query"]))
+            if res.peek() is None:
+                return msgs
+
+            tmpl = Template(q["msg_template"]) if q["msg_template"] else None
+            for rec in res:
+                data = rec.data()
+                msg = tmpl.render(**data) if tmpl else str(data)
+                msgs.append(msg)
+        return msgs
+
+
+    # -------------------------------------------------- #
+    # Shortest-path rows → list[str]  (one msg per path)
+    # -------------------------------------------------- #
+    def _render_path_msgs(self, q: dict) -> list[str]:
+        msgs: list[str] = []
+        with self.driver.session(database=self.database) as ses:
+            res = ses.run(self._replace_fillers_in_string(q["query"]))
+            if res.peek() is None:
+                return msgs
+
+            tmpl = Template(q["msg_template"]) if q["msg_template"] else None
+            path_no = 1
+            for rec in res:
+                path = next((v for v in rec.values() if _looks_like_path(v)), None)
+                if path is None:
+                    continue
+
+                ctx = {
+                    "start_name": path.start_node.get("name"),
+                    "end_name":   path.end_node.get("name"),
+                    "hops": [
+                        {
+                            "src": rel.start_node.get("name"),
+                            "src_labels": list(rel.start_node.labels),
+                            "type": rel.type,
+                            "dst": rel.end_node.get("name"),
+                            "dst_labels": list(rel.end_node.labels),
+                        } for rel in path
+                    ],
+                    "path_num": path_no,
+                    **rec.data(),      # include any extra RETURN cols
+                }
+
+                if tmpl:
+                    try:
+                        msgs.append(tmpl.render(**ctx))
+                    except UndefinedError as ue:
+                        log_error(f"Template error: {ue}")
+                else:
+                    # default textual rendering
+                    pieces = [f"*Path {path_no}* {ctx['start_name']} → {ctx['end_name']}"]
+                    for h in ctx["hops"]:
+                        pieces.append(
+                            f"{h['src']} ({'/'.join(h['src_labels'])}) "
+                            f"--{h['type']}→ "
+                            f"{h['dst']} ({'/'.join(h['dst_labels'])})"
+                        )
+                    msgs.append("\n".join(pieces))
+
+                path_no += 1
+        return msgs
+
+
+    def _slugify(self, text: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+
+    def _handle_output(self, f, message):
         if f == "":
             print(message)
         else:
@@ -284,19 +428,23 @@ class Driver:
                 file.write(strip_ansi_escape_sequences(message) + '\n')
 
 
-    def handle_query(self, query_data: dict, outfile: str):
+    def _handle_query(self, query_data: dict, outfile: str):
         """Run a query and handle its output."""
-        if "shortestpath" in query_data['query'].lower():
-            self.handle_path_query(query_data, outfile)
+        if self._is_path_query(query_data):
+            self._handle_path_query(query_data, outfile)
         else:
-            self.handle_standard_query(query_data, outfile)
+            self._handle_standard_query(query_data, outfile)
 
+
+    def _is_path_query(self, query_data: dict) -> bool:
+        """Check if the query is a path query."""
+        return "shortestpath" in query_data['query'].lower()
 
     def run_query(self, option: str, outfile: str):
             try:
                 q = self.queries.get(option)
                 if q:
-                    self.handle_query(q, outfile)
+                    self._handle_query(q, outfile)
                 else:
                     log_error("Cypher does not exist!")
             except Exception as e:

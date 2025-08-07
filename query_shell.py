@@ -6,6 +6,26 @@ from cmd2 import with_argparser  # pip install cmd2
 
 import database, util, log
 
+# ---------- helpers -------------------------------------------------
+def _id_list(value: str) -> list[int]:
+    """
+    Parse a single CLI token into a list of ints.
+    Accepts comma-separated values and ranges, e.g. 1,3,5-7
+    """
+    ids: set[int] = set()
+    for part in value.split(','):
+        part = part.strip()
+        if not part:
+            continue
+        if '-' in part:
+            a, b = part.split('-', 1)
+            ids.update(range(int(a), int(b) + 1))
+        else:
+            ids.add(int(part))
+    if not ids:
+        raise argparse.ArgumentTypeError('no valid IDs found')
+    return sorted(ids)
+
 class QueryShell(cmd2.Cmd):
     prompt = ': '
 
@@ -118,6 +138,58 @@ class QueryShell(cmd2.Cmd):
             self.perror('search <text>')
             return
         self.driver.search_queries(arg)
+
+    # ---------- `report` command ---------------------------------------
+    report_parser = argparse.ArgumentParser(
+        prog='report',
+        description='Run multiple queries and generate a HTML report'
+    )
+    report_parser.add_argument(
+        'ids',
+        nargs='*',          # 0 → ALL queries, ≥1 → selected
+        type=_id_list,
+        metavar='ID[,ID|ID-ID] ...',
+        help=('IDs of queries to include. '
+              'You can pass multiple tokens and use ranges, '
+              'e.g. "1 3 5-7".  If omitted, every stored query is run.')
+    )
+    report_parser.add_argument(
+        '-o', '--output',
+        default='reports',
+        metavar='DIR',
+        help='Base directory where the HTML report folder will be created '
+             '(default: %(default)s)'
+    )
+    report_parser.add_argument(
+        '--open',
+        action='store_true',
+        help='Open the generated index.html in your default browser'
+    )
+
+    @with_argparser(report_parser)
+    def do_report(self, args: argparse.Namespace):
+        """Execute one or many queries → Bootstrap-styled HTML report."""
+        # Flatten `ids` list of lists ⇢ single sorted list
+        flat_ids = sorted({i for sub in args.ids for i in sub}) if args.ids else None
+
+        # Sanity-check IDs
+        if flat_ids and (min(flat_ids) < 1 or max(flat_ids) > len(self.driver.queries)):
+            self.perror('One or more IDs are out of range')
+            return
+
+        try:
+            self.driver.run_queries_to_html(
+                query_ids=[str(i) for i in flat_ids] if flat_ids else None,
+                report_root=args.output
+            )
+            if args.open:
+                import webbrowser, pathlib
+                idx = pathlib.Path(args.output).resolve().joinpath(
+                    max(os.listdir(args.output))  # newest timestamped dir
+                ).joinpath('index.html')
+                webbrowser.open_new_tab(idx.as_uri())
+        except Exception as e:
+            self.perror(str(e))
 
     # aliases for clean exit
     def do_quit(self, _):  return True
