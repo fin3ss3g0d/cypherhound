@@ -253,11 +253,11 @@ class Driver:
                             msg = None
                     else:
                         # default text – 1 line per hop
-                        pieces = [f"*Path {path_idx}* {start_name} → {end_name}"]
+                        pieces = [f'{greenify("*Path " + f"{path_idx}*")} {start_name} {greenify("→")} {end_name}']
                         for h in hops:
                             pieces.append(
                                 f"{redify(h['src'])} ({'/'.join(h['src_labels'])}) "
-                                f"--{h['type']}→ "
+                                f"{yellowify(f"--{h['type']}→")} "
                                 f"{redify(h['dst'])} ({'/'.join(h['dst_labels'])})"
                             )
                         msg = "\n".join(pieces)
