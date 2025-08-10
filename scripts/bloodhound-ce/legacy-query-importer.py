@@ -30,57 +30,28 @@ def build_signature(method: str, uri: str, body: bytes, token_key: str) -> (str,
     return date_header, signature
 
 def load_queries(file_path: str):
-    """
-    Load an already-flattened BloodHound CE JSON:
-    {
-      "queries": [
-        { "name": "...", "description": "...", "query": "..." },
-        ...
-      ]
-    }
-
-    Returns a list of dicts with keys: name, description, query.
-    """
     if not os.path.isfile(file_path):
         raise FileNotFoundError(f"Query file not found: {file_path}")
 
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Invalid JSON in {file_path}: {e}") from e
+    with open(file_path, "r") as file:
+        raw_data = json.load(file)
 
-    if not isinstance(data, dict) or "queries" not in data or not isinstance(data["queries"], list):
-        raise ValueError("JSON must contain a top-level 'queries' list.")
+    flattened_queries = []
+    for entry in raw_data.get("queries", []):
+        name = entry.get("name", "Unnamed Query")
+        category = entry.get("category", "Uncategorized")
+        final_queries = [q for q in entry.get("queryList", []) if q.get("final", False)]
 
-    out = []
-    for idx, entry in enumerate(data["queries"], 1):
-        if not isinstance(entry, dict):
-            print(f"[!] Skipping query #{idx}: not a JSON object", file=sys.stderr)
-            continue
+        for idx, q in enumerate(final_queries):
+            query_name = name if len(final_queries) == 1 else f"{name} ({idx + 1})"
+            flattened_queries.append({
+                "name": query_name,
+                "description": f"{name} - {category}",
+                "query": q["query"]
+            })
 
-        name = str(entry.get("name", "Unnamed Query")).strip()
-        desc = str(entry.get("description", f"{name} - General")).strip()
-        q = entry.get("query")
-
-        if not isinstance(q, str) or not q.strip():
-            print(f"[!] Skipping query #{idx} ('{name}'): missing/empty 'query'", file=sys.stderr)
-            continue
-
-        # Optional: tidy up trailing semicolons
-        q = q.strip().rstrip(";")
-
-        out.append({
-            "name": name,
-            "description": desc,
-            "query": q
-        })
-
-    if not out:
-        raise ValueError("No valid queries found in the flattened JSON.")
-
-    print(f"[+] Loaded {len(out)} queries from {file_path}")
-    return out
+    print(f"[+] Loaded {len(flattened_queries)} final queries from {file_path}")
+    return flattened_queries
 
 def submit_query_with_retries(url, headers, body, query_name):
     for attempt in range(1, MAX_RETRIES + 1):
@@ -106,7 +77,7 @@ def main():
     parser = argparse.ArgumentParser(description="Submit custom BloodHound queries via API")
     parser.add_argument("--token-id", required=True, help="API token ID")
     parser.add_argument("--token-key", required=True, help="API token key")
-    parser.add_argument("--queries-file", required=True, help="Path to flattened JSON (BH CE format) containing queries")
+    parser.add_argument("--queries-file", required=True, help="Path to BH Legacy JSON file containing custom queries")
     parser.add_argument("--base-url", default="http://127.0.0.1:8080", help="BloodHound API base URL")
 
     args = parser.parse_args()

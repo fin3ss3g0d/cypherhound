@@ -53,3 +53,7 @@ Refactored the terminal logic for easier maintainability, bumped library version
 # 08/07/2025
 
 Added the report functionality to allow running multiple cyphers and outputting the results to a HTML report.
+
+# 08/10/2025
+
+Created a script to convert a YAML query template file to a JSON file for importing terminal cyphers into the BloodHound CE UI.

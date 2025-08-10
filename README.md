@@ -1,8 +1,8 @@
-# cypherhound
+# CypherHound
 
 ![logo](images/logo.png)
 
-A `Python3` terminal application that contains `Neo4j` cyphers for BloodHound data sets and a `customqueries.json` file containing cyphers for the legacy GUI with a script to automate importing them into BloodHound CE.
+A `Python3` terminal application that contains `Neo4j` cyphers for BloodHound data sets with a script to automate importing them into BloodHound CE.
 
 ## Output Samples
 
@@ -13,31 +13,35 @@ A `Python3` terminal application that contains `Neo4j` cyphers for BloodHound da
 **HTML Report**
 
 ![report summary](images/report%20summary.png)
+
+**HTML Report (continued)**
+
 ![details sample](images/adminto%20report%20sample.png)
 
 ## Why?
 
-`BloodHound` is a staple tool for every red teamer. However, there are some negative side effects based on its design. I will cover the biggest pain points I've experienced and what this tool aims to address:
+[BloodHound](https://github.com/SpecterOps/BloodHound) is a staple tool for every penetration tester. However, there are some negative side effects based on its design. I will cover the biggest pain points I've experienced and what this tool aims to address:
 
-1. My tools think in lists - until my tools parse exported `JSON` graphs, I need graph results in a line-by-line format `.txt` file
-2. Copy/pasting graph results - this plays into the first but do we need to explain this one?
-3. Graphs can be too large to draw - the information contained in any graph can aid our goals as the attacker and we *need* to be able to view *all* data efficiently
-4. Manually running custom cyphers is time-consuming - let's automate it :)
+1. **My tools think in lists** - until my tools parse exported `JSON` graphs, I need graph results in a line-by-line format `.txt` file *to actually attack things from other tools*
+2. **Copy/pasting graph results** - this plays into the first but *do we need to really explain this one*?
+3. **Graphs can be too large to draw** -  Large AD environments, multiple shortest paths being drawn on the same graph, etc. The information contained in ***any*** graph can aid our goals as the attacker and we ***need*** to be able to view ***all*** data efficiently.
+4. **Manually running custom cyphers is time-consuming** - let's automate it :)
 
-This tool can also help blue teams to reveal detailed information about their Active Directory environments as well. Matter-of-fact, there are enough cyphers packaged within this project to allow complete visibility into an Active Directory environment. The nature of the cyphers allow the operator to enumerate the environment with scalpel precision, mapping virtually every and any attack path/privilege possible.
+This tool can provide significant value for both red and blue teams.
 
 ## Features
 
-Take back control of your `BloodHound` data with `cypherhound`!
+Take back control of your `BloodHound` data with `CypherHound`!
 
 - Read cypher templates from a YAML file
   - Set cyphers to search based on user input (user, group, and computer-specific)
   - User-defined regex cyphers
 - User-defined exporting of all results
-  - Default export will be just end object to be used as target list with tools
-  - Raw export option available in `grep/cut/awk`-friendly format
-- `customqueries.json` file included
-  - Run the same queries from the GUI - both legacy and CE
+  - Examples provided in `grep/cut/awk`-friendly format
+  - Export any combination of cyphers to a modern, sleek HTML report
+- Run the same queries from the BloodHound CE GUI
+  - YAML -> JSON converter and automated BloodHound CE query importer
+  - BloodHound Legacy `customqueries.json` importer script into BloodHound CE included
 
 ## Installation
 
@@ -119,6 +123,27 @@ A table breakdown of the supported keywords and their descriptions can be seen b
 | `COMPUTER_SEARCH` | This will be replaced by the group string you configure with the `set` command at runtime |
 | `REGEX` | This will be replaced by the regular expression string you configure with the `set` command at runtime |
 
+## JSON Format
+
+This repository provides a [query-importer.py](scripts/bloodhound-ce/query-importer.py) script to automate importing queries into the BloodHound CE UI from a JSON file. [bh_query_converter.py](scripts/bloodhound-ce/bh_query_converter.py) has also been provided to convert a YAML file intended for the terminal application to the JSON format expected by [query-importer.py](scripts/bloodhound-ce/query-importer.py) & BloodHound CE. An example of the required JSON format can be seen below:
+
+```json
+{
+  "queries": [
+    {
+      "name": "List all AddKeyCredentialLink privileges for owned principals",
+      "description": "List all AddKeyCredentialLink privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:AddKeyCredentialLink]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AddKeyCredentialLink privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all AddKeyCredentialLink privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:AddKeyCredentialLink]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    }
+  ]
+}
+```
+
 ## Commands
 
 The full command menu is shown below:
@@ -149,21 +174,52 @@ Undocumented commands:
 exit  q  quit  stop
 ```
 
-## customqueries.json
+## BloodHound CE Integration
 
-Almost all cyphers included in the terminal application have been ported over to `json` format for direct usage in the legacy GUI. There is also a [query-importer.py](scripts/bloodhound-ce/query-importer.py) script included in this project that will read the `customqueries.json` file and automate importing each of the queries into BloodHound CE.
+![custom searches](images/custom%20searches.png)
 
-![customqueries.json](images/gui-cypher-list.png)
+### scripts/bloodhound-ce/query-importer.py
 
-Follow the instructions below in order to begin using them in BloodHound Legacy!
+The [query-importer.py](scripts/bloodhound-ce/query-importer.py) script will automate importing queries into the BloodHound CE UI from a JSON file. [bh_query_converter.py](scripts/bloodhound-ce/bh_query_converter.py) has also been provided to convert a YAML file intended for the terminal application to the JSON format expected by [query-importer.py](scripts/bloodhound-ce/query-importer.py) & BloodHound CE.
 
-**Linux**
+### scripts/bloodhound-ce/bh_query_converter.py
 
-Copy the `customqueries.json` file to `~/.config/bloodhound/`
+This script will convert a YAML intended for the terminal application into a JSON file for easy importing into BloodHound CE via the [query-importer.py](scripts/bloodhound-ce/query-importer.py) script. [ad-queries.json](ad-queries.json) has been provided as an example for what an output file looks like and is ready to go for [query-importer.py](scripts/bloodhound-ce/query-importer.py) and importing the queries into BloodHound CE.
 
-**Windows**
+### scripts/bloodhound-ce/legacy-query-importer.py
 
-Copy the `customqueries.json` file to `C:\Users\<YourUsername>\AppData\Roaming\bloodhound\`
+This script will read a `customqueries.json` file from BloodHound Legacy and import all of them into the new version of BloodHound Community Edition with your API credentials. It is provided so that queries you have created for BloodHound Legacy can still be used with Community Edition.
+
+### scripts/bloodhound-ce/purge-queries.py
+
+This script will delete all saved queries from BloodHound in order to reset for future imports. It is for BloodHound CE.
+
+### scripts/bloodhound-ce/add-owned.py
+
+This script will read a list of node names from a `.txt` file and mark them as either owned or high-value in the database.
+
+**Usage**
+
+To use the script, you should have two files ready:
+
+- A line by line `.txt` file containing node names in the `BloodHound` format
+  - For users: `USER@DOMAIN.LOCAL`
+  - For groups: `GROUP@DOMAIN.LOCAL`
+  - For computers: `COMPUTER.DOMAIN.LOCAL`
+- Your configuration file in `json` format containing your `Neo4j` username, password, and database (example shown above)
+
+The script has the following options:
+
+```
+  -h, --help            show this help message and exit
+  -c CONFIG, --config CONFIG
+                        Config file
+  -l LIST, --list LIST  List of node names
+  -o, --owned           Set target nodes as owned
+  -v, --high-value      Set target nodes as high-value
+```
+
+You need to specify at least `-o` or `-v`
 
 ## Helper Scripts
 
@@ -233,65 +289,6 @@ options:
   --encoding ENCODING   File encoding to use when reading input files (default: cp1252)
   --debug               Enable verbose debug output (default: False)
   -h, --help            Show this help message and exit
-```
-
-## BloodHound CE Integration
-
-### scripts/bloodhound-ce/add-owned.py
-
-This script will read a list of node names from a `.txt` file and mark them as either owned or high-value in the database.
-
-**Usage**
-
-To use the script, you should have two files ready:
-
-- A line by line `.txt` file containing node names in the `BloodHound` format
-  - For users: `USER@DOMAIN.LOCAL`
-  - For groups: `GROUP@DOMAIN.LOCAL`
-  - For computers: `COMPUTER.DOMAIN.LOCAL`
-- Your configuration file in `json` format containing your `Neo4j` username, password, and database (example shown above)
-
-The script has the following options:
-
-```
-  -h, --help            show this help message and exit
-  -c CONFIG, --config CONFIG
-                        Config file
-  -l LIST, --list LIST  List of node names
-  -o, --owned           Set target nodes as owned
-  -v, --high-value      Set target nodes as high-value
-```
-
-You need to specify at least `-o` or `-v`
-
-### scripts/bloodhound-ce/query-importer.py
-
-This script will read the `customqueries.json` file and import all of them into the new version of BloodHound Community Edition with your API credentials.
-
-**Usage**
-
-```
-usage: query-importer.py [-h] --token-id TOKEN_ID --token-key TOKEN_KEY --queries-file QUERIES_FILE [--base-url BASE_URL]
-query-importer.py: error: the following arguments are required: --token-id, --token-key, --queries-file
-```
-
-### scripts/bloodhound-ce/purge-queries.py
-
-This script will delete all saved queries from BloodHound in order to reset for future imports. It is for BloodHound CE.
-
-**Usage**
-
-```
-usage: purge-queries.py [-h] --token-id TOKEN_ID --token-key TOKEN_KEY [--base-url BASE_URL]
-
-Purge all imported BloodHound CE saved queries.
-
-options:
-  -h, --help            show this help message and exit
-  --token-id TOKEN_ID   API token ID
-  --token-key TOKEN_KEY
-                        API token key
-  --base-url BASE_URL   BloodHound API base URL
 ```
 
 ## Important Notes

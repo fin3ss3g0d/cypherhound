@@ -870,14 +870,6 @@ queries:
   msg_template: |-
     Domain {{ n_name }}
 - group: general
-  desc: List all Domains
-  cypher: |-
-    MATCH (n:Domain)
-    RETURN n.name AS n_name
-    ORDER BY n.name
-  msg_template: |-
-    Domain {{ n_name }}
-- group: general
   desc: List all Domains functional level
   cypher: |-
     MATCH (d:Domain)
@@ -1936,7 +1928,7 @@ queries:
     ORDER BY TYPE(r)
   msg_template: |-
     Group {{ n_name }} has {{ TYPE(r) }} over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: general
+- group: user
   desc: List all privileges for this user
   cypher: |-
     MATCH (n:User)-[r]->(m)
