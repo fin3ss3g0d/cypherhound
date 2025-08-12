@@ -57,3 +57,7 @@ Added the report functionality to allow running multiple cyphers and outputting 
 # 08/10/2025
 
 Created a script to convert a YAML query template file to a JSON file for importing terminal cyphers into the BloodHound CE UI.
+
+# 08/12/2025
+
+Major cypher addition update. Project supports all BloodHound traversable edges up to date. Adjustments to some pre-existing cyphers. Created an automated baseline query generator script for when new edges release.

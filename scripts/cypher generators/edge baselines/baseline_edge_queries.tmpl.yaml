@@ -1,0 +1,77 @@
+queries:
+- group: general
+  desc: List all [[ EDGE ]] privileges
+  cypher: |-
+    MATCH (n)-[r:[[ EDGE ]]]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
+    ORDER BY n.name
+  msg_template: |-
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has [[ EDGE ]] over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
+  desc: List all user [[ EDGE ]] privileges
+  cypher: |-
+    MATCH (n:User)-[r:[[ EDGE ]]]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    User {{ n_name }} has [[ EDGE ]] over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
+  desc: List all group [[ EDGE ]] privileges
+  cypher: |-
+    MATCH (n:Group)-[r:[[ EDGE ]]]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Group {{ n_name }} has [[ EDGE ]] over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
+  desc: List all computer [[ EDGE ]] privileges
+  cypher: |-
+    MATCH (n:Computer)-[r:[[ EDGE ]]]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Computer {{ n_name }} has [[ EDGE ]] over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
+  desc: List all [[ EDGE ]] privileges for owned principals
+  cypher: |-
+    MATCH (n {owned: true})-[r:[[ EDGE ]]]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
+    ORDER BY n.name
+  msg_template: |-
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has [[ EDGE ]] over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
+  desc: List all [[ EDGE ]] privileges for Users, Domain Users, Authenticated Users, and Everyone groups
+  cypher: |-
+    MATCH (n:Group)-[r:[[ EDGE ]]]->(m)
+    WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Group {{ n_name }} has [[ EDGE ]] over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: user
+  desc: List this user's [[ EDGE ]] privileges
+  cypher: |-
+    MATCH (n:User)-[r:[[ EDGE ]]]->(m)
+    WHERE n.name =~ '((?i)USER_SEARCH)'
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    User {{ n_name }} has [[ EDGE ]] over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: group
+  desc: List this group's [[ EDGE ]] privileges
+  cypher: |-
+    MATCH (n:Group)-[r:[[ EDGE ]]]->(m)
+    WHERE n.name =~ '((?i)GROUP_SEARCH)'
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Group {{ n_name }} has [[ EDGE ]] over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: computer
+  desc: List this computer's [[ EDGE ]] privileges
+  cypher: |-
+    MATCH (n:Computer)-[r:[[ EDGE ]]]->(m)
+    WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Computer {{ n_name }} has [[ EDGE ]] over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})

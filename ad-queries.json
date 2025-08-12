@@ -1,6 +1,191 @@
 {
   "queries": [
     {
+      "name": "List all AbuseTGTDelegation privileges",
+      "description": "List all AbuseTGTDelegation privileges - General",
+      "query": "MATCH p=(n)-[r:AbuseTGTDelegation]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AbuseTGTDelegation privileges for owned principals",
+      "description": "List all AbuseTGTDelegation privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:AbuseTGTDelegation]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AbuseTGTDelegation privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all AbuseTGTDelegation privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:AbuseTGTDelegation]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC1 privileges",
+      "description": "List all ADCSESC1 privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC1]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC1 privileges for owned principals",
+      "description": "List all ADCSESC1 privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ADCSESC1]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC1 privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ADCSESC1 privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC1]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC10a privileges",
+      "description": "List all ADCSESC10a privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC10a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC10a privileges for owned principals",
+      "description": "List all ADCSESC10a privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ADCSESC10a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC10a privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ADCSESC10a privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC10a]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC10b privileges",
+      "description": "List all ADCSESC10b privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC10b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC10b privileges for owned principals",
+      "description": "List all ADCSESC10b privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ADCSESC10b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC10b privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ADCSESC10b privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC10b]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC13 privileges",
+      "description": "List all ADCSESC13 privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC13]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC13 privileges for owned principals",
+      "description": "List all ADCSESC13 privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ADCSESC13]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC13 privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ADCSESC13 privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC13]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC3 privileges",
+      "description": "List all ADCSESC3 privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC3]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC3 privileges for owned principals",
+      "description": "List all ADCSESC3 privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ADCSESC3]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC3 privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ADCSESC3 privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC3]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC4 privileges",
+      "description": "List all ADCSESC4 privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC4]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC4 privileges for owned principals",
+      "description": "List all ADCSESC4 privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ADCSESC4]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC4 privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ADCSESC4 privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC4]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC6a privileges",
+      "description": "List all ADCSESC6a privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC6a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC6a privileges for owned principals",
+      "description": "List all ADCSESC6a privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ADCSESC6a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC6a privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ADCSESC6a privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC6a]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC6b privileges",
+      "description": "List all ADCSESC6b privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC6b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC6b privileges for owned principals",
+      "description": "List all ADCSESC6b privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ADCSESC6b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC6b privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ADCSESC6b privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC6b]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC9a privileges",
+      "description": "List all ADCSESC9a privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC9a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC9a privileges for owned principals",
+      "description": "List all ADCSESC9a privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ADCSESC9a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC9a privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ADCSESC9a privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC9a]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC9b privileges",
+      "description": "List all ADCSESC9b privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC9b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC9b privileges for owned principals",
+      "description": "List all ADCSESC9b privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ADCSESC9b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ADCSESC9b privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ADCSESC9b privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC9b]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AddAllowedToAct privileges",
+      "description": "List all AddAllowedToAct privileges - General",
+      "query": "MATCH p=(n)-[r:AddAllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AddAllowedToAct privileges for owned principals",
+      "description": "List all AddAllowedToAct privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:AddAllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AddAllowedToAct privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all AddAllowedToAct privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:AddAllowedToAct]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AddKeyCredentialLink privileges",
+      "description": "List all AddKeyCredentialLink privileges - General",
+      "query": "MATCH p=(n)-[r:AddKeyCredentialLink]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all AddKeyCredentialLink privileges for owned principals",
       "description": "List all AddKeyCredentialLink privileges for owned principals - General",
       "query": "MATCH p=(n {owned: true})-[r:AddKeyCredentialLink]->(m)\nRETURN p\nORDER BY n.name"
@@ -11,39 +196,59 @@
       "query": "MATCH p=(n:Group)-[r:AddKeyCredentialLink]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all AddMember privileges",
+      "description": "List all AddMember privileges - General",
+      "query": "MATCH p=(n)-[r:AddMember]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all AddMember privileges for owned principals",
       "description": "List all AddMember privileges for owned principals - General",
-      "query": "MATCH p=(n {owned: true})-[r:AddMember]->(m:Group)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n {owned: true})-[r:AddMember]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all AddMember privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all AddMember privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:AddMember]->(m:Group)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:AddMember]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AddSelf privileges",
+      "description": "List all AddSelf privileges - General",
+      "query": "MATCH p=(n)-[r:AddSelf]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all AddSelf privileges for owned principals",
       "description": "List all AddSelf privileges for owned principals - General",
-      "query": "MATCH p=(n {owned: true})-[r:AddSelf]->(m:Group)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n {owned: true})-[r:AddSelf]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all AddSelf privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all AddSelf privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:AddSelf]->(m:Group)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:AddSelf]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AdminTo privileges",
+      "description": "List all AdminTo privileges - General",
+      "query": "MATCH p=(n)-[r:AdminTo]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all AdminTo privileges for owned principals",
       "description": "List all AdminTo privileges for owned principals - General",
-      "query": "MATCH p=(m {owned: true})-[r:AdminTo]->(n:Computer)\nRETURN p\nORDER BY m.name"
+      "query": "MATCH p=(n {owned: true})-[r:AdminTo]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all AdminTo privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all AdminTo privileges for Users, Domain Users, Authenticated Users, or Everyone groups - General",
-      "query": "MATCH p=(m:Group)-[r:AdminTo]->(n:Computer)\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY m.name"
+      "name": "List all AdminTo privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all AdminTo privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:AdminTo]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all AdminTo privileges to Domain Controllers",
       "description": "List all AdminTo privileges to Domain Controllers - General",
       "query": "MATCH p=(m)-[:AdminTo]->(n:Computer)-[:MemberOf]->(g:Group)\nWHERE g.objectid =~ \"(?i)S-1-5-21-.*-516\"\nRETURN p\nORDER BY m.name"
+    },
+    {
+      "name": "List all AllExtendedRights privileges",
+      "description": "List all AllExtendedRights privileges - General",
+      "query": "MATCH p=(n)-[r:AllExtendedRights]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all AllExtendedRights privileges for owned principals",
@@ -56,14 +261,19 @@
       "query": "MATCH p=(n:Group)-[r:AllExtendedRights]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all AllowedToAct privileges",
+      "description": "List all AllowedToAct privileges - General",
+      "query": "MATCH p=(n)-[r:AllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all AllowedToAct privileges for owned principals",
       "description": "List all AllowedToAct privileges for owned principals - General",
-      "query": "MATCH p=(n {owned: true})-[r:AllowedToAct]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n {owned: true})-[r:AllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all AllowedToAct privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all AllowedToAct privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:AllowedToAct]->(m:Computer)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:AllowedToAct]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all AS-REP roastable users",
@@ -76,14 +286,184 @@
       "query": "MATCH (u:User {dontreqpreauth: true, owned: true})\nRETURN u AS result\nORDER BY u.name"
     },
     {
+      "name": "List all CanApplyGPO privileges",
+      "description": "List all CanApplyGPO privileges - General",
+      "query": "MATCH p=(n)-[r:CanApplyGPO]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CanApplyGPO privileges for owned principals",
+      "description": "List all CanApplyGPO privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:CanApplyGPO]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CanApplyGPO privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all CanApplyGPO privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:CanApplyGPO]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CanPSRemote privileges",
+      "description": "List all CanPSRemote privileges - General",
+      "query": "MATCH p=(n)-[r:CanPSRemote]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all CanPSRemote privileges for owned principals",
       "description": "List all CanPSRemote privileges for owned principals - General",
-      "query": "MATCH p=(n {owned: true})-[r:CanPSRemote]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n {owned: true})-[r:CanPSRemote]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all CanPSRemote privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all CanPSRemote privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:CanPSRemote]->(m:Computer)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:CanPSRemote]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CanRDP privileges",
+      "description": "List all CanRDP privileges - General",
+      "query": "MATCH p=(n)-[r:CanRDP]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CanRDP privileges for owned principals",
+      "description": "List all CanRDP privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:CanRDP]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CanRDP privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all CanRDP privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:CanRDP]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToADCS privileges",
+      "description": "List all CoerceAndRelayNTLMToADCS privileges - General",
+      "query": "MATCH p=(n)-[r:CoerceAndRelayNTLMToADCS]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToADCS privileges for owned principals",
+      "description": "List all CoerceAndRelayNTLMToADCS privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:CoerceAndRelayNTLMToADCS]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToADCS privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all CoerceAndRelayNTLMToADCS privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:CoerceAndRelayNTLMToADCS]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToLDAP privileges",
+      "description": "List all CoerceAndRelayNTLMToLDAP privileges - General",
+      "query": "MATCH p=(n)-[r:CoerceAndRelayNTLMToLDAP]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToLDAP privileges for owned principals",
+      "description": "List all CoerceAndRelayNTLMToLDAP privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:CoerceAndRelayNTLMToLDAP]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToLDAP privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all CoerceAndRelayNTLMToLDAP privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:CoerceAndRelayNTLMToLDAP]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToLDAPS privileges",
+      "description": "List all CoerceAndRelayNTLMToLDAPS privileges - General",
+      "query": "MATCH p=(n)-[r:CoerceAndRelayNTLMToLDAPS]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToLDAPS privileges for owned principals",
+      "description": "List all CoerceAndRelayNTLMToLDAPS privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:CoerceAndRelayNTLMToLDAPS]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToLDAPS privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all CoerceAndRelayNTLMToLDAPS privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:CoerceAndRelayNTLMToLDAPS]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToSMB privileges",
+      "description": "List all CoerceAndRelayNTLMToSMB privileges - General",
+      "query": "MATCH p=(n)-[r:CoerceAndRelayNTLMToSMB]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToSMB privileges for owned principals",
+      "description": "List all CoerceAndRelayNTLMToSMB privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:CoerceAndRelayNTLMToSMB]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceAndRelayNTLMToSMB privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all CoerceAndRelayNTLMToSMB privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:CoerceAndRelayNTLMToSMB]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceToTGT privileges",
+      "description": "List all CoerceToTGT privileges - General",
+      "query": "MATCH p=(n)-[r:CoerceToTGT]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceToTGT privileges for owned principals",
+      "description": "List all CoerceToTGT privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:CoerceToTGT]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CoerceToTGT privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all CoerceToTGT privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:CoerceToTGT]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer AbuseTGTDelegation privileges",
+      "description": "List all computer AbuseTGTDelegation privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:AbuseTGTDelegation]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer ADCSESC1 privileges",
+      "description": "List all computer ADCSESC1 privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ADCSESC1]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer ADCSESC10a privileges",
+      "description": "List all computer ADCSESC10a privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ADCSESC10a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer ADCSESC10b privileges",
+      "description": "List all computer ADCSESC10b privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ADCSESC10b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer ADCSESC13 privileges",
+      "description": "List all computer ADCSESC13 privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ADCSESC13]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer ADCSESC3 privileges",
+      "description": "List all computer ADCSESC3 privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ADCSESC3]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer ADCSESC4 privileges",
+      "description": "List all computer ADCSESC4 privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ADCSESC4]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer ADCSESC6a privileges",
+      "description": "List all computer ADCSESC6a privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ADCSESC6a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer ADCSESC6b privileges",
+      "description": "List all computer ADCSESC6b privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ADCSESC6b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer ADCSESC9a privileges",
+      "description": "List all computer ADCSESC9a privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ADCSESC9a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer ADCSESC9b privileges",
+      "description": "List all computer ADCSESC9b privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ADCSESC9b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer AddAllowedToAct privileges",
+      "description": "List all computer AddAllowedToAct privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:AddAllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer AddKeyCredentialLink privileges",
@@ -93,17 +473,17 @@
     {
       "name": "List all computer AddMember privileges",
       "description": "List all computer AddMember privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:AddMember]->(m:Group)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Computer)-[r:AddMember]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer AddSelf privileges",
       "description": "List all computer AddSelf privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:AddSelf]->(m:Group)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Computer)-[r:AddSelf]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer AdminTo privileges",
       "description": "List all computer AdminTo privileges - General",
-      "query": "MATCH p=(m:Computer)-[r:AdminTo]->(n:Computer)\nRETURN p\nORDER BY m.name"
+      "query": "MATCH p=(n:Computer)-[r:AdminTo]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer AllExtendedRights privileges",
@@ -116,14 +496,54 @@
       "query": "MATCH p=(n:Computer)-[r:AllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all computer CanApplyGPO privileges",
+      "description": "List all computer CanApplyGPO privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:CanApplyGPO]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all computer CanPSRemote privileges",
       "description": "List all computer CanPSRemote privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:CanPSRemote]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Computer)-[r:CanPSRemote]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer CanRDP privileges",
+      "description": "List all computer CanRDP privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:CanRDP]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer CoerceAndRelayNTLMToADCS privileges",
+      "description": "List all computer CoerceAndRelayNTLMToADCS privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:CoerceAndRelayNTLMToADCS]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer CoerceAndRelayNTLMToLDAP privileges",
+      "description": "List all computer CoerceAndRelayNTLMToLDAP privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:CoerceAndRelayNTLMToLDAP]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer CoerceAndRelayNTLMToLDAPS privileges",
+      "description": "List all computer CoerceAndRelayNTLMToLDAPS privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:CoerceAndRelayNTLMToLDAPS]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer CoerceAndRelayNTLMToSMB privileges",
+      "description": "List all computer CoerceAndRelayNTLMToSMB privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:CoerceAndRelayNTLMToSMB]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer CoerceToTGT privileges",
+      "description": "List all computer CoerceToTGT privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:CoerceToTGT]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer Constrained Delegation",
       "description": "List all computer Constrained Delegation - General",
       "query": "MATCH p=(c1:Computer)-[:AllowedToDelegate]->(c2:Computer)\nRETURN p\nORDER BY c1.name"
+    },
+    {
+      "name": "List all computer ContainsIdentity privileges",
+      "description": "List all computer ContainsIdentity privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:ContainsIdentity]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer cross-domain DCSync privileges",
@@ -143,12 +563,12 @@
     {
       "name": "List all computer ExecuteDCOM privileges",
       "description": "List all computer ExecuteDCOM privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:ExecuteDCOM]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Computer)-[r:ExecuteDCOM]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer ForceChangePassword privileges",
       "description": "List all computer ForceChangePassword privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:ForceChangePassword]->(m:User)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Computer)-[r:ForceChangePassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer GenericAll privileges",
@@ -161,13 +581,33 @@
       "query": "MATCH p=(n:Computer)-[r:GenericWrite]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all computer GoldenCert privileges",
+      "description": "List all computer GoldenCert privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:GoldenCert]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer GPOAppliesTo privileges",
+      "description": "List all computer GPOAppliesTo privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:GPOAppliesTo]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer HasSession privileges",
+      "description": "List all computer HasSession privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:HasSession]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all computer HasSIDHistory privileges",
       "description": "List all computer HasSIDHistory privileges - General",
       "query": "MATCH p=(n:Computer)-[r:HasSIDHistory]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all computer memberships",
-      "description": "List all computer memberships - General",
+      "name": "List all computer HasTrustKeys privileges",
+      "description": "List all computer HasTrustKeys privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:HasTrustKeys]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer MemberOf privileges",
+      "description": "List all computer MemberOf privileges - General",
       "query": "MATCH p=(n:Computer)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
@@ -176,19 +616,34 @@
       "query": "MATCH p=(n:Computer)-[r:Owns]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all computer OwnsLimitedRights privileges",
+      "description": "List all computer OwnsLimitedRights privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:OwnsLimitedRights]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all computer privileges",
       "description": "List all computer privileges - General",
       "query": "MATCH p=(n:Computer)-[r]->(m)\nRETURN p\nORDER BY TYPE(r)"
     },
     {
+      "name": "List all computer PropagatesACEsTo privileges",
+      "description": "List all computer PropagatesACEsTo privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:PropagatesACEsTo]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all computer ReadGMSAPassword privileges",
       "description": "List all computer ReadGMSAPassword privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:ReadGMSAPassword]->(m:User)\nRETURN p\nORDER by n.name"
+      "query": "MATCH p=(n:Computer)-[r:ReadGMSAPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer ReadLAPSPassword privileges",
       "description": "List all computer ReadLAPSPassword privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:ReadLAPSPassword]->(m:Computer)\nRETURN p\nORDER by n.name"
+      "query": "MATCH p=(n:Computer)-[r:ReadLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer SameForestTrust privileges",
+      "description": "List all computer SameForestTrust privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:SameForestTrust]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer shortest paths to admin groups",
@@ -241,14 +696,24 @@
       "query": "MATCH p=shortestPath((m:Computer)-[r*1..]->(n:Group))\nWHERE n.name =~ \".*((?i)WEB).*\" AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
+      "name": "List all computer SpoofSIDHistory privileges",
+      "description": "List all computer SpoofSIDHistory privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:SpoofSIDHistory]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all computer SQLAdmin privileges",
       "description": "List all computer SQLAdmin privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:SQLAdmin]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Computer)-[r:SQLAdmin]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer SyncedToEntraUser privileges",
+      "description": "List all computer SyncedToEntraUser privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:SyncedToEntraUser]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer SyncLAPSPassword privileges",
       "description": "List all computer SyncLAPSPassword privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:SyncLAPSPassword]->(m:Computer)\nRETURN p\nORDER by n.name"
+      "query": "MATCH p=(n:Computer)-[r:SyncLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer WriteAccountRestrictions privileges",
@@ -261,9 +726,19 @@
       "query": "MATCH p=(n:Computer)-[r:WriteDacl]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all computer WriteGPLink privileges",
+      "description": "List all computer WriteGPLink privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:WriteGPLink]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all computer WriteOwner privileges",
       "description": "List all computer WriteOwner privileges - General",
       "query": "MATCH p=(n:Computer)-[r:WriteOwner]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all computer WriteOwnerLimitedRights privileges",
+      "description": "List all computer WriteOwnerLimitedRights privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:WriteOwnerLimitedRights]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer WriteSPN privileges",
@@ -286,6 +761,26 @@
       "query": "MATCH (c:Container)\nRETURN c AS result\nORDER BY c.name"
     },
     {
+      "name": "List all ContainsIdentity privileges",
+      "description": "List all ContainsIdentity privileges - General",
+      "query": "MATCH p=(n)-[r:ContainsIdentity]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ContainsIdentity privileges for owned principals",
+      "description": "List all ContainsIdentity privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:ContainsIdentity]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ContainsIdentity privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ContainsIdentity privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ContainsIdentity]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all DCFor privileges",
+      "description": "List all DCFor privileges - General",
+      "query": "MATCH p=(n)-[r:DCFor]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all DCSync privileges",
       "description": "List all DCSync privileges - General",
       "query": "MATCH p=(n)-[r:DCSync|AllExtendedRights|GenericAll]->(m:Domain)\nRETURN p\nORDER BY n.name"
@@ -293,11 +788,11 @@
     {
       "name": "List all DCSync privileges for owned principals",
       "description": "List all DCSync privileges for owned principals - General",
-      "query": "MATCH p=(m {owned: true})-[r:DCSync|AllExtendedRights|GenericAll]->(n:Domain)\nRETURN p\nORDER by m.name"
+      "query": "MATCH p=(n {owned: true})-[r:DCSync|AllExtendedRights|GenericAll]->(m:Domain)\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all DCSync privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all DCSync privileges for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all DCSync privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all DCSync privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=(n:Group)-[r:DCSync|AllExtendedRights|GenericAll]->(m:Domain)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
@@ -328,12 +823,12 @@
     {
       "name": "List all domain shortest paths to domains",
       "description": "List all domain shortest paths to domains - General",
-      "query": "MATCH p=shortestPath((m:Domain)-[r*1..]->(n:Domain))\nWHERE NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\") AND NONE (r in relationships(p)\nWHERE type(r)=\"TrustedBy\") AND NOT m=n\nRETURN m.name AS m_name, p\nORDER BY m.name"
+      "query": "MATCH p=shortestPath((m:Domain)-[r*1..]->(n:Domain))\nWHERE NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\") AND NOT m=n\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
       "name": "List all domain trusts",
       "description": "List all domain trusts - General",
-      "query": "MATCH p=(n:Domain)-[r:TrustedBy]->(m:Domain)\nRETURN p\nORDER by n.name"
+      "query": "MATCH p=(n:Domain)-[r:SameForestTrust|CrossForestTrust]->(m:Domain)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all domains",
@@ -344,6 +839,11 @@
       "name": "List all Domains functional level",
       "description": "List all Domains functional level - General",
       "query": "MATCH (d:Domain)\nRETURN d AS result\nORDER BY d.name"
+    },
+    {
+      "name": "List all DumpSMSAPassword privileges",
+      "description": "List all DumpSMSAPassword privileges - General",
+      "query": "MATCH p=(n)-[r:DumpSMSAPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all DumpSMSAPassword privileges for owned principals",
@@ -371,24 +871,39 @@
       "query": "MATCH (n:Group)\nWHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\"\nWITH n\nMATCH p=(n)<-[r:MemberOf*1..]-(m)\nRETURN p\nORDER BY m.name"
     },
     {
+      "name": "List all ExecuteDCOM privileges",
+      "description": "List all ExecuteDCOM privileges - General",
+      "query": "MATCH p=(n)-[r:ExecuteDCOM]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all ExecuteDCOM privileges for owned principals",
       "description": "List all ExecuteDCOM privileges for owned principals - General",
-      "query": "MATCH p=(n {owned: true})-[r:ExecuteDCOM]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n {owned: true})-[r:ExecuteDCOM]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all ExecuteDCOM privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all ExecuteDCOM privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:ExecuteDCOM]->(m:Computer)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:ExecuteDCOM]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ForceChangePassword privileges",
+      "description": "List all ForceChangePassword privileges - General",
+      "query": "MATCH p=(n)-[r:ForceChangePassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all ForceChangePassword privileges for owned principals",
       "description": "List all ForceChangePassword privileges for owned principals - General",
-      "query": "MATCH p=(n {owned: true})-[r:ForceChangePassword]->(m:User)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n {owned: true})-[r:ForceChangePassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all ForceChangePassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all ForceChangePassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:ForceChangePassword]->(m:User)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:ForceChangePassword]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all GenericAll privileges",
+      "description": "List all GenericAll privileges - General",
+      "query": "MATCH p=(n)-[r:GenericAll]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all GenericAll privileges for owned principals",
@@ -401,6 +916,11 @@
       "query": "MATCH p=(n:Group)-[r:GenericAll]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all GenericWrite privileges",
+      "description": "List all GenericWrite privileges - General",
+      "query": "MATCH p=(n)-[r:GenericWrite]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all GenericWrite privileges for owned principals",
       "description": "List all GenericWrite privileges for owned principals - General",
       "query": "MATCH p=(n {owned: true})-[r:GenericWrite]->(m)\nRETURN p\nORDER BY n.name"
@@ -411,14 +931,104 @@
       "query": "MATCH p=(n:Group)-[r:GenericWrite]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all GoldenCert privileges",
+      "description": "List all GoldenCert privileges - General",
+      "query": "MATCH p=(n)-[r:GoldenCert]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all GoldenCert privileges for owned principals",
+      "description": "List all GoldenCert privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:GoldenCert]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all GoldenCert privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all GoldenCert privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:GoldenCert]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all GP Links",
       "description": "List all GP Links - General",
       "query": "MATCH p=(g1)-[:GPLink]->(g2)\nRETURN p\nORDER BY g1.name"
     },
     {
+      "name": "List all GPOAppliesTo privileges",
+      "description": "List all GPOAppliesTo privileges - General",
+      "query": "MATCH p=(n)-[r:GPOAppliesTo]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all GPOAppliesTo privileges for owned principals",
+      "description": "List all GPOAppliesTo privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:GPOAppliesTo]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all GPOAppliesTo privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all GPOAppliesTo privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:GPOAppliesTo]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all GPOs",
       "description": "List all GPOs - General",
       "query": "MATCH (n:GPO)\nRETURN n AS result\nORDER BY n.name"
+    },
+    {
+      "name": "List all group AbuseTGTDelegation privileges",
+      "description": "List all group AbuseTGTDelegation privileges - General",
+      "query": "MATCH p=(n:Group)-[r:AbuseTGTDelegation]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group ADCSESC1 privileges",
+      "description": "List all group ADCSESC1 privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC1]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group ADCSESC10a privileges",
+      "description": "List all group ADCSESC10a privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC10a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group ADCSESC10b privileges",
+      "description": "List all group ADCSESC10b privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC10b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group ADCSESC13 privileges",
+      "description": "List all group ADCSESC13 privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC13]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group ADCSESC3 privileges",
+      "description": "List all group ADCSESC3 privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC3]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group ADCSESC4 privileges",
+      "description": "List all group ADCSESC4 privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC4]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group ADCSESC6a privileges",
+      "description": "List all group ADCSESC6a privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC6a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group ADCSESC6b privileges",
+      "description": "List all group ADCSESC6b privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC6b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group ADCSESC9a privileges",
+      "description": "List all group ADCSESC9a privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC9a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group ADCSESC9b privileges",
+      "description": "List all group ADCSESC9b privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ADCSESC9b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group AddAllowedToAct privileges",
+      "description": "List all group AddAllowedToAct privileges - General",
+      "query": "MATCH p=(n:Group)-[r:AddAllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group AddKeyCredentialLink privileges",
@@ -428,17 +1038,17 @@
     {
       "name": "List all group AddMember privileges",
       "description": "List all group AddMember privileges - General",
-      "query": "MATCH p=(n:Group)-[r:AddMember]->(m:Group)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:AddMember]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group AddSelf privileges",
       "description": "List all group AddSelf privileges - General",
-      "query": "MATCH p=(n:Group)-[r:AddSelf]->(m:Group)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:AddSelf]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group AdminTo privileges",
       "description": "List all group AdminTo privileges - General",
-      "query": "MATCH p=(m:Group)-[r:AdminTo]->(n:Computer)\nRETURN p\nORDER BY m.name"
+      "query": "MATCH p=(n:Group)-[r:AdminTo]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group AllExtendedRights privileges",
@@ -451,14 +1061,54 @@
       "query": "MATCH p=(n:Group)-[r:AllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all group CanApplyGPO privileges",
+      "description": "List all group CanApplyGPO privileges - General",
+      "query": "MATCH p=(n:Group)-[r:CanApplyGPO]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all group CanPSRemote privileges",
       "description": "List all group CanPSRemote privileges - General",
-      "query": "MATCH p=(n:Group)-[r:CanPSRemote]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:CanPSRemote]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group CanRDP privileges",
+      "description": "List all group CanRDP privileges - General",
+      "query": "MATCH p=(n:Group)-[r:CanRDP]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group CoerceAndRelayNTLMToADCS privileges",
+      "description": "List all group CoerceAndRelayNTLMToADCS privileges - General",
+      "query": "MATCH p=(n:Group)-[r:CoerceAndRelayNTLMToADCS]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group CoerceAndRelayNTLMToLDAP privileges",
+      "description": "List all group CoerceAndRelayNTLMToLDAP privileges - General",
+      "query": "MATCH p=(n:Group)-[r:CoerceAndRelayNTLMToLDAP]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group CoerceAndRelayNTLMToLDAPS privileges",
+      "description": "List all group CoerceAndRelayNTLMToLDAPS privileges - General",
+      "query": "MATCH p=(n:Group)-[r:CoerceAndRelayNTLMToLDAPS]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group CoerceAndRelayNTLMToSMB privileges",
+      "description": "List all group CoerceAndRelayNTLMToSMB privileges - General",
+      "query": "MATCH p=(n:Group)-[r:CoerceAndRelayNTLMToSMB]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group CoerceToTGT privileges",
+      "description": "List all group CoerceToTGT privileges - General",
+      "query": "MATCH p=(n:Group)-[r:CoerceToTGT]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group Constrained Delegation",
       "description": "List all group Constrained Delegation - General",
       "query": "MATCH p=(g:Group)-[:AllowedToDelegate]->(c:Computer)\nRETURN p\nORDER BY g.name"
+    },
+    {
+      "name": "List all group ContainsIdentity privileges",
+      "description": "List all group ContainsIdentity privileges - General",
+      "query": "MATCH p=(n:Group)-[r:ContainsIdentity]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group cross-domain DCSync privileges",
@@ -483,12 +1133,12 @@
     {
       "name": "List all group ExecuteDCOM privileges",
       "description": "List all group ExecuteDCOM privileges - General",
-      "query": "MATCH p=(n:Group)-[r:ExecuteDCOM]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:ExecuteDCOM]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group ForceChangePassword privileges",
       "description": "List all group ForceChangePassword privileges - General",
-      "query": "MATCH p=(n:Group)-[r:ForceChangePassword]->(m:User)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:ForceChangePassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group GenericAll privileges",
@@ -501,13 +1151,33 @@
       "query": "MATCH p=(n:Group)-[r:GenericWrite]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all group GoldenCert privileges",
+      "description": "List all group GoldenCert privileges - General",
+      "query": "MATCH p=(n:Group)-[r:GoldenCert]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group GPOAppliesTo privileges",
+      "description": "List all group GPOAppliesTo privileges - General",
+      "query": "MATCH p=(n:Group)-[r:GPOAppliesTo]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group HasSession privileges",
+      "description": "List all group HasSession privileges - General",
+      "query": "MATCH p=(n:Group)-[r:HasSession]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all group HasSIDHistory privileges",
       "description": "List all group HasSIDHistory privileges - General",
       "query": "MATCH p=(n:Group)-[r:HasSIDHistory]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all group memberships",
-      "description": "List all group memberships - General",
+      "name": "List all group HasTrustKeys privileges",
+      "description": "List all group HasTrustKeys privileges - General",
+      "query": "MATCH p=(n:Group)-[r:HasTrustKeys]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group MemberOf privileges",
+      "description": "List all group MemberOf privileges - General",
       "query": "MATCH p=(n:Group)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
@@ -516,9 +1186,19 @@
       "query": "MATCH p=(n:Group)-[r:Owns]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all group OwnsLimitedRights privileges",
+      "description": "List all group OwnsLimitedRights privileges - General",
+      "query": "MATCH p=(n:Group)-[r:OwnsLimitedRights]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all group privileges",
       "description": "List all group privileges - General",
       "query": "MATCH p=(n:Group)-[r]->(m)\nRETURN p\nORDER BY TYPE(r)"
+    },
+    {
+      "name": "List all group PropagatesACEsTo privileges",
+      "description": "List all group PropagatesACEsTo privileges - General",
+      "query": "MATCH p=(n:Group)-[r:PropagatesACEsTo]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group RDP privileges",
@@ -528,12 +1208,17 @@
     {
       "name": "List all group ReadGMSAPassword privileges",
       "description": "List all group ReadGMSAPassword privileges - General",
-      "query": "MATCH p=(n:Group)-[r:ReadGMSAPassword]->(m:User)\nRETURN p\nORDER by n.name"
+      "query": "MATCH p=(n:Group)-[r:ReadGMSAPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group ReadLAPSPassword privileges",
       "description": "List all group ReadLAPSPassword privileges - General",
-      "query": "MATCH p=(n:Group)-[r:ReadLAPSPassword]->(m:Computer)\nRETURN p\nORDER by n.name"
+      "query": "MATCH p=(n:Group)-[r:ReadLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group SameForestTrust privileges",
+      "description": "List all group SameForestTrust privileges - General",
+      "query": "MATCH p=(n:Group)-[r:SameForestTrust]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group shortest paths to admin groups",
@@ -586,14 +1271,24 @@
       "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group))\nWHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
+      "name": "List all group SpoofSIDHistory privileges",
+      "description": "List all group SpoofSIDHistory privileges - General",
+      "query": "MATCH p=(n:Group)-[r:SpoofSIDHistory]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all group SQLAdmin privileges",
       "description": "List all group SQLAdmin privileges - General",
-      "query": "MATCH p=(n:Group)-[r:SQLAdmin]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:SQLAdmin]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group SyncedToEntraUser privileges",
+      "description": "List all group SyncedToEntraUser privileges - General",
+      "query": "MATCH p=(n:Group)-[r:SyncedToEntraUser]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group SyncLAPSPassword privileges",
       "description": "List all group SyncLAPSPassword privileges - General",
-      "query": "MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m:Computer)\nRETURN p\nORDER by n.name"
+      "query": "MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group WriteAccountRestrictions privileges",
@@ -606,9 +1301,19 @@
       "query": "MATCH p=(n:Group)-[r:WriteDacl]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all group WriteGPLink privileges",
+      "description": "List all group WriteGPLink privileges - General",
+      "query": "MATCH p=(n:Group)-[r:WriteGPLink]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all group WriteOwner privileges",
       "description": "List all group WriteOwner privileges - General",
       "query": "MATCH p=(n:Group)-[r:WriteOwner]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group WriteOwnerLimitedRights privileges",
+      "description": "List all group WriteOwnerLimitedRights privileges - General",
+      "query": "MATCH p=(n:Group)-[r:WriteOwnerLimitedRights]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group WriteSPN privileges",
@@ -621,8 +1326,8 @@
       "query": "MATCH p=(n {owned: true})-[:MemberOf]->(g:Group)-[:AdminTo]->(m:Computer)\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all group-delegated AdminTo privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all group-delegated AdminTo privileges for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all group-delegated AdminTo privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all group-delegated AdminTo privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=(m:Group)-[:MemberOf]->(g:Group)-[:AdminTo]->(n:Computer)\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY m.name"
     },
     {
@@ -631,8 +1336,8 @@
       "query": "MATCH p=(n {owned: true})-[:MemberOf]->(g:Group),(g)-[r]->(m)\nRETURN p\nORDER BY TYPE(r)"
     },
     {
-      "name": "List all group-delegated privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all group-delegated privileges for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all group-delegated privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all group-delegated privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=(n:Group)-[:MemberOf]->(g:Group)-[r]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY TYPE(r)"
     },
     {
@@ -641,8 +1346,8 @@
       "query": "MATCH p=(n {owned: true})-[:MemberOf]->(g:Group)-[:CanRDP]->(m:Computer)\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all group-delegated RDP privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all group-delegated RDP privileges for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all group-delegated RDP privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all group-delegated RDP privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=(m:Group)-[:MemberOf]->(g:Group)-[:CanRDP]->(n:Computer)\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY m.name"
     },
     {
@@ -656,6 +1361,26 @@
       "query": "MATCH (m:Group {admincount: true})\nRETURN m AS result\nORDER BY m.name"
     },
     {
+      "name": "List all HasSession privileges",
+      "description": "List all HasSession privileges - General",
+      "query": "MATCH p=(n)-[r:HasSession]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all HasSession privileges for owned principals",
+      "description": "List all HasSession privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:HasSession]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all HasSession privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all HasSession privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:HasSession]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all HasSIDHistory privileges",
+      "description": "List all HasSIDHistory privileges - General",
+      "query": "MATCH p=(n)-[r:HasSIDHistory]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all HasSIDHistory privileges for owned principals",
       "description": "List all HasSIDHistory privileges for owned principals - General",
       "query": "MATCH p=(n {owned: true})-[r:HasSIDHistory]->(m)\nRETURN p\nORDER BY n.name"
@@ -664,6 +1389,21 @@
       "name": "List all HasSIDHistory privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all HasSIDHistory privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=(n:Group)-[r:HasSIDHistory]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all HasTrustKeys privileges",
+      "description": "List all HasTrustKeys privileges - General",
+      "query": "MATCH p=(n)-[r:HasTrustKeys]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all HasTrustKeys privileges for owned principals",
+      "description": "List all HasTrustKeys privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:HasTrustKeys]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all HasTrustKeys privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all HasTrustKeys privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:HasTrustKeys]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all high-value computers",
@@ -691,11 +1431,6 @@
       "query": "MATCH (m:User {highvalue: true})\nRETURN m AS result\nORDER BY m.name"
     },
     {
-      "name": "List all high-value users",
-      "description": "List all high-value users - General",
-      "query": "MATCH (m:User {highvalue: true})\nRETURN m AS result\nORDER BY m.name"
-    },
-    {
       "name": "List all kerberoastable users",
       "description": "List all kerberoastable users - General",
       "query": "MATCH (n:User {hasspn: true})\nRETURN n AS result\nORDER BY n.name"
@@ -706,6 +1441,21 @@
       "query": "MATCH (n:User {owned: true, hasspn: true})\nRETURN n AS result\nORDER BY n.name"
     },
     {
+      "name": "List all MemberOf privileges",
+      "description": "List all MemberOf privileges - General",
+      "query": "MATCH p=(n)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all MemberOf privileges for owned principals",
+      "description": "List all MemberOf privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all MemberOf privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all MemberOf privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:MemberOf]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all members of high-value groups",
       "description": "List all members of high-value groups - General",
       "query": "MATCH p=(n:User)-[r:MemberOf*1..]->(m:Group {highvalue: true})\nRETURN p\nORDER BY n.name"
@@ -714,16 +1464,6 @@
       "name": "List all members of high-value groups for owned principals",
       "description": "List all members of high-value groups for owned principals - General",
       "query": "MATCH p=(n {owned: true})-[r:MemberOf*1..]->(m:Group {highvalue: true})\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all memberships for owned principals",
-      "description": "List all memberships for owned principals - General",
-      "query": "MATCH p=(n {owned: true})-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all memberships for Users, Domain Users, Authenticated Users, and Everyone groups",
-      "description": "List all memberships for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:MemberOf]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all object control over Containers",
@@ -771,6 +1511,11 @@
       "query": "MATCH (m {admincount: true, owned: true})\nRETURN m AS result\nORDER BY m.name"
     },
     {
+      "name": "List all Owns privileges",
+      "description": "List all Owns privileges - General",
+      "query": "MATCH p=(n)-[r:Owns]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all Owns privileges for owned principals",
       "description": "List all Owns privileges for owned principals - General",
       "query": "MATCH p=(n {owned: true})-[r:Owns]->(m)\nRETURN p\nORDER BY n.name"
@@ -781,14 +1526,44 @@
       "query": "MATCH p=(n:Group)-[r:Owns]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all OwnsLimitedRights privileges",
+      "description": "List all OwnsLimitedRights privileges - General",
+      "query": "MATCH p=(n)-[r:OwnsLimitedRights]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all OwnsLimitedRights privileges for owned principals",
+      "description": "List all OwnsLimitedRights privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:OwnsLimitedRights]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all OwnsLimitedRights privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all OwnsLimitedRights privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:OwnsLimitedRights]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all privileges for owned principals",
       "description": "List all privileges for owned principals - General",
       "query": "MATCH p=(n {owned: true})-[r]->(m)\nRETURN p\nORDER BY TYPE(r)"
     },
     {
-      "name": "List all privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all privileges for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=(n:Group)-[r]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY TYPE(r)"
+    },
+    {
+      "name": "List all PropagatesACEsTo privileges",
+      "description": "List all PropagatesACEsTo privileges - General",
+      "query": "MATCH p=(n)-[r:PropagatesACEsTo]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all PropagatesACEsTo privileges for owned principals",
+      "description": "List all PropagatesACEsTo privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:PropagatesACEsTo]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all PropagatesACEsTo privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all PropagatesACEsTo privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:PropagatesACEsTo]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all RDP privileges for owned principals",
@@ -796,29 +1571,54 @@
       "query": "MATCH p=(m {owned: true})-[:CanRDP]->(c:Computer)\nRETURN p\nORDER BY m.name"
     },
     {
-      "name": "List all RDP privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all RDP privileges for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all RDP privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all RDP privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=(g:Group)-[:CanRDP]->(c:Computer)\nWHERE (g.objectid =~ \"(?i)S-1-5-21-.*-513\" OR g.objectid =~ \"(?i).*-S-1-5-11\" OR g.objectid =~ \"(?i).*-S-1-1-0\" OR g.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY g.name"
+    },
+    {
+      "name": "List all ReadGMSAPassword privileges",
+      "description": "List all ReadGMSAPassword privileges - General",
+      "query": "MATCH p=(n)-[r:ReadGMSAPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all ReadGMSAPassword privileges for owned principals",
       "description": "List all ReadGMSAPassword privileges for owned principals - General",
-      "query": "MATCH p=(m {owned: true})-[r:ReadGMSAPassword]->(n:User)\nRETURN p\nORDER by m.name"
+      "query": "MATCH p=(n {owned: true})-[r:ReadGMSAPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all ReadGMSAPassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all ReadGMSAPassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:ReadGMSAPassword]->(m:User)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:ReadGMSAPassword]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all ReadLAPSPassword privileges",
+      "description": "List all ReadLAPSPassword privileges - General",
+      "query": "MATCH p=(n)-[r:ReadLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all ReadLAPSPassword privileges for owned principals",
       "description": "List all ReadLAPSPassword privileges for owned principals - General",
-      "query": "MATCH p=(m {owned: true})-[r:ReadLAPSPassword]->(n:Computer)\nRETURN p\nORDER by m.name"
+      "query": "MATCH p=(n {owned: true})-[r:ReadLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all ReadLAPSPassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all ReadLAPSPassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:ReadLAPSPassword]->(m:Computer)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER by n.name"
+      "name": "List all ReadLAPSPassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all ReadLAPSPassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:ReadLAPSPassword]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all SameForestTrust privileges",
+      "description": "List all SameForestTrust privileges - General",
+      "query": "MATCH p=(n)-[r:SameForestTrust]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all SameForestTrust privileges for owned principals",
+      "description": "List all SameForestTrust privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:SameForestTrust]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all SameForestTrust privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all SameForestTrust privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:SameForestTrust]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all sensitive users",
@@ -841,8 +1641,8 @@
       "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group))\nWHERE n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
-      "name": "List all shortest paths to admin groups for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all shortest paths to admin groups for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all shortest paths to admin groups for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all shortest paths to admin groups for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group))\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)admin|adm).*\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
@@ -851,8 +1651,8 @@
       "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group))\nWHERE n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
-      "name": "List all shortest paths to Domain Admins for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all shortest paths to Domain Admins for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all shortest paths to Domain Admins for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all shortest paths to Domain Admins for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group))\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-512\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
@@ -861,8 +1661,8 @@
       "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group))\nWHERE n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
-      "name": "List all shortest paths to Domain Controllers for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all shortest paths to Domain Controllers for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all shortest paths to Domain Controllers for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all shortest paths to Domain Controllers for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group))\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-516\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
@@ -871,8 +1671,8 @@
       "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Domain))\nWHERE NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\") AND NOT m=n\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
-      "name": "List all shortest paths to domains for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all shortest paths to domains for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all shortest paths to domains for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all shortest paths to domains for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Domain))\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\") AND NOT m=n\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
@@ -881,8 +1681,8 @@
       "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group))\nWHERE n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
-      "name": "List all shortest paths to Enterprise Admins for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all shortest paths to Enterprise Admins for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all shortest paths to Enterprise Admins for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all shortest paths to Enterprise Admins for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group))\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.objectid =~ \"(?i)S-1-5-21-.*-519\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
@@ -891,8 +1691,8 @@
       "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group))\nWHERE n.name =~ \".*((?i)EXCHANGE).*\" AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\") AND NOT m=n\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
-      "name": "List all shortest paths to Exchange groups for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all shortest paths to Exchange groups for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all shortest paths to Exchange groups for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all shortest paths to Exchange groups for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group))\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)EXCHANGE).*\" AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\") AND NOT m=n\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
@@ -901,8 +1701,8 @@
       "query": "MATCH (m {owned: true}),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n))\nWHERE NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\") AND NOT m=n\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
-      "name": "List all shortest paths to high-value targets for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all shortest paths to high-value targets for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all shortest paths to high-value targets for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all shortest paths to high-value targets for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH (m:Group),(n {highvalue: true}),p=shortestPath((m)-[r*1..]->(n))\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\") AND NOT m=n\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
@@ -911,8 +1711,8 @@
       "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group))\nWHERE n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
-      "name": "List all shortest paths to service groups for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all shortest paths to service groups for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all shortest paths to service groups for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all shortest paths to service groups for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group))\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)service|svc).*\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
@@ -921,8 +1721,8 @@
       "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group))\nWHERE n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
-      "name": "List all shortest paths to SQL groups for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all shortest paths to SQL groups for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all shortest paths to SQL groups for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all shortest paths to SQL groups for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group))\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)SQL).*\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
@@ -931,29 +1731,69 @@
       "query": "MATCH p=shortestPath((m {owned: true})-[r*1..]->(n:Group))\nWHERE n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
-      "name": "List all shortest paths to web groups for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all shortest paths to web groups for Users, Domain Users, Authenticated Users, or Everyone groups - General",
+      "name": "List all shortest paths to web groups for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all shortest paths to web groups for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=shortestPath((m:Group)-[r*1..]->(n:Group))\nWHERE (m.objectid =~ \"(?i)S-1-5-21-.*-513\" OR m.objectid =~ \"(?i).*-S-1-5-11\" OR m.objectid =~ \"(?i).*-S-1-1-0\" OR m.objectid =~ \"(?i).*-S-1-5-32-545\") AND n.name =~ \".*((?i)WEB).*\" AND NOT m=n AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
+    },
+    {
+      "name": "List all SpoofSIDHistory privileges",
+      "description": "List all SpoofSIDHistory privileges - General",
+      "query": "MATCH p=(n)-[r:SpoofSIDHistory]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all SpoofSIDHistory privileges for owned principals",
+      "description": "List all SpoofSIDHistory privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:SpoofSIDHistory]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all SpoofSIDHistory privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all SpoofSIDHistory privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:SpoofSIDHistory]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all SQLAdmin privileges",
+      "description": "List all SQLAdmin privileges - General",
+      "query": "MATCH p=(n)-[r:SQLAdmin]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all SQLAdmin privileges for owned principals",
       "description": "List all SQLAdmin privileges for owned principals - General",
-      "query": "MATCH p=(n {owned: true})-[r:SQLAdmin]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n {owned: true})-[r:SQLAdmin]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all SQLAdmin privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all SQLAdmin privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:SQLAdmin]->(m:Computer)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:Group)-[r:SQLAdmin]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all SyncedToEntraUser privileges",
+      "description": "List all SyncedToEntraUser privileges - General",
+      "query": "MATCH p=(n)-[r:SyncedToEntraUser]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all SyncedToEntraUser privileges for owned principals",
+      "description": "List all SyncedToEntraUser privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:SyncedToEntraUser]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all SyncedToEntraUser privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all SyncedToEntraUser privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:SyncedToEntraUser]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all SyncLAPSPassword privileges",
+      "description": "List all SyncLAPSPassword privileges - General",
+      "query": "MATCH p=(n)-[r:SyncLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all SyncLAPSPassword privileges for owned principals",
       "description": "List all SyncLAPSPassword privileges for owned principals - General",
-      "query": "MATCH p=(m {owned: true})-[r:SyncLAPSPassword]->(n:Computer)\nRETURN p\nORDER by m.name"
+      "query": "MATCH p=(n {owned: true})-[r:SyncLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all SyncLAPSPassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups",
-      "description": "List all SyncLAPSPassword privileges for Users, Domain Users, Authenticated Users, or Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m:Computer)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER by n.name"
+      "name": "List all SyncLAPSPassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all SyncLAPSPassword privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all Unconstrained Delegation",
@@ -966,6 +1806,66 @@
       "query": "MATCH (H:Computer)\nWHERE H.operatingsystem =~ '.*(2000|2003|2008|xp|vista|7|me).*'\nRETURN H AS result\nORDER BY H.name"
     },
     {
+      "name": "List all user AbuseTGTDelegation privileges",
+      "description": "List all user AbuseTGTDelegation privileges - General",
+      "query": "MATCH p=(n:User)-[r:AbuseTGTDelegation]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user ADCSESC1 privileges",
+      "description": "List all user ADCSESC1 privileges - General",
+      "query": "MATCH p=(n:User)-[r:ADCSESC1]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user ADCSESC10a privileges",
+      "description": "List all user ADCSESC10a privileges - General",
+      "query": "MATCH p=(n:User)-[r:ADCSESC10a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user ADCSESC10b privileges",
+      "description": "List all user ADCSESC10b privileges - General",
+      "query": "MATCH p=(n:User)-[r:ADCSESC10b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user ADCSESC13 privileges",
+      "description": "List all user ADCSESC13 privileges - General",
+      "query": "MATCH p=(n:User)-[r:ADCSESC13]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user ADCSESC3 privileges",
+      "description": "List all user ADCSESC3 privileges - General",
+      "query": "MATCH p=(n:User)-[r:ADCSESC3]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user ADCSESC4 privileges",
+      "description": "List all user ADCSESC4 privileges - General",
+      "query": "MATCH p=(n:User)-[r:ADCSESC4]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user ADCSESC6a privileges",
+      "description": "List all user ADCSESC6a privileges - General",
+      "query": "MATCH p=(n:User)-[r:ADCSESC6a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user ADCSESC6b privileges",
+      "description": "List all user ADCSESC6b privileges - General",
+      "query": "MATCH p=(n:User)-[r:ADCSESC6b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user ADCSESC9a privileges",
+      "description": "List all user ADCSESC9a privileges - General",
+      "query": "MATCH p=(n:User)-[r:ADCSESC9a]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user ADCSESC9b privileges",
+      "description": "List all user ADCSESC9b privileges - General",
+      "query": "MATCH p=(n:User)-[r:ADCSESC9b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user AddAllowedToAct privileges",
+      "description": "List all user AddAllowedToAct privileges - General",
+      "query": "MATCH p=(n:User)-[r:AddAllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all user AddKeyCredentialLink privileges",
       "description": "List all user AddKeyCredentialLink privileges - General",
       "query": "MATCH p=(n:User)-[r:AddKeyCredentialLink]->(m)\nRETURN p\nORDER BY n.name"
@@ -973,17 +1873,17 @@
     {
       "name": "List all user AddMember privileges",
       "description": "List all user AddMember privileges - General",
-      "query": "MATCH p=(n:User)-[r:AddMember]->(m:Group)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:User)-[r:AddMember]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user AddSelf privileges",
       "description": "List all user AddSelf privileges - General",
-      "query": "MATCH p=(n:User)-[r:AddSelf]->(m:Group)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:User)-[r:AddSelf]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user AdminTo privileges",
       "description": "List all user AdminTo privileges - General",
-      "query": "MATCH p=(m:User)-[r:AdminTo]->(n:Computer)\nRETURN p\nORDER BY m.name"
+      "query": "MATCH p=(n:User)-[r:AdminTo]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user AllExtendedRights privileges",
@@ -996,14 +1896,54 @@
       "query": "MATCH p=(n:User)-[r:AllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all user CanApplyGPO privileges",
+      "description": "List all user CanApplyGPO privileges - General",
+      "query": "MATCH p=(n:User)-[r:CanApplyGPO]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all user CanPSRemote privileges",
       "description": "List all user CanPSRemote privileges - General",
-      "query": "MATCH p=(n:User)-[r:CanPSRemote]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:User)-[r:CanPSRemote]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user CanRDP privileges",
+      "description": "List all user CanRDP privileges - General",
+      "query": "MATCH p=(n:User)-[r:CanRDP]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user CoerceAndRelayNTLMToADCS privileges",
+      "description": "List all user CoerceAndRelayNTLMToADCS privileges - General",
+      "query": "MATCH p=(n:User)-[r:CoerceAndRelayNTLMToADCS]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user CoerceAndRelayNTLMToLDAP privileges",
+      "description": "List all user CoerceAndRelayNTLMToLDAP privileges - General",
+      "query": "MATCH p=(n:User)-[r:CoerceAndRelayNTLMToLDAP]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user CoerceAndRelayNTLMToLDAPS privileges",
+      "description": "List all user CoerceAndRelayNTLMToLDAPS privileges - General",
+      "query": "MATCH p=(n:User)-[r:CoerceAndRelayNTLMToLDAPS]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user CoerceAndRelayNTLMToSMB privileges",
+      "description": "List all user CoerceAndRelayNTLMToSMB privileges - General",
+      "query": "MATCH p=(n:User)-[r:CoerceAndRelayNTLMToSMB]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user CoerceToTGT privileges",
+      "description": "List all user CoerceToTGT privileges - General",
+      "query": "MATCH p=(n:User)-[r:CoerceToTGT]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user Constrained Delegation",
       "description": "List all user Constrained Delegation - General",
       "query": "MATCH p=(u:User)-[:AllowedToDelegate]->(c:Computer)\nRETURN p\nORDER BY u.name"
+    },
+    {
+      "name": "List all user ContainsIdentity privileges",
+      "description": "List all user ContainsIdentity privileges - General",
+      "query": "MATCH p=(n:User)-[r:ContainsIdentity]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user cross-domain DCSync privileges",
@@ -1028,12 +1968,12 @@
     {
       "name": "List all user ExecuteDCOM privileges",
       "description": "List all user ExecuteDCOM privileges - General",
-      "query": "MATCH p=(n:User)-[r:ExecuteDCOM]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:User)-[r:ExecuteDCOM]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user ForceChangePassword privileges",
       "description": "List all user ForceChangePassword privileges - General",
-      "query": "MATCH p=(n:User)-[r:ForceChangePassword]->(m:User)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:User)-[r:ForceChangePassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user GenericAll privileges",
@@ -1046,13 +1986,33 @@
       "query": "MATCH p=(n:User)-[r:GenericWrite]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all user GoldenCert privileges",
+      "description": "List all user GoldenCert privileges - General",
+      "query": "MATCH p=(n:User)-[r:GoldenCert]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user GPOAppliesTo privileges",
+      "description": "List all user GPOAppliesTo privileges - General",
+      "query": "MATCH p=(n:User)-[r:GPOAppliesTo]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user HasSession privileges",
+      "description": "List all user HasSession privileges - General",
+      "query": "MATCH p=(n:User)-[r:HasSession]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all user HasSIDHistory privileges",
       "description": "List all user HasSIDHistory privileges - General",
       "query": "MATCH p=(n:User)-[r:HasSIDHistory]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all user memberships",
-      "description": "List all user memberships - General",
+      "name": "List all user HasTrustKeys privileges",
+      "description": "List all user HasTrustKeys privileges - General",
+      "query": "MATCH p=(n:User)-[r:HasTrustKeys]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user MemberOf privileges",
+      "description": "List all user MemberOf privileges - General",
       "query": "MATCH p=(n:User)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
@@ -1061,9 +2021,19 @@
       "query": "MATCH p=(n:User)-[r:Owns]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all user OwnsLimitedRights privileges",
+      "description": "List all user OwnsLimitedRights privileges - General",
+      "query": "MATCH p=(n:User)-[r:OwnsLimitedRights]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all user privileges",
       "description": "List all user privileges - General",
       "query": "MATCH p=(n:User)-[r]->(m)\nRETURN p\nORDER BY TYPE(r)"
+    },
+    {
+      "name": "List all user PropagatesACEsTo privileges",
+      "description": "List all user PropagatesACEsTo privileges - General",
+      "query": "MATCH p=(n:User)-[r:PropagatesACEsTo]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user RDP privileges",
@@ -1073,12 +2043,17 @@
     {
       "name": "List all user ReadGMSAPassword privileges",
       "description": "List all user ReadGMSAPassword privileges - General",
-      "query": "MATCH p=(n:User)-[r:ReadGMSAPassword]->(m:User)\nRETURN p\nORDER by n.name"
+      "query": "MATCH p=(n:User)-[r:ReadGMSAPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user ReadLAPSPassword privileges",
       "description": "List all user ReadLAPSPassword privileges - General",
-      "query": "MATCH p=(n:User)-[r:ReadLAPSPassword]->(m:Computer)\nRETURN p\nORDER by n.name"
+      "query": "MATCH p=(n:User)-[r:ReadLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user SameForestTrust privileges",
+      "description": "List all user SameForestTrust privileges - General",
+      "query": "MATCH p=(n:User)-[r:SameForestTrust]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user shortest paths to admin groups",
@@ -1131,14 +2106,24 @@
       "query": "MATCH p=shortestPath((m:User)-[r*1..]->(n:Group))\nWHERE n.name =~ \".*((?i)WEB).*\" AND NONE(x IN relationships(p)\nWHERE type(x)=\"Contains\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"CrossForestTrust\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"DelegatedEnrollmentAgent\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"Enroll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnrollOnBehalfOf\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"EnterpriseCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ExtendedByPolicy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChanges\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesAll\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GetChangesInFilteredSet\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"GPLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"HostsCAService\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"IssuedSignedBy\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"LocalToComputer\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCA\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"ManageCertificates\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"MemberOfLocalGroup\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"NTAuthStoreFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OIDGroupLink\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"OwnsRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"PublishedTo\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RemoteInteractiveLogonPrivilege\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"RootCAFor\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"TrustedForNTAuth\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WriteOwnerRaw\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKIEnrollmentFlag\") AND NONE(x IN relationships(p)\nWHERE type(x)=\"WritePKINameFlag\")\nRETURN m.name AS m_name, p\nORDER BY m.name"
     },
     {
+      "name": "List all user SpoofSIDHistory privileges",
+      "description": "List all user SpoofSIDHistory privileges - General",
+      "query": "MATCH p=(n:User)-[r:SpoofSIDHistory]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all user SQLAdmin privileges",
       "description": "List all user SQLAdmin privileges - General",
-      "query": "MATCH p=(n:User)-[r:SQLAdmin]->(m:Computer)\nRETURN p\nORDER BY n.name"
+      "query": "MATCH p=(n:User)-[r:SQLAdmin]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user SyncedToEntraUser privileges",
+      "description": "List all user SyncedToEntraUser privileges - General",
+      "query": "MATCH p=(n:User)-[r:SyncedToEntraUser]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user SyncLAPSPassword privileges",
       "description": "List all user SyncLAPSPassword privileges - General",
-      "query": "MATCH p=(n:User)-[r:SyncLAPSPassword]->(m:Computer)\nRETURN p\nORDER by n.name"
+      "query": "MATCH p=(n:User)-[r:SyncLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user WriteAccountRestrictions privileges",
@@ -1151,9 +2136,19 @@
       "query": "MATCH p=(n:User)-[r:WriteDacl]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all user WriteGPLink privileges",
+      "description": "List all user WriteGPLink privileges - General",
+      "query": "MATCH p=(n:User)-[r:WriteGPLink]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all user WriteOwner privileges",
       "description": "List all user WriteOwner privileges - General",
       "query": "MATCH p=(n:User)-[r:WriteOwner]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all user WriteOwnerLimitedRights privileges",
+      "description": "List all user WriteOwnerLimitedRights privileges - General",
+      "query": "MATCH p=(n:User)-[r:WriteOwnerLimitedRights]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user WriteSPN privileges",
@@ -1191,6 +2186,11 @@
       "query": "MATCH (m:User {admincount: true})\nRETURN m AS result\nORDER BY m.name"
     },
     {
+      "name": "List all WriteAccountRestrictions privileges",
+      "description": "List all WriteAccountRestrictions privileges - General",
+      "query": "MATCH p=(n)-[r:WriteAccountRestrictions]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all WriteAccountRestrictions privileges for owned principals",
       "description": "List all WriteAccountRestrictions privileges for owned principals - General",
       "query": "MATCH p=(n {owned: true})-[r:WriteAccountRestrictions]->(m)\nRETURN p\nORDER BY n.name"
@@ -1199,6 +2199,11 @@
       "name": "List all WriteAccountRestrictions privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all WriteAccountRestrictions privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=(n:Group)-[r:WriteAccountRestrictions]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all WriteDacl privileges",
+      "description": "List all WriteDacl privileges - General",
+      "query": "MATCH p=(n)-[r:WriteDacl]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all WriteDacl privileges for owned principals",
@@ -1211,6 +2216,26 @@
       "query": "MATCH p=(n:Group)-[r:WriteDacl]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all WriteGPLink privileges",
+      "description": "List all WriteGPLink privileges - General",
+      "query": "MATCH p=(n)-[r:WriteGPLink]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all WriteGPLink privileges for owned principals",
+      "description": "List all WriteGPLink privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:WriteGPLink]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all WriteGPLink privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all WriteGPLink privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:WriteGPLink]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all WriteOwner privileges",
+      "description": "List all WriteOwner privileges - General",
+      "query": "MATCH p=(n)-[r:WriteOwner]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all WriteOwner privileges for owned principals",
       "description": "List all WriteOwner privileges for owned principals - General",
       "query": "MATCH p=(n {owned: true})-[r:WriteOwner]->(m)\nRETURN p\nORDER BY n.name"
@@ -1219,6 +2244,26 @@
       "name": "List all WriteOwner privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all WriteOwner privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=(n:Group)-[r:WriteOwner]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all WriteOwnerLimitedRights privileges",
+      "description": "List all WriteOwnerLimitedRights privileges - General",
+      "query": "MATCH p=(n)-[r:WriteOwnerLimitedRights]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all WriteOwnerLimitedRights privileges for owned principals",
+      "description": "List all WriteOwnerLimitedRights privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:WriteOwnerLimitedRights]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all WriteOwnerLimitedRights privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all WriteOwnerLimitedRights privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:WriteOwnerLimitedRights]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all WriteSPN privileges",
+      "description": "List all WriteSPN privileges - General",
+      "query": "MATCH p=(n)-[r:WriteSPN]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all WriteSPN privileges for owned principals",
