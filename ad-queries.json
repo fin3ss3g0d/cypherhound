@@ -276,6 +276,21 @@
       "query": "MATCH p=(n:Group)-[r:AllowedToAct]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all AllowedToDelegate privileges",
+      "description": "List all AllowedToDelegate privileges - General",
+      "query": "MATCH p=(n)-[r:AllowedToDelegate]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AllowedToDelegate privileges for owned principals",
+      "description": "List all AllowedToDelegate privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:AllowedToDelegate]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all AllowedToDelegate privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all AllowedToDelegate privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:AllowedToDelegate]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all AS-REP roastable users",
       "description": "List all AS-REP roastable users - General",
       "query": "MATCH (u:User {dontreqpreauth: true})\nRETURN u AS result\nORDER BY u.name"
@@ -496,6 +511,11 @@
       "query": "MATCH p=(n:Computer)-[r:AllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all computer AllowedToDelegate privileges",
+      "description": "List all computer AllowedToDelegate privileges - General",
+      "query": "MATCH p=(n:Computer)-[r:AllowedToDelegate]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all computer CanApplyGPO privileges",
       "description": "List all computer CanApplyGPO privileges - General",
       "query": "MATCH p=(n:Computer)-[r:CanApplyGPO]->(m)\nRETURN p\nORDER BY n.name"
@@ -534,11 +554,6 @@
       "name": "List all computer CoerceToTGT privileges",
       "description": "List all computer CoerceToTGT privileges - General",
       "query": "MATCH p=(n:Computer)-[r:CoerceToTGT]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all computer Constrained Delegation",
-      "description": "List all computer Constrained Delegation - General",
-      "query": "MATCH p=(c1:Computer)-[:AllowedToDelegate]->(c2:Computer)\nRETURN p\nORDER BY c1.name"
     },
     {
       "name": "List all computer ContainsIdentity privileges",
@@ -591,6 +606,11 @@
       "query": "MATCH p=(n:Computer)-[r:GPOAppliesTo]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all computer group memberships",
+      "description": "List all computer group memberships - General",
+      "query": "MATCH p=(n:Computer)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all computer HasSession privileges",
       "description": "List all computer HasSession privileges - General",
       "query": "MATCH p=(n:Computer)-[r:HasSession]->(m)\nRETURN p\nORDER BY n.name"
@@ -604,11 +624,6 @@
       "name": "List all computer HasTrustKeys privileges",
       "description": "List all computer HasTrustKeys privileges - General",
       "query": "MATCH p=(n:Computer)-[r:HasTrustKeys]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all computer MemberOf privileges",
-      "description": "List all computer MemberOf privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer Owns privileges",
@@ -639,11 +654,6 @@
       "name": "List all computer ReadLAPSPassword privileges",
       "description": "List all computer ReadLAPSPassword privileges - General",
       "query": "MATCH p=(n:Computer)-[r:ReadLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all computer SameForestTrust privileges",
-      "description": "List all computer SameForestTrust privileges - General",
-      "query": "MATCH p=(n:Computer)-[r:SameForestTrust]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all computer shortest paths to admin groups",
@@ -774,6 +784,16 @@
       "name": "List all ContainsIdentity privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
       "description": "List all ContainsIdentity privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
       "query": "MATCH p=(n:Group)-[r:ContainsIdentity]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CrossForestTrust privileges",
+      "description": "List all CrossForestTrust privileges - General",
+      "query": "MATCH p=(n)-[r:CrossForestTrust]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all CrossForestTrust privileges for owned principals",
+      "description": "List all CrossForestTrust privileges for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:CrossForestTrust]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all DCFor privileges",
@@ -1061,6 +1081,11 @@
       "query": "MATCH p=(n:Group)-[r:AllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all group AllowedToDelegate privileges",
+      "description": "List all group AllowedToDelegate privileges - General",
+      "query": "MATCH p=(n:Group)-[r:AllowedToDelegate]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all group CanApplyGPO privileges",
       "description": "List all group CanApplyGPO privileges - General",
       "query": "MATCH p=(n:Group)-[r:CanApplyGPO]->(m)\nRETURN p\nORDER BY n.name"
@@ -1099,11 +1124,6 @@
       "name": "List all group CoerceToTGT privileges",
       "description": "List all group CoerceToTGT privileges - General",
       "query": "MATCH p=(n:Group)-[r:CoerceToTGT]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all group Constrained Delegation",
-      "description": "List all group Constrained Delegation - General",
-      "query": "MATCH p=(g:Group)-[:AllowedToDelegate]->(c:Computer)\nRETURN p\nORDER BY g.name"
     },
     {
       "name": "List all group ContainsIdentity privileges",
@@ -1161,6 +1181,11 @@
       "query": "MATCH p=(n:Group)-[r:GPOAppliesTo]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all group group memberships",
+      "description": "List all group group memberships - General",
+      "query": "MATCH p=(n:Group)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all group HasSession privileges",
       "description": "List all group HasSession privileges - General",
       "query": "MATCH p=(n:Group)-[r:HasSession]->(m)\nRETURN p\nORDER BY n.name"
@@ -1176,9 +1201,19 @@
       "query": "MATCH p=(n:Group)-[r:HasTrustKeys]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all group MemberOf privileges",
-      "description": "List all group MemberOf privileges - General",
-      "query": "MATCH p=(n:Group)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
+      "name": "List all group memberships",
+      "description": "List all group memberships - General",
+      "query": "MATCH p=(n)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group memberships for owned principals",
+      "description": "List all group memberships for owned principals - General",
+      "query": "MATCH p=(n {owned: true})-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
+      "name": "List all group memberships for Users, Domain Users, Authenticated Users, and Everyone groups",
+      "description": "List all group memberships for Users, Domain Users, Authenticated Users, and Everyone groups - General",
+      "query": "MATCH p=(n:Group)-[r:MemberOf]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group Owns privileges",
@@ -1214,11 +1249,6 @@
       "name": "List all group ReadLAPSPassword privileges",
       "description": "List all group ReadLAPSPassword privileges - General",
       "query": "MATCH p=(n:Group)-[r:ReadLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all group SameForestTrust privileges",
-      "description": "List all group SameForestTrust privileges - General",
-      "query": "MATCH p=(n:Group)-[r:SameForestTrust]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all group shortest paths to admin groups",
@@ -1441,21 +1471,6 @@
       "query": "MATCH (n:User {owned: true, hasspn: true})\nRETURN n AS result\nORDER BY n.name"
     },
     {
-      "name": "List all MemberOf privileges",
-      "description": "List all MemberOf privileges - General",
-      "query": "MATCH p=(n)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all MemberOf privileges for owned principals",
-      "description": "List all MemberOf privileges for owned principals - General",
-      "query": "MATCH p=(n {owned: true})-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all MemberOf privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
-      "description": "List all MemberOf privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:MemberOf]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
-    },
-    {
       "name": "List all members of high-value groups",
       "description": "List all members of high-value groups - General",
       "query": "MATCH p=(n:User)-[r:MemberOf*1..]->(m:Group {highvalue: true})\nRETURN p\nORDER BY n.name"
@@ -1614,11 +1629,6 @@
       "name": "List all SameForestTrust privileges for owned principals",
       "description": "List all SameForestTrust privileges for owned principals - General",
       "query": "MATCH p=(n {owned: true})-[r:SameForestTrust]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all SameForestTrust privileges for Users, Domain Users, Authenticated Users, and Everyone groups",
-      "description": "List all SameForestTrust privileges for Users, Domain Users, Authenticated Users, and Everyone groups - General",
-      "query": "MATCH p=(n:Group)-[r:SameForestTrust]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all sensitive users",
@@ -1796,11 +1806,6 @@
       "query": "MATCH p=(n:Group)-[r:SyncLAPSPassword]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
-      "name": "List all Unconstrained Delegation",
-      "description": "List all Unconstrained Delegation - General",
-      "query": "MATCH (c:Computer {unconstraineddelegation: true})\nRETURN c AS result\nORDER BY c.name"
-    },
-    {
       "name": "List all unsupported OSs",
       "description": "List all unsupported OSs - General",
       "query": "MATCH (H:Computer)\nWHERE H.operatingsystem =~ '.*(2000|2003|2008|xp|vista|7|me).*'\nRETURN H AS result\nORDER BY H.name"
@@ -1896,6 +1901,11 @@
       "query": "MATCH p=(n:User)-[r:AllowedToAct]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all user AllowedToDelegate privileges",
+      "description": "List all user AllowedToDelegate privileges - General",
+      "query": "MATCH p=(n:User)-[r:AllowedToDelegate]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all user CanApplyGPO privileges",
       "description": "List all user CanApplyGPO privileges - General",
       "query": "MATCH p=(n:User)-[r:CanApplyGPO]->(m)\nRETURN p\nORDER BY n.name"
@@ -1934,11 +1944,6 @@
       "name": "List all user CoerceToTGT privileges",
       "description": "List all user CoerceToTGT privileges - General",
       "query": "MATCH p=(n:User)-[r:CoerceToTGT]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all user Constrained Delegation",
-      "description": "List all user Constrained Delegation - General",
-      "query": "MATCH p=(u:User)-[:AllowedToDelegate]->(c:Computer)\nRETURN p\nORDER BY u.name"
     },
     {
       "name": "List all user ContainsIdentity privileges",
@@ -1996,6 +2001,11 @@
       "query": "MATCH p=(n:User)-[r:GPOAppliesTo]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all user group memberships",
+      "description": "List all user group memberships - General",
+      "query": "MATCH p=(n:User)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all user HasSession privileges",
       "description": "List all user HasSession privileges - General",
       "query": "MATCH p=(n:User)-[r:HasSession]->(m)\nRETURN p\nORDER BY n.name"
@@ -2009,11 +2019,6 @@
       "name": "List all user HasTrustKeys privileges",
       "description": "List all user HasTrustKeys privileges - General",
       "query": "MATCH p=(n:User)-[r:HasTrustKeys]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all user MemberOf privileges",
-      "description": "List all user MemberOf privileges - General",
-      "query": "MATCH p=(n:User)-[r:MemberOf]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user Owns privileges",
@@ -2049,11 +2054,6 @@
       "name": "List all user ReadLAPSPassword privileges",
       "description": "List all user ReadLAPSPassword privileges - General",
       "query": "MATCH p=(n:User)-[r:ReadLAPSPassword]->(m)\nRETURN p\nORDER BY n.name"
-    },
-    {
-      "name": "List all user SameForestTrust privileges",
-      "description": "List all user SameForestTrust privileges - General",
-      "query": "MATCH p=(n:User)-[r:SameForestTrust]->(m)\nRETURN p\nORDER BY n.name"
     },
     {
       "name": "List all user shortest paths to admin groups",

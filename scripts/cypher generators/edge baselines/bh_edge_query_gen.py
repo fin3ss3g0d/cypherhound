@@ -8,21 +8,19 @@ template YAML and appending to a master YAML.
 
 PRIMARY MODE (recommended):
   • Baseline uses Jinja markers like [[ EDGE ]] in desc/cypher/msg_template/etc.
-  • We render the ENTIRE file through a Jinja2 environment configured with
-    variable_start_string="[[", variable_end_string="]]" so that runtime {{ ... }}
-    placeholders (e.g., Jinja in your message templates) are preserved as-is.
+  • The ENTIRE file is rendered through Jinja2 with [[ ... ]] so runtime {{ ... }} stays intact.
 
 FALLBACK MODE (legacy baselines):
-  • If the baseline does not contain [[ EDGE ]], we parse the YAML and detect the
-    relationship token from cypher (e.g., -[r:AddKeyCredentialLink]->), or you can
-    pass --baseline-edge to override. We then replace that token in desc/cypher/msg_template.
+  • If the baseline does not contain [[ EDGE ]], parse YAML and detect the relationship token
+    from cypher (e.g., -[r:AddKeyCredentialLink]->), or pass --baseline-edge to override.
 
 Features
 --------
 • CLI args with help/usage; debug prints
 • Dry-run preview and optional backup of output
-• De-duplication (by group|desc|cypher hash)
-• Literal block scalars (|) for multi-line cypher/msg_template on write
+• Replace-or-add merge policy (skip only on exact group+desc+cypher match; replace on group+desc)
+• Literal block scalars (|) for multi-line cypher, always for msg_template
+• **NEW**: Edge blacklist (default: MemberOf, SameForestTrust, DCFor, DCSync)
 
 Usage
 -----
@@ -34,8 +32,24 @@ Usage
   python edge_query_expander.py \
     --template baseline_legacy_addkey.yaml \
     --edges-file edges.txt \
-    --baseline-edge AddKeyCredentialLink \
     --output master_queries.yaml --dry-run
+
+Blacklist examples
+------------------
+  # default blacklist is active
+  python edge_query_expander.py --template t.yaml --edges MemberOf,AddMember --output out.yaml
+
+  # add extra blacklisted edges on top of defaults
+  python edge_query_expander.py --template t.yaml --edges A,B \
+    --blacklist C,D --output out.yaml
+
+  # provide a blacklist file (one per line)
+  python edge_query_expander.py --template t.yaml --edges-file edges.txt \
+    --blacklist-file bl.txt --output out.yaml
+
+  # ignore the built-in defaults
+  python edge_query_expander.py --template t.yaml --edges X,Y \
+    --no-default-blacklist --output out.yaml
 """
 
 import argparse
@@ -52,6 +66,7 @@ from jinja2 import Environment, StrictUndefined
 # ---------------- YAML literal block support for multi-line strings ----------------
 
 class LiteralStr(str):
+    """Marker type to force PyYAML to emit a literal block scalar (|)."""
     pass
 
 def _literal_representer(dumper, data):
@@ -85,8 +100,7 @@ def warn(msg: str):
 
 def make_jinja_env() -> Environment:
     """
-    Use [[ ... ]] for our generator-time substitutions, so we don't touch
-    the runtime {{ ... }} placeholders used by your message templates.
+    Use [[ ... ]] for generator-time substitutions; keep runtime {{ ... }} intact.
     """
     return Environment(
         variable_start_string="[[",
@@ -95,6 +109,43 @@ def make_jinja_env() -> Environment:
         lstrip_blocks=True,
         undefined=StrictUndefined,
     )
+
+
+# ------------------------------ Blacklist config ---------------------------------
+
+DEFAULT_EDGE_BLACKLIST: Set[str] = {
+    "MemberOf",
+    "SameForestTrust",
+    "DCFor",
+    "DCSync",
+}
+
+def read_list_from_file(path: str) -> List[str]:
+    if not os.path.isfile(path):
+        raise FileNotFoundError(f"File not found: {path}")
+    vals: List[str] = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            s = line.strip()
+            if s and not s.startswith("#"):
+                vals.append(s)
+    return vals
+
+def parse_blacklist(blk_arg: str, blk_file: str, include_default: bool, ci: bool, debug: bool) -> Set[str]:
+    bl: Set[str] = set()
+    if include_default:
+        bl |= DEFAULT_EDGE_BLACKLIST
+    if blk_arg:
+        parts = [p.strip() for p in blk_arg.split(",") if p.strip()]
+        bl |= set(parts)
+    if blk_file:
+        file_edges = read_list_from_file(blk_file)
+        bl |= set(file_edges)
+    # Normalize case if case-insensitive
+    if ci:
+        bl = {e.lower() for e in bl}
+    dbg(debug, f"Effective blacklist ({'CI' if ci else 'CS'}): {sorted(bl)}")
+    return bl
 
 
 # -------------------------------- File helpers -----------------------------------
@@ -141,7 +192,7 @@ def save_yaml_file(path: str, data: Dict[str, Any], backup: bool, debug: bool) -
                     mt = str(mt)
                 q["msg_template"] = LiteralStr(mt)
 
-            # For cypher: keep behavior similar to before; if multi-line, block scalar.
+            # For cypher: if multi-line, block scalar (toggle to force always)
             if "cypher" in q and q["cypher"] is not None:
                 cy = q["cypher"]
                 if not isinstance(cy, str):
@@ -149,9 +200,7 @@ def save_yaml_file(path: str, data: Dict[str, Any], backup: bool, debug: bool) -
                 if "\n" in cy:
                     q["cypher"] = LiteralStr(cy)
                 else:
-                    # (Optional) uncomment to also force single-line cypher to block style:
-                    # q["cypher"] = LiteralStr(cy)
-                    q["cypher"] = cy
+                    q["cypher"] = LiteralStr(cy)
 
             return q
 
@@ -171,13 +220,7 @@ def read_edges(edges_arg: str, edges_file: str, debug: bool) -> List[str]:
         parts = [p.strip() for p in edges_arg.split(",") if p.strip()]
         vals.extend(parts)
     if edges_file:
-        if not os.path.isfile(edges_file):
-            raise FileNotFoundError(f"Edges file not found: {edges_file}")
-        with open(edges_file, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#"):
-                    vals.append(line)
+        vals.extend(read_list_from_file(edges_file))
 
     bad = [e for e in vals if not re.fullmatch(r"[A-Za-z0-9_]+", e)]
     if bad:
@@ -193,6 +236,30 @@ def read_edges(edges_arg: str, edges_file: str, debug: bool) -> List[str]:
 
     dbg(debug, f"Edges parsed: {ordered}")
     return ordered
+
+def apply_blacklist(edges: List[str], blacklist: Set[str], ci: bool, debug: bool) -> Tuple[List[str], List[str]]:
+    if not blacklist:
+        return edges, []
+    kept: List[str] = []
+    skipped: List[str] = []
+    if ci:
+        bl = blacklist  # already lowercased
+        for e in edges:
+            if e.lower() in bl:
+                skipped.append(e)
+            else:
+                kept.append(e)
+    else:
+        bl = blacklist
+        for e in edges:
+            if e in bl:
+                skipped.append(e)
+            else:
+                kept.append(e)
+    if skipped:
+        warn(f"Skipping blacklisted edges: {', '.join(skipped)}")
+    dbg(debug, f"Edges after blacklist: {kept}")
+    return kept, skipped
 
 
 # ------------------------ Rendering / Generation paths ---------------------------
@@ -245,7 +312,7 @@ def replacement_in_query(q: Dict[str, Any], baseline_edge: str, new_edge: str, d
 
 def generate_entries_from_baseline_text(template_text: str, edges: List[str], debug: bool) -> List[Dict[str, Any]]:
     """
-    Dispatches to the Jinja render path (if [[ EDGE ]] is present).
+    Dispatches to the Jinja render path (if [[ EDGE ]] is present) or legacy path.
     """
     generated: List[Dict[str, Any]] = []
     if template_has_marker(template_text):
@@ -267,7 +334,7 @@ def generate_entries_from_baseline_text(template_text: str, edges: List[str], de
     return generated
 
 
-# --------------------------------- Dedup logic -----------------------------------
+# --------------------------------- Merge logic -----------------------------------
 
 def norm_ws(s: str) -> str:
     return "\n".join(line.rstrip() for line in str(s).strip().splitlines())
@@ -373,9 +440,19 @@ def main():
     )
     ap.add_argument("--template", required=True, help="Path to baseline template YAML (prefer [[ EDGE ]] markers).")
     ap.add_argument("--output", required=True, help="Path to master queries YAML to append to (created if missing).")
+
     eg = ap.add_mutually_exclusive_group(required=True)
     eg.add_argument("--edges", help="Comma-separated list of edges, e.g. 'GenericAll,WriteSPN,AddMember'.")
     eg.add_argument("--edges-file", help="File containing one edge per line.")
+
+    # Blacklist controls
+    ap.add_argument("--blacklist", help="Comma-separated edge names to blacklist (skip generation).")
+    ap.add_argument("--blacklist-file", help="File with one edge per line to blacklist.")
+    ap.add_argument("--no-default-blacklist", action="store_true",
+                    help="Do not include the built-in default blacklist.")
+    ap.add_argument("--blacklist-ci", action="store_true",
+                    help="Treat blacklist checks as case-insensitive.")
+
     ap.add_argument("--backup", action="store_true", help="Backup output to .bak before writing.")
     ap.add_argument("--dry-run", action="store_true", help="Preview changes without writing.")
     ap.add_argument("--debug", action="store_true", help="Verbose debug output.")
@@ -385,11 +462,25 @@ def main():
 
     try:
         template_text = load_text(args.template)
-        edges = read_edges(args.edges, args.edges_file, args.debug)
-        if not edges:
-            raise ValueError("No edges provided after parsing --edges / --edges-file.")
+        edges = read_edges(args.edges, args.blacklist_file and None if False else args.edges_file, args.debug)
 
-        # --- Generate entries (this is where the JINJA RENDER happens if [[ EDGE ]] is present) ---
+        # Build effective blacklist
+        blacklist = parse_blacklist(
+            blk_arg=args.blacklist,
+            blk_file=args.blacklist_file,
+            include_default=(not args.no_default_blacklist),
+            ci=args.blacklist_ci,
+            debug=args.debug,
+        )
+
+        # Apply blacklist
+        edges, skipped_bl = apply_blacklist(edges, blacklist, args.blacklist_ci, args.debug)
+        if not edges:
+            warn("All requested edges are blacklisted; nothing to generate.")
+            print(f"[+] Skipped by blacklist: {len(skipped_bl)} ({', '.join(skipped_bl)})" if skipped_bl else "")
+            return
+
+        # --- Generate entries (JINJA RENDER happens here if [[ EDGE ]] is present) ---
         generated = generate_entries_from_baseline_text(template_text, edges, args.debug)
 
         # --- Load or create the master YAML ---
@@ -399,23 +490,24 @@ def main():
             master = {"queries": []}
             dbg(args.debug, f"Master '{args.output}' does not exist; will create.")
 
-        # --- Append + dedupe and report ---
+        # --- Append + replace-or-add and report ---
         added, replaced, skipped = append_replace_or_add(master, generated, args.debug)
 
         print(f"[+] Edges requested: {edges}")
+        if skipped_bl:
+            print(f"[+] Skipped by blacklist: {len(skipped_bl)} ({', '.join(skipped_bl)})")
         print(f"[+] Generated: {len(generated)} | Added: {added} | Replaced: {replaced} | Skipped: {skipped}")
         print(f"[+] Master path: {args.output}")
 
         if args.dry_run:
             print("[DRY-RUN] Not writing changes. Use without --dry-run to persist.")
-            # Show a single example for sanity
             if generated:
                 sample = {"queries": [generated[0]]}
                 print("\n--- Sample Generated Entry ---")
                 print(yaml.safe_dump(sample, sort_keys=False, allow_unicode=True, width=100))
             return
 
-        # --- Persist updated master (with block scalars for readability) ---
+        # --- Persist updated master ---
         save_yaml_file(args.output, master, backup=args.backup, debug=args.debug)
         print("[+] Write complete.")
 

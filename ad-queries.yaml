@@ -495,6 +495,33 @@ queries:
   msg_template: |-
     Group {{ n_name }} has AllowedToAct over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
+  desc: List all AllowedToDelegate privileges
+  cypher: |-
+    MATCH (n)-[r:AllowedToDelegate]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
+    ORDER BY n.name
+  msg_template: |-
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has AllowedToDelegate over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
+- group: general
+  desc: List all AllowedToDelegate privileges for owned principals
+  cypher: |-
+    MATCH (n {owned: true})-[r:AllowedToDelegate]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
+    ORDER BY n.name
+  msg_template: |-
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has AllowedToDelegate over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
+- group: general
+  desc: List all AllowedToDelegate privileges for Users, Domain Users, Authenticated Users, and Everyone groups
+  cypher: |-
+    MATCH (n:Group)-[r:AllowedToDelegate]->(m)
+    WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Group {{ n_name }} has AllowedToDelegate over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
   desc: List all AS-REP roastable users
   cypher: |-
     MATCH (u:User {dontreqpreauth: true})
@@ -876,6 +903,14 @@ queries:
   msg_template: |-
     Computer {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
+  desc: List all computer AllowedToDelegate privileges
+  cypher: |-
+    MATCH (n:Computer)-[r:AllowedToDelegate]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Computer {{ n_name }} has AllowedToDelegate over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
   desc: List all computer CanApplyGPO privileges
   cypher: |-
     MATCH (n:Computer)-[r:CanApplyGPO]->(m)
@@ -943,14 +978,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Computer {{ n_name }} has CoerceToTGT over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: general
-  desc: List all computer Constrained Delegation
-  cypher: |-
-    MATCH (c1:Computer)-[:AllowedToDelegate]->(c2:Computer)
-    RETURN c1.name AS c1_name, c2.name AS c2_name
-    ORDER BY c1.name
-  msg_template: |-
-    Computer {{ c1_name }} is allowed to delegate for {{ c2_name }}
 - group: general
   desc: List all computer ContainsIdentity privileges
   cypher: |-
@@ -1034,6 +1061,14 @@ queries:
   msg_template: |-
     Computer {{ n_name }} has GPOAppliesTo over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
+  desc: List all computer group memberships
+  cypher: |-
+    MATCH (n:Computer)-[r:MemberOf]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Computer {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
   desc: List all computer HasSession privileges
   cypher: |-
     MATCH (n:Computer)-[r:HasSession]->(m)
@@ -1057,14 +1092,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Computer {{ n_name }} has HasTrustKeys over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: general
-  desc: List all computer MemberOf privileges
-  cypher: |-
-    MATCH (n:Computer)-[r:MemberOf]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    Computer {{ n_name }} has MemberOf over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer Owns privileges
   cypher: |-
@@ -1113,14 +1140,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Computer {{ n_name }} has ReadLAPSPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: general
-  desc: List all computer SameForestTrust privileges
-  cypher: |-
-    MATCH (n:Computer)-[r:SameForestTrust]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    Computer {{ n_name }} has SameForestTrust over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all computer shortest paths to admin groups
   cypher: |-
@@ -1604,6 +1623,24 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Group {{ n_name }} has ContainsIdentity over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
+  desc: List all CrossForestTrust privileges
+  cypher: |-
+    MATCH (n)-[r:CrossForestTrust]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
+    ORDER BY n.name
+  msg_template: |-
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has CrossForestTrust over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
+- group: general
+  desc: List all CrossForestTrust privileges for owned principals
+  cypher: |-
+    MATCH (n {owned: true})-[r:CrossForestTrust]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
+    ORDER BY n.name
+  msg_template: |-
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has CrossForestTrust over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all DCFor privileges
   cypher: |-
@@ -2126,6 +2163,14 @@ queries:
   msg_template: |-
     Group {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
+  desc: List all group AllowedToDelegate privileges
+  cypher: |-
+    MATCH (n:Group)-[r:AllowedToDelegate]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Group {{ n_name }} has AllowedToDelegate over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
   desc: List all group CanApplyGPO privileges
   cypher: |-
     MATCH (n:Group)-[r:CanApplyGPO]->(m)
@@ -2193,14 +2238,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Group {{ n_name }} has CoerceToTGT over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: general
-  desc: List all group Constrained Delegation
-  cypher: |-
-    MATCH (g:Group)-[:AllowedToDelegate]->(c:Computer)
-    RETURN g.name AS g_name, c.name AS c_name
-    ORDER BY g.name
-  msg_template: |-
-    Group {{ g_name }} is allowed to delegate for {{ c_name }}
 - group: general
   desc: List all group ContainsIdentity privileges
   cypher: |-
@@ -2291,6 +2328,14 @@ queries:
   msg_template: |-
     Group {{ n_name }} has GPOAppliesTo over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
+  desc: List all group group memberships
+  cypher: |-
+    MATCH (n:Group)-[r:MemberOf]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Group {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
   desc: List all group HasSession privileges
   cypher: |-
     MATCH (n:Group)-[r:HasSession]->(m)
@@ -2315,13 +2360,32 @@ queries:
   msg_template: |-
     Group {{ n_name }} has HasTrustKeys over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
-  desc: List all group MemberOf privileges
+  desc: List all group memberships
+  cypher: |-
+    MATCH (n)-[r:MemberOf]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
+    ORDER BY n.name
+  msg_template: |-
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) is MemberOf {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
+- group: general
+  desc: List all group memberships for owned principals
+  cypher: |-
+    MATCH (n {owned: true})-[r:MemberOf]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
+    ORDER BY n.name
+  msg_template: |-
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) is MemberOf {{ m_name }} ({{ labels_m[0]
+    }}/{{ labels_m[1] }})
+- group: general
+  desc: List all group memberships for Users, Domain Users, Authenticated Users, and Everyone groups
   cypher: |-
     MATCH (n:Group)-[r:MemberOf]->(m)
+    WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
     RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
-    Group {{ n_name }} has MemberOf over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+    Group {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group Owns privileges
   cypher: |-
@@ -2378,14 +2442,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Group {{ n_name }} has ReadLAPSPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: general
-  desc: List all group SameForestTrust privileges
-  cypher: |-
-    MATCH (n:Group)-[r:SameForestTrust]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    Group {{ n_name }} has SameForestTrust over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all group shortest paths to admin groups
   cypher: |-
@@ -3057,33 +3113,6 @@ queries:
   msg_template: |-
     User {{ result }} is kerberoastable
 - group: general
-  desc: List all MemberOf privileges
-  cypher: |-
-    MATCH (n)-[r:MemberOf]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
-    ORDER BY n.name
-  msg_template: |-
-    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has MemberOf over {{ m_name }} ({{ labels_m[0]
-    }}/{{ labels_m[1] }})
-- group: general
-  desc: List all MemberOf privileges for owned principals
-  cypher: |-
-    MATCH (n {owned: true})-[r:MemberOf]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n
-    ORDER BY n.name
-  msg_template: |-
-    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has MemberOf over {{ m_name }} ({{ labels_m[0]
-    }}/{{ labels_m[1] }})
-- group: general
-  desc: List all MemberOf privileges for Users, Domain Users, Authenticated Users, and Everyone groups
-  cypher: |-
-    MATCH (n:Group)-[r:MemberOf]->(m)
-    WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    Group {{ n_name }} has MemberOf over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: general
   desc: List all members of high-value groups
   cypher: |-
     MATCH p=(n:User)-[r:MemberOf*1..]->(m:Group {highvalue: true})
@@ -3386,15 +3415,6 @@ queries:
   msg_template: |-
     {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has SameForestTrust over {{ m_name }} ({{
     labels_m[0] }}/{{ labels_m[1] }})
-- group: general
-  desc: List all SameForestTrust privileges for Users, Domain Users, Authenticated Users, and Everyone groups
-  cypher: |-
-    MATCH (n:Group)-[r:SameForestTrust]->(m)
-    WHERE (n.objectid =~ "(?i)S-1-5-21-.*-513" OR n.objectid =~ "(?i).*-S-1-5-11" OR n.objectid =~ "(?i).*-S-1-1-0" OR n.objectid =~ "(?i).*-S-1-5-32-545")
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    Group {{ n_name }} has SameForestTrust over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all sensitive users
   cypher: |-
@@ -5488,14 +5508,6 @@ queries:
   msg_template: |-
     Group {{ n_name }} has SyncLAPSPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
-  desc: List all Unconstrained Delegation
-  cypher: |-
-    MATCH (c:Computer {unconstraineddelegation: true})
-    RETURN c.name AS c_name
-    ORDER BY c.name
-  msg_template: |-
-    Computer {{ c_name }} has unconstrained delegation privilege
-- group: general
   desc: List all unsupported OSs
   cypher: |-
     MATCH (H:Computer)
@@ -5649,6 +5661,14 @@ queries:
   msg_template: |-
     User {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
+  desc: List all user AllowedToDelegate privileges
+  cypher: |-
+    MATCH (n:User)-[r:AllowedToDelegate]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    User {{ n_name }} has AllowedToDelegate over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
   desc: List all user CanApplyGPO privileges
   cypher: |-
     MATCH (n:User)-[r:CanApplyGPO]->(m)
@@ -5716,14 +5736,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     User {{ n_name }} has CoerceToTGT over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: general
-  desc: List all user Constrained Delegation
-  cypher: |-
-    MATCH (u:User)-[:AllowedToDelegate]->(c:Computer)
-    RETURN u.name AS u_name, c.name AS c_name
-    ORDER BY u.name
-  msg_template: |-
-    User {{ u_name }} is allowed to delegate for {{ c_name }}
 - group: general
   desc: List all user ContainsIdentity privileges
   cypher: |-
@@ -5814,6 +5826,14 @@ queries:
   msg_template: |-
     User {{ n_name }} has GPOAppliesTo over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
+  desc: List all user group memberships
+  cypher: |-
+    MATCH (n:User)-[r:MemberOf]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    User {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: general
   desc: List all user HasSession privileges
   cypher: |-
     MATCH (n:User)-[r:HasSession]->(m)
@@ -5837,14 +5857,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     User {{ n_name }} has HasTrustKeys over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: general
-  desc: List all user MemberOf privileges
-  cypher: |-
-    MATCH (n:User)-[r:MemberOf]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    User {{ n_name }} has MemberOf over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user Owns privileges
   cypher: |-
@@ -5901,14 +5913,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     User {{ n_name }} has ReadLAPSPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: general
-  desc: List all user SameForestTrust privileges
-  cypher: |-
-    MATCH (n:User)-[r:SameForestTrust]->(m)
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    User {{ n_name }} has SameForestTrust over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
   desc: List all user shortest paths to admin groups
   cypher: |-
@@ -6873,6 +6877,15 @@ queries:
   msg_template: |-
     Computer {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
+  desc: List this computer's AllowedToDelegate privileges
+  cypher: |-
+    MATCH (n:Computer)-[r:AllowedToDelegate]->(m)
+    WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Computer {{ n_name }} has AllowedToDelegate over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: computer
   desc: List this computer's CanApplyGPO privileges
   cypher: |-
     MATCH (n:Computer)-[r:CanApplyGPO]->(m)
@@ -6948,14 +6961,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Computer {{ n_name }} has CoerceToTGT over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: computer
-  desc: List this computer's Constrained Delegation privileges
-  cypher: |-
-    MATCH (n:Computer)-[:AllowedToDelegate]->(c:Computer)
-    WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, c.name AS c_name
-  msg_template: |-
-    Computer {{ n_name }} is allowed to delegate for {{ c_name }}
 - group: computer
   desc: List this computer's ContainsIdentity privileges
   cypher: |-
@@ -7039,6 +7044,15 @@ queries:
   msg_template: |-
     Computer {{ n_name }} has GPOAppliesTo over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
+  desc: List this computer's group memberships
+  cypher: |-
+    MATCH (n:Computer)-[r:MemberOf]->(m)
+    WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Computer {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: computer
   desc: List this computer's group-delegated AdminTo privileges
   cypher: |-
     MATCH (n:Computer)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer)
@@ -7074,15 +7088,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Computer {{ n_name }} has HasTrustKeys over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: computer
-  desc: List this computer's MemberOf privileges
-  cypher: |-
-    MATCH (n:Computer)-[r:MemberOf]->(m)
-    WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    Computer {{ n_name }} has MemberOf over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's Owns privileges
   cypher: |-
@@ -7128,15 +7133,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Computer {{ n_name }} has ReadLAPSPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: computer
-  desc: List this computer's SameForestTrust privileges
-  cypher: |-
-    MATCH (n:Computer)-[r:SameForestTrust]->(m)
-    WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    Computer {{ n_name }} has SameForestTrust over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: computer
   desc: List this computer's SpoofSIDHistory privileges
   cypher: |-
@@ -7392,6 +7388,15 @@ queries:
   msg_template: |-
     Group {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
+  desc: List this group's AllowedToDelegate privileges
+  cypher: |-
+    MATCH (n:Group)-[r:AllowedToDelegate]->(m)
+    WHERE n.name =~ '((?i)GROUP_SEARCH)'
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Group {{ n_name }} has AllowedToDelegate over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: group
   desc: List this group's CanApplyGPO privileges
   cypher: |-
     MATCH (n:Group)-[r:CanApplyGPO]->(m)
@@ -7467,14 +7472,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Group {{ n_name }} has CoerceToTGT over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: group
-  desc: List this group's Constrained Delegation privileges
-  cypher: |-
-    MATCH (g:Group)-[:AllowedToDelegate]->(c:Computer)
-    WHERE g.name =~ '((?i)GROUP_SEARCH)'
-    RETURN g.name AS g_name, c.name AS c_name
-  msg_template: |-
-    Group {{ g_name }} is allowed to delegate for {{ c_name }}
 - group: group
   desc: List this group's ContainsIdentity privileges
   cypher: |-
@@ -7566,6 +7563,15 @@ queries:
   msg_template: |-
     Group {{ n_name }} has GPOAppliesTo over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
+  desc: List this group's group memberships
+  cypher: |-
+    MATCH (n:Group)-[r:MemberOf]->(m)
+    WHERE n.name =~ '((?i)GROUP_SEARCH)'
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    Group {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: group
   desc: List this group's group-delegated AdminTo privileges
   cypher: |-
     MATCH (n:Group)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer)
@@ -7610,15 +7616,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Group {{ n_name }} has HasTrustKeys over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: group
-  desc: List this group's MemberOf privileges
-  cypher: |-
-    MATCH (n:Group)-[r:MemberOf]->(m)
-    WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    Group {{ n_name }} has MemberOf over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's members
   cypher: |-
@@ -7682,15 +7679,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Group {{ n_name }} has ReadLAPSPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: group
-  desc: List this group's SameForestTrust privileges
-  cypher: |-
-    MATCH (n:Group)-[r:SameForestTrust]->(m)
-    WHERE n.name =~ '((?i)GROUP_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    Group {{ n_name }} has SameForestTrust over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: group
   desc: List this group's SpoofSIDHistory privileges
   cypher: |-
@@ -7946,6 +7934,15 @@ queries:
   msg_template: |-
     User {{ n_name }} is AllowedToAct for {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
+  desc: List this user's AllowedToDelegate privileges
+  cypher: |-
+    MATCH (n:User)-[r:AllowedToDelegate]->(m)
+    WHERE n.name =~ '((?i)USER_SEARCH)'
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    User {{ n_name }} has AllowedToDelegate over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: user
   desc: List this user's CanApplyGPO privileges
   cypher: |-
     MATCH (n:User)-[r:CanApplyGPO]->(m)
@@ -8021,14 +8018,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     User {{ n_name }} has CoerceToTGT over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: user
-  desc: List this user's Constrained Delegation privileges
-  cypher: |-
-    MATCH (u:User)-[:AllowedToDelegate]->(c:Computer)
-    WHERE u.name =~ '((?i)USER_SEARCH)'
-    RETURN u.name AS u_name, c.name AS c_name
-  msg_template: |-
-    User {{ u_name }} is allowed to delegate for {{ c_name }}
 - group: user
   desc: List this user's ContainsIdentity privileges
   cypher: |-
@@ -8129,6 +8118,15 @@ queries:
   msg_template: |-
     User {{ n_name }} has GPOAppliesTo over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
+  desc: List this user's group memberships
+  cypher: |-
+    MATCH (n:User)-[r:MemberOf]->(m)
+    WHERE n.name =~ '((?i)USER_SEARCH)'
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
+    ORDER BY n.name
+  msg_template: |-
+    User {{ n_name }} is MemberOf {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
+- group: user
   desc: List this user's group-delegated AdminTo privileges
   cypher: |-
     MATCH (n:User)-[:MemberOf]->(m:Group),(m)-[:AdminTo]->(c:Computer)
@@ -8173,15 +8171,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     User {{ n_name }} has HasTrustKeys over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: user
-  desc: List this user's MemberOf privileges
-  cypher: |-
-    MATCH (n:User)-[r:MemberOf]->(m)
-    WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    User {{ n_name }} has MemberOf over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's Owns privileges
   cypher: |-
@@ -8235,15 +8224,6 @@ queries:
     ORDER BY n.name
   msg_template: |-
     User {{ n_name }} has ReadLAPSPassword over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
-- group: user
-  desc: List this user's SameForestTrust privileges
-  cypher: |-
-    MATCH (n:User)-[r:SameForestTrust]->(m)
-    WHERE n.name =~ '((?i)USER_SEARCH)'
-    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
-    ORDER BY n.name
-  msg_template: |-
-    User {{ n_name }} has SameForestTrust over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: user
   desc: List this user's sessions
   cypher: |-

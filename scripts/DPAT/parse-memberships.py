@@ -57,7 +57,7 @@ def read_memberships_file(path: str, domain: str, debug: bool, encoding: str = "
 
     dom_esc = re.escape(domain)
     pattern = re.compile(
-        rf"^User\s+([\w.$-]+)@{dom_esc}\s+is\s+MemberOf\s+(.*?)@{dom_esc}\s+\((?:Group/Base|Base/Group)\)\s*$",
+        rf"^User\s+([\w.$-]+)@{dom_esc}\s+is\s+MemberOf\s+(.*?)@{dom_esc}\s+\((?:Group/Base|Base/Group|ADLocalGroup/Group)\)\s*$",
         re.IGNORECASE
     )
 
