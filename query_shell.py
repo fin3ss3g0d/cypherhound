@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 import inspect
-import os, argparse, cmd2
+import os, re, argparse, cmd2
 from cmd2 import with_argparser  # pip install cmd2
 
 import database, util, log
+
+_VALID_KEY = re.compile(r"^[A-Za-z_][A-Za-z0-9_\.]*$")
 
 # ---------- helpers -------------------------------------------------
 def _id_list(value: str) -> list[int]:
@@ -25,6 +27,9 @@ def _id_list(value: str) -> list[int]:
     if not ids:
         raise argparse.ArgumentTypeError('no valid IDs found')
     return sorted(ids)
+
+def _is_valid_key(key: str) -> bool:
+    return bool(_VALID_KEY.match(key))  # reuse same pattern as driver
 
 class QueryShell(cmd2.Cmd):
     prompt = ': '
@@ -57,41 +62,61 @@ class QueryShell(cmd2.Cmd):
 
         self.driver = database.Driver(user, pwd, db, template_file=yaml_file)
 
+    # `set` command
+    set_parser = argparse.ArgumentParser(
+        prog="set", description="Set a dynamic search parameter (set <TARGET> <VALUE...>)"
+    )
+    set_parser.add_argument("target", help="e.g., user | group | computer | regex | any.dotted.key")
+    set_parser.add_argument("value", nargs="+", help="Value to assign (space-joined)")
 
-    # --------- helpers ----------------------------------------------------
-    def _validate_and_call(self, setter, value, label):
-        """
-        Common validation wrapper.
-        """
+    unset_parser = argparse.ArgumentParser(
+        prog="unset", description="Unset a dynamic search parameter (unset <TARGET>)"
+    )
+    unset_parser.add_argument("target", help="Key to remove, e.g., user or foo.bar")
+
+    show_parser = argparse.ArgumentParser(
+        prog="show", description="Show dynamic search parameters"
+    )
+
+    def _validate_and_set(self, target: str, value: str, label: str):
         if not util.validate_common_config(value):
             self.perror(f'{label} is empty or missing "@!"')
             return
         util.validate_user_input(value)
-        setter(value)
+        self.driver.set_param(target, value)
         log.log_successful_set(label, value)
-
-    # --------- `set` command ----------------------------------------------
-    set_parser = argparse.ArgumentParser(
-        prog='set', description='Update query parameters')
-    set_sub = set_parser.add_subparsers(dest='kind', required=True)
-
-    for kind in ('user', 'group', 'computer', 'regex'):
-        p = set_sub.add_parser(kind)
-        p.add_argument('value', nargs='+', help=f'{kind} value')
 
     @with_argparser(set_parser)
     def do_set(self, args: argparse.Namespace):
-        """Set user/group/computer/regex parameters."""
-        value = ' '.join(args.value)
-        match args.kind:
-            case 'user':
-                self._validate_and_call(self.driver.set_user_param, value, 'user')
-            case 'group':
-                self._validate_and_call(self.driver.set_group_param, value, 'group')
-            case 'computer':
-                self._validate_and_call(self.driver.set_computer_param, value, 'computer')
-            case 'regex':
-                self._validate_and_call(self.driver.set_regex, value, 'regex')
+        """Set arbitrary `params.<target>` to a value."""
+        target = args.target.strip()
+        value = " ".join(args.value)
+        if not _is_valid_key(target):
+            self.perror("Invalid key. Use letters/digits/underscore, optional dots for nesting.")
+            return
+        try:
+            self._validate_and_set(target, value, target)
+        except Exception as e:
+            self.perror(str(e))
+
+    @with_argparser(unset_parser)
+    def do_unset(self, args: argparse.Namespace):
+        """Remove `params.<target>`."""
+        ok = self.driver.unset_param(args.target.strip())
+        if ok:
+            self.poutput(f"Removed {args.target}")
+        else:
+            self.perror(f"{args.target} not found")
+
+    @with_argparser(show_parser)
+    def do_show(self, _):
+        """Show all `params.*` parameters."""
+        params = self.driver.get_params()
+        if not params:
+            self.poutput("(no search params set)")
+            return
+        import json
+        self.poutput(json.dumps(params, indent=2, sort_keys=True))
 
     # --------- `run` command ----------------------------------------------
     run_parser = argparse.ArgumentParser(prog='run', description='Execute a query')

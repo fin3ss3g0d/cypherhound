@@ -9,7 +9,7 @@ from neo4j import GraphDatabase
 from collections import OrderedDict
 from pathlib import Path
 
-from jinja2 import Template, UndefinedError, Environment, FileSystemLoader, select_autoescape
+from jinja2 import Template, UndefinedError, Environment, FileSystemLoader, select_autoescape, StrictUndefined
 from datetime import datetime
 from pathlib import Path
 
@@ -22,6 +22,41 @@ def _looks_like_path(obj) -> bool:
         hasattr(obj, "__iter__")   # paths are iterable over relationships
     )
 
+def _set_nested(d: dict, dotted_key: str, value: str) -> None:
+    """
+    Allow dotted keys ('a.b.c') to create/update nested dicts.
+    """
+    parts = [p for p in dotted_key.split('.') if p]
+    if not parts:
+        raise ValueError("Empty key path.")
+    cur = d
+    for p in parts[:-1]:
+        if p not in cur or not isinstance(cur[p], dict):
+            cur[p] = {}
+        cur = cur[p]
+    cur[parts[-1]] = value
+
+def _del_nested(d: dict, dotted_key: str) -> bool:
+    parts = [p for p in dotted_key.split('.') if p]
+    if not parts:
+        return False
+    cur = d
+    for p in parts[:-1]:
+        if p not in cur or not isinstance(cur[p], dict):
+            return False
+        cur = cur[p]
+    return cur.pop(parts[-1], None) is not None
+
+def _get_nested(d: dict, dotted_key: str, default=None):
+    parts = [p for p in dotted_key.split('.') if p]
+    cur = d
+    for p in parts:
+        if not isinstance(cur, dict) or p not in cur:
+            return default
+        cur = cur[p]
+    return cur
+
+_VALID_KEY = re.compile(r"^[A-Za-z_][A-Za-z0-9_\.]*$")
 
 class Driver:
     # --------------------------------------------------------------------- #
@@ -31,19 +66,22 @@ class Driver:
                  user: str,
                  password: str,
                  db: str,
-                 template_file: str,
-                 u_search="",
-                 g_search="",
-                 c_search="",
-                 regex=""):
+                 template_file: str):
 
         self.driver  = GraphDatabase.driver("neo4j://localhost:7687",
                                             auth=(user, password))
         self.database        = db
-        self.user_search     = u_search
-        self.group_search    = g_search
-        self.computer_search = c_search
-        self.regex           = regex
+
+        # single, flexible namespace for all user-provided values
+        self.params: dict[str, object] = {}
+
+        # Jinja env shared for cypher and messages (same filters, strict undefined)
+        self._jinja = Environment(
+            undefined=StrictUndefined,
+            autoescape=False,
+            trim_blocks=True,
+            lstrip_blocks=True,
+        )
 
         self.queries = self._load_queries(template_file)
 
@@ -73,41 +111,9 @@ class Driver:
         self.driver.close()
 
 
-    def set_user_param(self, param):
-        self.user_search = param
-
-
-    def get_user_param(self):
-        return self.user_search
-
-
-    def set_group_param(self, param):
-        self.group_search = param
-
-
-    def get_group_param(self):
-        return self.group_search
-
-
-    def set_computer_param(self, param):
-        self.computer_search = param
-
-
-    def get_computer_param(self):
-        return self.computer_search
-
-
-    def set_regex(self, r):
-        self.regex = r
-
-
-    def get_regex(self):
-        return self.regex
-    
-    
     def search_queries(self, search_string):
         results = {k: v for k, v in self.queries.items() if search_string.lower() in v['desc'].lower()}
-    
+
         if results:
             log_green(f'Cypher matches for "{search_string}":')
             for key, value in results.items():
@@ -132,52 +138,85 @@ class Driver:
             print(f'{redify(num + ".")} {data["desc"]}')
 
 
-    def _replace_fillers_in_string(self, string):
-        replacements = {
-            'USER_SEARCH': self.user_search,
-            'GROUP_SEARCH': self.group_search,
-            'COMPUTER_SEARCH': self.computer_search,
-            'REGEX': self.regex,
-        }
-    
-        for filler, replacement in replacements.items():
-            string = string.replace(filler, replacement)
-    
-        return string
+    # ----- generic, dynamic setters/getters for `params.*` -----
+    def set_param(self, key: str, value: str) -> None:
+        if not _VALID_KEY.match(key):
+            raise ValueError(
+                "Key must start with a letter/_ and contain only letters, digits, underscores, and dots."
+            )
+        _set_nested(self.params, key, value)
+
+
+    def unset_param(self, key: str) -> bool:
+        ok = _del_nested(self.params, key)
+        return ok
+
+
+    def get_param(self, key: str, default=None):
+        val = _get_nested(self.params, key, default=default)
+        return val
+
+
+    def get_params(self) -> dict:
+        # shallow copy for safety
+        return dict(self.params)
+
+
+    # ----- render cypher via Jinja using `params` -----
+    def _render_cypher_template(self, cypher_template: str) -> str:
+        """
+        Render a Cypher template. Makes `params` available.
+        Raises with helpful error if a variable is missing (StrictUndefined).
+        """
+        try:
+            tmpl = self._jinja.from_string(cypher_template)
+            ctx = {
+                "params": self.params
+            }
+            rendered = tmpl.render(**ctx)
+            return rendered
+        except Exception as e:
+            raise RuntimeError(f"Failed to render cypher template: {e}") from e
 
 
     # --------------------------------------------------------------------- #
-    # STANDARD query executor – Jinja2 templating
+    # STANDARD query executor – Jinja2 templating (updated)
     # --------------------------------------------------------------------- #
     def _handle_standard_query(self, query_data: dict, outfile: str):
         try:
             with self.driver.session(database=self.database) as session:
-                cypher = self._replace_fillers_in_string(query_data["query"])
+                # 1) Render the cypher
+                cypher = self._render_cypher_template(query_data["query"])
+
                 results = session.run(cypher)
 
                 if results.peek() is None:
                     log_no_results()
                     return
 
-                # Pre-compile the template once
+                # 2) Pre-compile the message template using same env for filters if needed
                 template = None
-                if query_data["msg_template"]:
-                    template = Template(query_data["msg_template"])
+                if query_data.get("msg_template"):
+                    template = self._jinja.from_string(query_data["msg_template"])
 
                 count = 0
                 for rec in results:
                     raw = rec.data()
-
-                    # colour every first-level value that is a str / int / float / bool
+                    # colorize simple types
                     ctx = {
                         k: redify(v) if isinstance(v, (str, int, float, bool)) else v
                         for k, v in raw.items()
                     }
-
-                    msg = template.render(**ctx) if template else str(raw)
+                    # Render the human message (falls back to dict string)
+                    try:
+                        msg = template.render(**ctx) if template else str(raw)
+                    except Exception as e:
+                        # If a msg_template references a field that doesn't exist, fail gracefully
+                        msg = f"[TEMPLATE ERROR] {e} | raw={raw}"
 
                     if not msg:
                         continue
+
                     self._handle_output(outfile, msg)
                     count += 1
 
@@ -196,15 +235,16 @@ class Driver:
     def _handle_path_query(self, query_data: dict, outfile: str):
         try:
             with self.driver.session(database=self.database) as session:
-                cypher   = self._replace_fillers_in_string(query_data["query"])
+                cypher   = self._render_cypher_template(query_data["query"])
                 results  = session.run(cypher)
 
                 if results.peek() is None:
                     log_no_results()
                     return
 
-                template = Template(query_data["msg_template"]) \
-                           if query_data["msg_template"] else None
+                template = None
+                if query_data.get("msg_template"):
+                    template = self._jinja.from_string(query_data["msg_template"])
 
                 count = 0
                 path_idx = 1

@@ -52,7 +52,7 @@ queries:
   desc: List this user's [[ EDGE ]] privileges
   cypher: |-
     MATCH (n:User)-[r:[[ EDGE ]]]->(m)
-    WHERE n.name =~ '((?i)USER_SEARCH)'
+    WHERE n.name =~ '((?i){{ params.user }})'
     RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
@@ -61,7 +61,7 @@ queries:
   desc: List this group's [[ EDGE ]] privileges
   cypher: |-
     MATCH (n:Group)-[r:[[ EDGE ]]]->(m)
-    WHERE n.name =~ '((?i)GROUP_SEARCH)'
+    WHERE n.name =~ '((?i){{ params.group }})'
     RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-
@@ -70,7 +70,7 @@ queries:
   desc: List this computer's [[ EDGE ]] privileges
   cypher: |-
     MATCH (n:Computer)-[r:[[ EDGE ]]]->(m)
-    WHERE n.name =~ '((?i)COMPUTER_SEARCH)'
+    WHERE n.name =~ '((?i){{ params.computer }})'
     RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m
     ORDER BY n.name
   msg_template: |-

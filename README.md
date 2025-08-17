@@ -96,32 +96,38 @@ A table breakdown of the keys/value pairs can be seen below:
 | `cypher`       | The query itself in Neo4j format                                                                  |
 | `msg_template` | Jinja2 template for the terminal output based on cypher variables, **use aliases for Neo4j variables to avoid Jinja attempting to render as nested variables** |
 
-**YAML Keywords**
+## Dynamic Parameters in Cypher (Jinja2 `params.*`)
 
-The program supports inserting keywords into the YAML file for dynamic searching at runtime. For example, if you would like a query to behave dynamically in order to search against a specific user, group, computer, or regular expression. An example of this is shown below:
+The program uses **Jinja2** to render Cypher. Define runtime parameters with the `set` command and reference them in YAML as `{{ params.<key> }}`.
+
+**CLI**
+```
+set <key> <value...> # e.g., set user john.doe@example.com
+unset <key> # optional
+show # optional
+```
+
+**YAML Example**
 
 ```yaml
 - group: user
-  desc: List all shortest paths to admin groups for this user
+  desc: List all privileges for this user
   cypher: |-
-    MATCH p=shortestPath((m:User)-[r*1..]->(n:Group))
-    WHERE n.name =~ ".*((?i)admin|adm).*" AND m.name =~ '((?i)USER_SEARCH)' AND NONE (r IN relationships(p)
-    WHERE type(r)= "GetChanges") AND NONE (r in relationships(p)
-    WHERE type(r)="GetChangesAll") AND NONE (r in relationships(p)
-    WHERE type(r)="GetChangesInFilteredSet")
-    RETURN m.name AS m_name, p
-    ORDER BY m.name
-  msg_template: null
+    MATCH (n:User)-[r]->(m)
+    WHERE n.name =~ '((?i){{ params.user }})'
+    RETURN n.name AS n_name, TYPE(r) AS rel_type, labels(m) AS labels_m, m.name AS m_name
+    ORDER BY TYPE(r)
+  msg_template: |-
+    User {{ n_name }} has {{ rel_type }} over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 ```
 
-A table breakdown of the supported keywords and their descriptions can be seen below:
-
-| Keyword | Description |
-|---------|-------------|
-| `USER_SEARCH` | This will be replaced by the user string you configure with the `set` command at runtime |
-| `GROUP_SEARCH` | This will be replaced by the group string you configure with the `set` command at runtime |
-| `COMPUTER_SEARCH` | This will be replaced by the group string you configure with the `set` command at runtime |
-| `REGEX` | This will be replaced by the regular expression string you configure with the `set` command at runtime |
+**Common Param Patterns**
+| Param key            | Example value                         | Use in Cypher                                    |
+|----------------------|---------------------------------------|--------------------------------------------------|
+| `params.user`        | `john.doe@example.com`                | `= {{ params.user }}`                            |
+| `params.user_regex`  | `(?i)john\.doe(@example\.com)?`       | `=~ '{{ params.user_regex }}'`                   |
+| `params.group`       | `Domain Admins@example.com`           | `= {{ params.group }}`                           |
+| `params.prefix`      | `ACME-`                               | `STARTS WITH {{ params.prefix }}`                |
 
 ## JSON Format
 
@@ -165,9 +171,11 @@ run                   Execute a query
 run_pyscript          Run a Python script file inside the console
 run_script            Run commands in script file that is encoded as either ASCII or UTF-8 text
 search                Full-text search through stored queries.
-set                   Update query parameters
+set                   Set a dynamic search parameter (set <TARGET> <VALUE...>)
 shell                 Execute a command as if at the OS prompt
 shortcuts             List available shortcuts
+show                  Show dynamic search parameters
+unset                 Unset a dynamic search parameter (unset <TARGET>)
 
 Undocumented commands:
 ======================

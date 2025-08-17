@@ -61,3 +61,7 @@ Created a script to convert a YAML query template file to a JSON file for import
 # 08/12/2025
 
 Major cypher addition update. Project supports all BloodHound traversable edges up to date. Adjustments to some pre-existing cyphers. Created an automated baseline query generator script for when new edges release.
+
+# 08/17/2025
+
+Changed dynamic cypher parameter logic to use Jinja 2 and expanded flexibility with dynamic parameters.
