@@ -27,6 +27,15 @@ queries:
   msg_template: |-
     Group {{ n_name }} has AbuseTGTDelegation over {{ m_name }} ({{ labels_m[0] }}/{{ labels_m[1] }})
 - group: general
+  desc: List all ADCS privileges
+  cypher: |-
+    MATCH (n)-[r:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b]->(m)
+    RETURN n.name AS n_name, m.name AS m_name, labels(m) AS labels_m, labels(n) AS labels_n, type(r) AS rel_type
+    ORDER BY n.name
+  msg_template: |-
+    {{ n_name }} ({{ labels_n[0] }}/{{ labels_n[1] }}) has {{ rel_type }} over {{ m_name }} ({{
+    labels_m[0] }}/{{ labels_m[1] }})
+- group: general
   desc: List all ADCSESC1 privileges
   cypher: |-
     MATCH (n)-[r:ADCSESC1]->(m)
@@ -1685,6 +1694,18 @@ queries:
     ORDER BY n.name
   msg_template: |-
     Computer {{ n_name }} is disabled
+- group: general
+  desc: List all disabled users who have not logged on in over 90 days (lastLogonTimestamp)
+  cypher: |-
+    WITH 90 as days_since_logon
+    MATCH (u:User {enabled: false})
+    WHERE u.lastlogontimestamp < (datetime().epochseconds - (days_since_logon * 86400))
+      AND NOT u.lastlogontimestamp IN [-1.0, 0.0]
+    RETURN u.name AS u_name, u.lastlogontimestamp AS u_lastlogontimestamp, days_since_logon
+    ORDER BY u.name
+  msg_template: |-
+    Disabled user {{ u_name }} has not logged on in over {{ days_since_logon }} days
+    (lastlogontimestamp={{ u_lastlogontimestamp }})
 - group: general
   desc: List all Domain Admins
   cypher: |-
@@ -6393,6 +6414,18 @@ queries:
     ORDER BY m.name
   msg_template: |-
     User {{ m_name }} has an admin count
+- group: general
+  desc: List all users with passwords older than 1 year (pwdLastSet)
+  cypher: |-
+    WITH 365 as days_since_change
+    MATCH (u:User)
+    WHERE u.pwdlastset < (datetime().epochseconds - (days_since_change * 86400))
+      AND NOT u.pwdlastset IN [-1.0, 0.0]
+    RETURN u.name AS u_name, u.pwdlastset AS u_pwdlastset, days_since_change
+    ORDER BY u.name
+  msg_template: |-
+    User {{ u_name }} has not changed their password in over {{ days_since_change }} days (pwdlastset={{
+    u_pwdlastset }})
 - group: general
   desc: List all WriteAccountRestrictions privileges
   cypher: |-

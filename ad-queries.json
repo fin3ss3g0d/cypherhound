@@ -16,6 +16,11 @@
       "query": "MATCH p=(n:Group)-[r:AbuseTGTDelegation]->(m)\nWHERE (n.objectid =~ \"(?i)S-1-5-21-.*-513\" OR n.objectid =~ \"(?i).*-S-1-5-11\" OR n.objectid =~ \"(?i).*-S-1-1-0\" OR n.objectid =~ \"(?i).*-S-1-5-32-545\")\nRETURN p\nORDER BY n.name"
     },
     {
+      "name": "List all ADCS privileges",
+      "description": "List all ADCS privileges - General",
+      "query": "MATCH p=(n)-[r:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b]->(m)\nRETURN p\nORDER BY n.name"
+    },
+    {
       "name": "List all ADCSESC1 privileges",
       "description": "List all ADCSESC1 privileges - General",
       "query": "MATCH p=(n)-[r:ADCSESC1]->(m)\nRETURN p\nORDER BY n.name"
@@ -819,6 +824,11 @@
       "name": "List all disabled computers",
       "description": "List all disabled computers - General",
       "query": "MATCH (n:Computer {enabled: false})\nRETURN n AS result\nORDER BY n.name"
+    },
+    {
+      "name": "List all disabled users who have not logged on in over 90 days (lastLogonTimestamp)",
+      "description": "List all disabled users who have not logged on in over 90 days (lastLogonTimestamp) - General",
+      "query": "WITH 90 as days_since_logon\nMATCH (u:User {enabled: false})\nWHERE u.lastlogontimestamp < (datetime().epochseconds - (days_since_logon * 86400))\n  AND NOT u.lastlogontimestamp IN [-1.0, 0.0]\nRETURN u AS result\nORDER BY u.name"
     },
     {
       "name": "List all Domain Admins",
@@ -2184,6 +2194,11 @@
       "name": "List all users with an admin count",
       "description": "List all users with an admin count - General",
       "query": "MATCH (m:User {admincount: true})\nRETURN m AS result\nORDER BY m.name"
+    },
+    {
+      "name": "List all users with passwords older than 1 year (pwdLastSet)",
+      "description": "List all users with passwords older than 1 year (pwdLastSet) - General",
+      "query": "WITH 365 as days_since_change\nMATCH (u:User)\nWHERE u.pwdlastset < (datetime().epochseconds - (days_since_change * 86400))\n  AND NOT u.pwdlastset IN [-1.0, 0.0]\nRETURN u AS result\nORDER BY u.name"
     },
     {
       "name": "List all WriteAccountRestrictions privileges",

@@ -229,6 +229,66 @@ The script has the following options:
 
 You need to specify at least `-o` or `-v`
 
+## BloodHound Query Library Integration
+
+### scripts/bhql/query-importer.py (BloodHound Query Library Importer)
+
+This script imports the **SpecterOps BloodHoundQueryLibrary** saved queries into **BloodHound Community Edition** using the BloodHound CE API.
+
+* Reads the BloodHoundQueryLibrary `Queries.json` (master query bundle)
+* Optionally filters queries by `platforms` (case-insensitive)
+* Submits each query to BloodHound CE as a saved query (`/api/v2/saved-queries`)
+* Includes retry logic for API rate limiting (HTTP `429`) using `Retry-After` when present
+
+**Usage**
+
+```bash
+python3 scripts/bhql/query-importer.py \
+  --token-id "<TOKEN_ID>" \
+  --token-key "<TOKEN_KEY>" \
+  --queries-file "/path/to/Queries.json" \
+  --base-url "http://127.0.0.1:8080"
+```
+
+**Platform-filtered import (examples)**
+
+```bash
+# Only import queries that support Active Directory
+python3 scripts/bhql/query-importer.py \
+  --token-id "<TOKEN_ID>" \
+  --token-key "<TOKEN_KEY>" \
+  --queries-file "/path/to/Queries.json" \
+  --platforms "Active Directory" \
+  --base-url "http://127.0.0.1:8080"
+
+# Import queries for multiple platforms (any match)
+python3 scripts/bhql/query-importer.py \
+  --token-id "<TOKEN_ID>" \
+  --token-key "<TOKEN_KEY>" \
+  --queries-file "/path/to/Queries.json" \
+  --platforms "Active Directory" "Azure" \
+  --base-url "http://127.0.0.1:8080"
+```
+
+> Tip: You can create a token in BloodHound CE and use its Token ID/Key here. If you want to “start fresh” before importing, use the included purge script (see `scripts/bloodhound-ce/purge-queries.py`).
+
+## If BloodHoundQueryLibrary `Queries.json` is out of sync
+
+The SpecterOps BloodHoundQueryLibrary repo stores query sources as individual YAML files (`queries/*.yml`) and aggregates them into `Queries.json`. If the master JSON is behind the YAML sources, you can regenerate it locally using their converter script.
+
+From the **BloodHoundQueryLibrary repo root**:
+
+```bash
+# Install dependencies (if needed)
+python3 -m pip install -r requirements.txt
+
+# Regenerate Queries.json from the YAML directory
+python3 utilities/python/convert.py ./queries ./Queries.json --file-format json
+
+# (Optional) Generate a zip bundle instead
+python3 utilities/python/convert.py ./queries ./Queries.zip --file-format zip
+```
+
 ## Helper Scripts
 
 ### scripts/helpers/format_yaml_queries.py

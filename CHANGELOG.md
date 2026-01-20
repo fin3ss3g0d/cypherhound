@@ -65,3 +65,7 @@ Major cypher addition update. Project supports all BloodHound traversable edges 
 # 08/17/2025
 
 Changed dynamic cypher parameter logic to use Jinja 2 and expanded flexibility with dynamic parameters.
+
+# 01/20/2025
+
+Added automated cypher import script into BloodHound CE from [BloodHound Query Library](https://github.com/SpecterOps/BloodHoundQueryLibrary). Also added a few new ciphers.
